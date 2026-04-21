@@ -1,0 +1,52 @@
+# ═══════════════════════════════════════════════════════════
+# AI Strategy Hub — .gitignore
+# ═══════════════════════════════════════════════════════════
+
+# ── Secrets ────────────────────────────────────────────────
+.env
+*.key
+*.pem
+
+# ── Python ─────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+
+# ── Node ───────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── Frontend Build Output ──────────────────────────────────
+frontend/dist/
+
+# ── Data (user-specific) ──────────────────────────────────
+data/strategy_hub.db
+data/uploads/
+data/embeddings/
+
+# ── User Documents (private) ──────────────────────────────
+Input Dokumente/
+
+# ── IDE / OS ───────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Misc ───────────────────────────────────────────────────
+*.log
+*.tmp
+.gemini/

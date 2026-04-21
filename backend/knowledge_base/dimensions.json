@@ -1,0 +1,1711 @@
+{
+  "version": "2.0.0",
+  "model_name": "Open AI Maturity Meta-Model (OAIMM)",
+  "description": "A meta-model for AI maturity assessment synthesized from global best practices: NIST AI RMF, EU AI Act, Google Cloud AI Adoption Framework, Microsoft RAI Maturity Model, OWASP AI Security Matrix, and UNESCO AI Readiness Framework. Every recommendation is traceable to its original source.",
+  "maturity_levels": [
+    {
+      "level": 1,
+      "name": "Exploring",
+      "name_de": "Erkundend",
+      "description": "No formal AI strategy. Sporadic experiments, individual initiatives, no governance.",
+      "color": "#ef4444"
+    },
+    {
+      "level": 2,
+      "name": "Experimenting",
+      "name_de": "Experimentierend",
+      "description": "Pilot projects running. Initial governance awareness. Siloed data and teams.",
+      "color": "#f97316"
+    },
+    {
+      "level": 3,
+      "name": "Operationalizing",
+      "name_de": "Operationalisierend",
+      "description": "AI in production. Established MLOps. Formal data governance. Dedicated teams.",
+      "color": "#eab308"
+    },
+    {
+      "level": 4,
+      "name": "Scaling",
+      "name_de": "Skalierend",
+      "description": "AI across multiple business units. Measurable ROI. Robust risk management.",
+      "color": "#22c55e"
+    },
+    {
+      "level": 5,
+      "name": "Transforming",
+      "name_de": "Transformierend",
+      "description": "AI-native organization. Autonomous agents at scale. Continuous innovation.",
+      "color": "#3b82f6"
+    }
+  ],
+  "dimensions": [
+    {
+      "id": "strategy",
+      "name": "Strategy & Leadership",
+      "name_de": "Strategie & Führung",
+      "icon": "🎯",
+      "weight": 0.15,
+      "description": "Alignment of AI initiatives with business goals, executive sponsorship, and strategic roadmap.",
+      "sources": [
+        "Google AI Adoption Framework",
+        "Microsoft CAF",
+        "UNESCO"
+      ],
+      "checkpoints": [
+        {
+          "id": "STR-01",
+          "text": "A formal AI strategy document exists and is aligned with overall business objectives",
+          "text_de": "Ein formales AI-Strategiedokument existiert und ist mit den Unternehmenszielen abgestimmt",
+          "min_level": 2,
+          "sources": [
+            "Google AI Adoption Framework",
+            "UNESCO"
+          ],
+          "category": "Documentation",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Strategy Pillar — Strategic Alignment",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            },
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 2 — Policy & Strategy",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            }
+          ]
+        },
+        {
+          "id": "STR-02",
+          "text": "Executive sponsor for AI initiatives is identified and actively engaged",
+          "text_de": "Ein Executive Sponsor für AI-Initiativen ist benannt und aktiv beteiligt",
+          "min_level": 2,
+          "sources": [
+            "Google AI Adoption Framework"
+          ],
+          "category": "Leadership",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "People Pillar — Executive Sponsorship",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        },
+        {
+          "id": "STR-03",
+          "text": "AI investment roadmap with measurable milestones and budget allocation exists",
+          "text_de": "Eine AI-Investitions-Roadmap mit messbaren Meilensteinen und Budgetplanung existiert",
+          "min_level": 3,
+          "sources": [
+            "Google AI Adoption Framework",
+            "OWASP AIMA"
+          ],
+          "category": "Planning",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Strategy Pillar — Investment Planning",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            },
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "Program Management — Resource Allocation",
+              "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
+            }
+          ]
+        },
+        {
+          "id": "STR-04",
+          "text": "AI use cases are prioritized based on feasibility and business impact",
+          "text_de": "AI-Anwendungsfälle werden nach Machbarkeit und Business Impact priorisiert",
+          "min_level": 2,
+          "sources": [
+            "NIST AI RMF (MAP-3)",
+            "OWASP AIMA"
+          ],
+          "category": "Planning",
+          "evidence_tags": [
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "MAP 3 — AI Benefits & Costs",
+              "url": "https://airc.nist.gov/AI_RMF"
+            },
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "Use Case Prioritization",
+              "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
+            }
+          ]
+        },
+        {
+          "id": "STR-05",
+          "text": "Success metrics (ROI, efficiency gains, revenue impact) are defined and tracked",
+          "text_de": "Erfolgsmetriken (ROI, Effizienzgewinne, Umsatzwirkung) sind definiert und werden getrackt",
+          "min_level": 3,
+          "sources": [
+            "Google AI Adoption Framework"
+          ],
+          "category": "Measurement",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Strategy Pillar — KPI & ROI Tracking",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        },
+        {
+          "id": "STR-06",
+          "text": "AI strategy is reviewed and updated at least annually",
+          "text_de": "Die AI-Strategie wird mindestens jährlich überprüft und aktualisiert",
+          "min_level": 3,
+          "sources": [
+            "UNESCO"
+          ],
+          "category": "Documentation",
+          "evidence_tags": [
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 2 — Periodic Strategy Review",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            }
+          ]
+        },
+        {
+          "id": "STR-07",
+          "text": "Competitive landscape and AI trends are regularly monitored and inform strategy",
+          "text_de": "Wettbewerbslandschaft und AI-Trends werden regelmäßig beobachtet und fließen in die Strategie ein",
+          "min_level": 3,
+          "sources": [
+            "OWASP AIMA"
+          ],
+          "category": "Planning",
+          "evidence_tags": [
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "Threat Landscape Monitoring",
+              "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
+            }
+          ]
+        },
+        {
+          "id": "STR-08",
+          "text": "AI drives new revenue streams or fundamental business model changes",
+          "text_de": "AI treibt neue Umsatzquellen oder fundamentale Geschäftsmodelländerungen",
+          "min_level": 5,
+          "sources": [
+            "Google AI Adoption Framework"
+          ],
+          "category": "Transformation",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Transformation Pillar — AI-Native Business Models",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        },
+        {
+          "id": "STR-09",
+          "text": "AI strategy aligns with broader digital transformation and innovation goals",
+          "text_de": "Die AI-Strategie ist mit breiteren Zielen der digitalen Transformation und Innovation abgestimmt",
+          "min_level": 2,
+          "sources": [
+            "UNESCO"
+          ],
+          "category": "Planning",
+          "evidence_tags": [
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 1 — Digital Transformation Alignment",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            }
+          ]
+        },
+        {
+          "id": "STR-10",
+          "text": "Stakeholder consultation processes inform AI strategy development",
+          "text_de": "Stakeholder-Konsultationsprozesse fließen in die AI-Strategieentwicklung ein",
+          "min_level": 3,
+          "sources": [
+            "UNESCO",
+            "Microsoft RAI MM"
+          ],
+          "category": "Leadership",
+          "evidence_tags": [
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 6 — Multi-Stakeholder Governance",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            },
+            {
+              "source": "Microsoft RAI Maturity Model",
+              "reference": "Organizational — Stakeholder Engagement",
+              "url": "https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/"
+            }
+          ]
+        },
+        {
+          "id": "CP_st_11",
+          "text": "A formal AI maturity assessment is conducted periodically to pinpoint gaps in data, governance, and skills.",
+          "text_de": "Ein formelles KI-Reifegrad-Assessment wird regelmäßig durchgeführt, um Lücken in den Bereichen Daten, Governance und Fähigkeiten zu identifizieren.",
+          "min_level": 2,
+          "category": "Strategic Alignment",
+          "sources": [
+            "The AI Maturity Journey: How to Move from Experiments to Enterprise Transformation"
+          ],
+          "evidence_tags": []
+        },
+        {
+          "id": "CP_st_12",
+          "text": "AI scaling follows a phased approach, ensuring operational adoption and foundational capabilities are secured before attempting enterprise-wide automation.",
+          "text_de": "Die KI-Skalierung folgt einem phasenweisen Ansatz, der sicherstellt, dass die operative Akzeptanz und grundlegende Fähigkeiten gesichert sind, bevor eine unternehmensweite Automatisierung angestrebt wird.",
+          "min_level": 3,
+          "category": "Scaling Strategy",
+          "sources": [
+            "The AI Maturity Journey: How to Move from Experiments to Enterprise Transformation"
+          ],
+          "evidence_tags": []
+        },
+        {
+          "id": "CP_st_13",
+          "text": "AI initiatives are managed as an integrated enterprise-wide portfolio rather than a collection of standalone high-impact use cases.",
+          "text_de": "KI-Initiativen werden als integriertes, unternehmensweites Portfolio gesteuert und nicht als Sammlung isolierter, hochwirksamer Anwendungsfälle.",
+          "min_level": 4,
+          "category": "Strategic Alignment",
+          "sources": [
+            "The AI Maturity Journey: How to Move from Experiments to Enterprise Transformation"
+          ],
+          "evidence_tags": [],
+          "added_at": "2026-04-17T20:45:38.790408+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_st_14",
+          "text": "The organizational analytics paradigm has formally shifted from reactive historical reporting to AI-driven proactive intelligence and forecasting.",
+          "text_de": "Das organisatorische Analyseparadigma hat sich offiziell von reaktivem, historischem Reporting hin zu KI-gesteuerter, proaktiver Intelligenz und Prognose verlagert.",
+          "min_level": 3,
+          "category": "Business Value & Impact",
+          "sources": [
+            "The AI Maturity Journey: How to Move from Experiments to Enterprise Transformation"
+          ],
+          "evidence_tags": [],
+          "added_at": "2026-04-17T20:45:38.790408+00:00",
+          "added_by": "framework_builder"
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "name": "Data & Infrastructure",
+      "name_de": "Daten & Infrastruktur",
+      "icon": "🗄️",
+      "weight": 0.15,
+      "description": "Data quality, accessibility, governance, and technical infrastructure readiness.",
+      "sources": [
+        "NIST AI RMF (Map)",
+        "Google AI Adoption Framework",
+        "UNESCO"
+      ],
+      "checkpoints": [
+        {
+          "id": "DAT-01",
+          "text": "Data inventory across the organization is cataloged and accessible",
+          "text_de": "Ein Dateninventar über die gesamte Organisation ist katalogisiert und zugänglich",
+          "min_level": 2,
+          "sources": [
+            "Google AI Adoption Framework",
+            "NIST AI RMF"
+          ],
+          "category": "Data Management",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Data Pillar — Data Inventory & Cataloging",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            },
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "MAP 1.1 — Data Identification",
+              "url": "https://airc.nist.gov/AI_RMF"
+            }
+          ]
+        },
+        {
+          "id": "DAT-02",
+          "text": "Data quality standards are established, monitored, and enforced",
+          "text_de": "Datenqualitätsstandards sind etabliert, überwacht und durchgesetzt",
+          "min_level": 3,
+          "sources": [
+            "EU AI Act",
+            "Google AI Adoption Framework"
+          ],
+          "category": "Data Quality",
+          "evidence_tags": [
+            {
+              "source": "EU AI Act",
+              "reference": "Article 10 — Data and Data Governance",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            },
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Data Pillar — Quality Management",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        },
+        {
+          "id": "DAT-03",
+          "text": "Data governance framework (ownership, access control, retention) is active",
+          "text_de": "Ein Data-Governance-Framework (Eigentümer, Zugangskontrolle, Aufbewahrung) ist aktiv",
+          "min_level": 3,
+          "sources": [
+            "Google AI Adoption Framework",
+            "UNESCO",
+            "EU AI Act"
+          ],
+          "category": "Governance",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Data Pillar — Governance Framework",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            },
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 3 — Data Infrastructure",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            },
+            {
+              "source": "EU AI Act",
+              "reference": "Article 10(2) — Data Governance Practices",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            }
+          ]
+        },
+        {
+          "id": "DAT-04",
+          "text": "Cross-functional data sharing mechanisms are in place",
+          "text_de": "Bereichsübergreifende Datenaustausch-Mechanismen sind etabliert",
+          "min_level": 3,
+          "sources": [
+            "Google AI Adoption Framework"
+          ],
+          "category": "Data Management",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Data Pillar — Cross-Team Data Access",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        },
+        {
+          "id": "DAT-05",
+          "text": "Data provenance and lineage tracking is implemented",
+          "text_de": "Datenherkunft und Datenlinien-Tracking sind implementiert",
+          "min_level": 4,
+          "sources": [
+            "NIST AI RMF (MAP-1)",
+            "UNESCO"
+          ],
+          "category": "Data Quality",
+          "evidence_tags": [
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "MAP 1.5 — Data Provenance",
+              "url": "https://airc.nist.gov/AI_RMF"
+            },
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 3 — Data Traceability",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            }
+          ]
+        },
+        {
+          "id": "DAT-06",
+          "text": "Cloud or on-premise infrastructure is capable of supporting AI workloads",
+          "text_de": "Cloud- oder On-Premise-Infrastruktur ist für AI-Workloads geeignet",
+          "min_level": 2,
+          "sources": [
+            "Google AI Adoption Framework",
+            "UNESCO"
+          ],
+          "category": "Infrastructure",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Technology Pillar — Compute Infrastructure",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            },
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 4 — Technical Infrastructure",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            }
+          ]
+        },
+        {
+          "id": "DAT-07",
+          "text": "Feature stores or shared data processing pipelines exist",
+          "text_de": "Feature Stores oder gemeinsame Datenverarbeitungs-Pipelines existieren",
+          "min_level": 4,
+          "sources": [
+            "Google AI Adoption Framework"
+          ],
+          "category": "Infrastructure",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Technology Pillar — Feature Engineering at Scale",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        },
+        {
+          "id": "DAT-08",
+          "text": "Data is available in machine-readable formats appropriate for AI models",
+          "text_de": "Daten liegen in maschinenlesbaren, für AI-Modelle geeigneten Formaten vor",
+          "min_level": 2,
+          "sources": [
+            "NIST AI RMF"
+          ],
+          "category": "Data Quality",
+          "evidence_tags": [
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "MAP 1.1 — Data Fitness for Purpose",
+              "url": "https://airc.nist.gov/AI_RMF"
+            }
+          ]
+        },
+        {
+          "id": "DAT-09",
+          "text": "Datasets are checked for bias, representativeness, and relevance",
+          "text_de": "Datensätze werden auf Bias, Repräsentativität und Relevanz geprüft",
+          "min_level": 3,
+          "sources": [
+            "EU AI Act",
+            "NIST AI RMF (MAP-4)"
+          ],
+          "category": "Data Quality",
+          "evidence_tags": [
+            {
+              "source": "EU AI Act",
+              "reference": "Article 10(2)(f) — Bias Examination",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            },
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "MAP 4 — Bias & Fairness in Data",
+              "url": "https://airc.nist.gov/AI_RMF"
+            }
+          ]
+        },
+        {
+          "id": "DAT-10",
+          "text": "Real-time data processing capabilities are available at scale",
+          "text_de": "Echtzeit-Datenverarbeitungsfähigkeiten sind im großen Maßstab verfügbar",
+          "min_level": 5,
+          "sources": [
+            "Google AI Adoption Framework"
+          ],
+          "category": "Infrastructure",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Technology Pillar — Real-Time ML Serving",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "governance",
+      "name": "Governance & Compliance",
+      "name_de": "Governance & Compliance",
+      "icon": "⚖️",
+      "weight": 0.2,
+      "description": "AI-specific policies, regulatory compliance (EU AI Act), risk management, and accountability.",
+      "sources": [
+        "EU AI Act",
+        "NIST AI RMF (Govern)",
+        "OWASP AIMA"
+      ],
+      "checkpoints": [
+        {
+          "id": "GOV-01",
+          "text": "AI governance framework or board is established with decision-making authority",
+          "text_de": "Ein AI-Governance-Framework oder -Gremium mit Entscheidungsbefugnis ist etabliert",
+          "min_level": 3,
+          "sources": [
+            "NIST AI RMF (GOV-2)",
+            "Microsoft RAI MM"
+          ],
+          "category": "Structure",
+          "evidence_tags": [
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "GOVERN 2 — Accountability Structures",
+              "url": "https://airc.nist.gov/AI_RMF"
+            },
+            {
+              "source": "Microsoft RAI Maturity Model",
+              "reference": "Organizational — Governance Bodies",
+              "url": "https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/"
+            }
+          ]
+        },
+        {
+          "id": "GOV-02",
+          "text": "AI risk management policies are documented and implemented",
+          "text_de": "AI-Risikomanagement-Richtlinien sind dokumentiert und implementiert",
+          "min_level": 2,
+          "sources": [
+            "NIST AI RMF (GOV-1)",
+            "EU AI Act"
+          ],
+          "category": "Policy",
+          "evidence_tags": [
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "GOVERN 1.1 — Risk Management Policy",
+              "url": "https://airc.nist.gov/AI_RMF"
+            },
+            {
+              "source": "EU AI Act",
+              "reference": "Article 9 — Risk Management System",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            }
+          ]
+        },
+        {
+          "id": "GOV-03",
+          "text": "Complete inventory of all AI systems with risk categorization exists",
+          "text_de": "Ein vollständiges Inventar aller AI-Systeme mit Risikokategorisierung existiert",
+          "min_level": 2,
+          "sources": [
+            "EU AI Act",
+            "NIST AI RMF (MAP-2)"
+          ],
+          "category": "Inventory",
+          "evidence_tags": [
+            {
+              "source": "EU AI Act",
+              "reference": "Article 6 & Annex III — Risk Classification",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            },
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "MAP 2 — AI System Categorization",
+              "url": "https://airc.nist.gov/AI_RMF"
+            }
+          ]
+        },
+        {
+          "id": "GOV-04",
+          "text": "Regulatory compliance tracking (EU AI Act, GDPR, sector-specific) is active",
+          "text_de": "Regulatorische Compliance-Verfolgung (EU AI Act, DSGVO, branchenspezifisch) ist aktiv",
+          "min_level": 3,
+          "sources": [
+            "EU AI Act",
+            "OWASP AIMA"
+          ],
+          "category": "Compliance",
+          "evidence_tags": [
+            {
+              "source": "EU AI Act",
+              "reference": "Article 16–22 — Provider Obligations",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            },
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "Compliance Monitoring",
+              "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
+            }
+          ]
+        },
+        {
+          "id": "GOV-05",
+          "text": "Roles and responsibilities for AI oversight are clearly defined",
+          "text_de": "Rollen und Verantwortlichkeiten für die AI-Aufsicht sind klar definiert",
+          "min_level": 2,
+          "sources": [
+            "NIST AI RMF (GOV-2)",
+            "EU AI Act"
+          ],
+          "category": "Structure",
+          "evidence_tags": [
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "GOVERN 2.1 — Roles & Responsibilities",
+              "url": "https://airc.nist.gov/AI_RMF"
+            },
+            {
+              "source": "EU AI Act",
+              "reference": "Article 4(1) — AI Literacy Requirement",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            }
+          ]
+        },
+        {
+          "id": "GOV-06",
+          "text": "Third-party AI vendor assessment and contract review process is established",
+          "text_de": "Ein Bewertungs- und Vertragsüberprüfungsprozess für AI-Drittanbieter ist etabliert",
+          "min_level": 3,
+          "sources": [
+            "NIST AI RMF (GOV-6)",
+            "EU AI Act"
+          ],
+          "category": "Vendor Management",
+          "evidence_tags": [
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "GOVERN 6 — Third-Party Risk",
+              "url": "https://airc.nist.gov/AI_RMF"
+            },
+            {
+              "source": "EU AI Act",
+              "reference": "Article 25 — Obligations of Distributors",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            }
+          ]
+        },
+        {
+          "id": "GOV-07",
+          "text": "Incident response procedures for AI system failures are defined",
+          "text_de": "Incident-Response-Verfahren für AI-Systemausfälle sind definiert",
+          "min_level": 3,
+          "sources": [
+            "EU AI Act",
+            "NIST AI RMF (MAN-4)",
+            "OWASP AIMA"
+          ],
+          "category": "Risk Management",
+          "evidence_tags": [
+            {
+              "source": "EU AI Act",
+              "reference": "Article 62 — Serious Incident Reporting",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            },
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "MANAGE 4 — Incident Response",
+              "url": "https://airc.nist.gov/AI_RMF"
+            },
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "Incident Response Playbooks",
+              "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
+            }
+          ]
+        },
+        {
+          "id": "GOV-08",
+          "text": "Human oversight mechanisms exist for AI-driven decisions",
+          "text_de": "Mechanismen zur menschlichen Aufsicht bei AI-gesteuerten Entscheidungen existieren",
+          "min_level": 2,
+          "sources": [
+            "EU AI Act",
+            "UNESCO"
+          ],
+          "category": "Oversight",
+          "evidence_tags": [
+            {
+              "source": "EU AI Act",
+              "reference": "Article 14 — Human Oversight",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            },
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 5 — Human Autonomy & Oversight",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            }
+          ]
+        },
+        {
+          "id": "GOV-09",
+          "text": "Regular AI risk reviews are scheduled and lead to actionable improvements",
+          "text_de": "Regelmäßige AI-Risiko-Reviews sind geplant und führen zu umsetzbaren Verbesserungen",
+          "min_level": 3,
+          "sources": [
+            "NIST AI RMF (MAN-1)",
+            "OWASP AIMA"
+          ],
+          "category": "Risk Management",
+          "evidence_tags": [
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "MANAGE 1 — Risk Treatment & Response",
+              "url": "https://airc.nist.gov/AI_RMF"
+            },
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "Continuous Risk Assessment",
+              "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
+            }
+          ]
+        },
+        {
+          "id": "GOV-10",
+          "text": "Automated logging and audit trails for AI decisions are maintained",
+          "text_de": "Automatisiertes Logging und Audit-Trails für AI-Entscheidungen werden geführt",
+          "min_level": 3,
+          "sources": [
+            "EU AI Act",
+            "NIST AI RMF (MEA-3)"
+          ],
+          "category": "Transparency",
+          "evidence_tags": [
+            {
+              "source": "EU AI Act",
+              "reference": "Article 12 — Record-Keeping / Logging",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            },
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "MEASURE 3 — Tracking & Documentation",
+              "url": "https://airc.nist.gov/AI_RMF"
+            }
+          ]
+        },
+        {
+          "id": "GOV-11",
+          "text": "Technical documentation for AI systems is maintained and available for regulators",
+          "text_de": "Technische Dokumentation der AI-Systeme wird gepflegt und steht Regulierern zur Verfügung",
+          "min_level": 3,
+          "sources": [
+            "EU AI Act"
+          ],
+          "category": "Documentation",
+          "evidence_tags": [
+            {
+              "source": "EU AI Act",
+              "reference": "Article 11 & Annex IV — Technical Documentation",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            }
+          ]
+        },
+        {
+          "id": "GOV-12",
+          "text": "Conformity assessments are performed for high-risk AI systems",
+          "text_de": "Konformitätsbewertungen werden für Hochrisiko-AI-Systeme durchgeführt",
+          "min_level": 4,
+          "sources": [
+            "EU AI Act"
+          ],
+          "category": "Compliance",
+          "evidence_tags": [
+            {
+              "source": "EU AI Act",
+              "reference": "Article 43 — Conformity Assessment",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            }
+          ]
+        },
+        {
+          "id": "CP_go_13",
+          "text": "Informal AI experiments and shadow AI initiatives across departments are actively inventoried to bring visibility and transition them into governed processes.",
+          "text_de": "Informelle KI-Experimente und Shadow-KI-Initiativen in den Abteilungen werden aktiv inventarisiert, um Transparenz zu schaffen und sie in gesteuerte Prozesse zu überführen.",
+          "min_level": 2,
+          "category": "Risk Management",
+          "sources": [
+            "The AI Maturity Journey: How to Move from Experiments to Enterprise Transformation"
+          ],
+          "evidence_tags": []
+        }
+      ]
+    },
+    {
+      "id": "technology",
+      "name": "Technology & MLOps",
+      "name_de": "Technologie & MLOps",
+      "icon": "⚙️",
+      "weight": 0.15,
+      "description": "ML pipeline maturity, deployment practices, monitoring, and technical infrastructure.",
+      "sources": [
+        "Microsoft RAI MM",
+        "Google AI Adoption Framework",
+        "OWASP AIMA"
+      ],
+      "checkpoints": [
+        {
+          "id": "TEC-01",
+          "text": "MLOps pipeline (training, deployment, monitoring) is operational",
+          "text_de": "MLOps-Pipeline (Training, Deployment, Monitoring) ist operativ",
+          "min_level": 3,
+          "sources": [
+            "Google AI Adoption Framework",
+            "OWASP AIMA"
+          ],
+          "category": "MLOps",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Technology Pillar — MLOps Maturity",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            },
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "Secure ML Pipeline",
+              "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
+            }
+          ]
+        },
+        {
+          "id": "TEC-02",
+          "text": "Model versioning and experiment tracking is implemented",
+          "text_de": "Modell-Versionierung und Experiment-Tracking sind implementiert",
+          "min_level": 3,
+          "sources": [
+            "OWASP AIMA"
+          ],
+          "category": "MLOps",
+          "evidence_tags": [
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "Model Version Control & Lineage",
+              "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
+            }
+          ]
+        },
+        {
+          "id": "TEC-03",
+          "text": "CI/CD pipelines include AI-specific testing and security scanning",
+          "text_de": "CI/CD-Pipelines beinhalten AI-spezifisches Testing und Security-Scanning",
+          "min_level": 4,
+          "sources": [
+            "OWASP AIMA",
+            "Microsoft RAI MM"
+          ],
+          "category": "DevOps",
+          "evidence_tags": [
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "ML Testing in CI/CD",
+              "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
+            },
+            {
+              "source": "Microsoft RAI Maturity Model",
+              "reference": "Engineering — Automated Testing",
+              "url": "https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/"
+            }
+          ]
+        },
+        {
+          "id": "TEC-04",
+          "text": "API gateways and integration patterns for AI services are established",
+          "text_de": "API-Gateways und Integrationsmuster für AI-Services sind etabliert",
+          "min_level": 3,
+          "sources": [
+            "Google AI Adoption Framework",
+            "OWASP AIMA"
+          ],
+          "category": "Architecture",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Technology Pillar — API Design & Integration",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            },
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "Secure API Gateway Patterns",
+              "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
+            }
+          ]
+        },
+        {
+          "id": "TEC-05",
+          "text": "Model drift monitoring and alerting is implemented",
+          "text_de": "Model-Drift-Monitoring und Alerting sind implementiert",
+          "min_level": 4,
+          "sources": [
+            "NIST AI RMF (MEA-3)",
+            "OWASP AIMA"
+          ],
+          "category": "Monitoring",
+          "evidence_tags": [
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "MEASURE 3.2 — Drift Detection",
+              "url": "https://airc.nist.gov/AI_RMF"
+            },
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "Model Monitoring & Drift Detection",
+              "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
+            }
+          ]
+        },
+        {
+          "id": "TEC-06",
+          "text": "Rollback/shutdown mechanisms are available for AI systems in production",
+          "text_de": "Rollback-/Shutdown-Mechanismen sind für AI-Systeme in Produktion verfügbar",
+          "min_level": 3,
+          "sources": [
+            "NIST AI RMF (MAN-4)",
+            "EU AI Act"
+          ],
+          "category": "Operations",
+          "evidence_tags": [
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "MANAGE 4.2 — Decommission & Rollback",
+              "url": "https://airc.nist.gov/AI_RMF"
+            },
+            {
+              "source": "EU AI Act",
+              "reference": "Article 14(4) — Stop Button / Override",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            }
+          ]
+        },
+        {
+          "id": "TEC-07",
+          "text": "Security-by-design principles are applied to AI system architecture",
+          "text_de": "Security-by-Design-Prinzipien werden auf die AI-Systemarchitektur angewendet",
+          "min_level": 3,
+          "sources": [
+            "OWASP AIMA"
+          ],
+          "category": "Security",
+          "evidence_tags": [
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "Secure Architecture Principles",
+              "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
+            }
+          ]
+        },
+        {
+          "id": "TEC-08",
+          "text": "Sandbox/experimentation environments are available for AI development",
+          "text_de": "Sandbox-/Experimentierumgebungen stehen für AI-Entwicklung zur Verfügung",
+          "min_level": 2,
+          "sources": [
+            "UNESCO",
+            "Google AI Adoption Framework"
+          ],
+          "category": "Infrastructure",
+          "evidence_tags": [
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 4 — Innovation Sandboxes",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            },
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Technology Pillar — Experimentation Environments",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        },
+        {
+          "id": "TEC-09",
+          "text": "Prompt injection and AI-specific attack mitigations are implemented",
+          "text_de": "Prompt-Injection und AI-spezifische Angriffsabwehr sind implementiert",
+          "min_level": 4,
+          "sources": [
+            "OWASP AIMA"
+          ],
+          "category": "Security",
+          "evidence_tags": [
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "LLM01 — Prompt Injection",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            }
+          ]
+        },
+        {
+          "id": "TEC-10",
+          "text": "Autonomous AI agents are deployed in production with orchestration frameworks",
+          "text_de": "Autonome AI-Agenten sind mit Orchestrierungs-Frameworks in Produktion deployed",
+          "min_level": 5,
+          "sources": [
+            "Google AI Adoption Framework"
+          ],
+          "category": "Advanced",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Transformation Pillar — AI Agents at Scale",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        },
+        {
+          "id": "CP_te_11",
+          "text": "Continuous learning loops are implemented to automatically refine model predictions and operational workflows based on real-time outcomes.",
+          "text_de": "Kontinuierliche Lernschleifen sind implementiert, um Modellvorhersagen und operative Workflows basierend auf Echtzeit-Ergebnissen automatisch zu verfeinern.",
+          "min_level": 4,
+          "category": "Advanced MLOps",
+          "sources": [
+            "The AI Maturity Journey: How to Move from Experiments to Enterprise Transformation"
+          ],
+          "evidence_tags": []
+        },
+        {
+          "id": "CP_te_12",
+          "text": "A unified platform architecture is established that seamlessly integrates data ingestion, cleaning, transformation, and AI model deployment.",
+          "text_de": "Eine einheitliche Plattformarchitektur ist etabliert, die Datenaufnahme, -bereinigung, -transformation und die Bereitstellung von KI-Modellen nahtlos integriert.",
+          "min_level": 3,
+          "category": "Architecture & Integration",
+          "sources": [
+            "The AI Maturity Journey: How to Move from Experiments to Enterprise Transformation"
+          ],
+          "evidence_tags": [],
+          "added_at": "2026-04-17T20:45:38.790408+00:00",
+          "added_by": "framework_builder"
+        }
+      ]
+    },
+    {
+      "id": "talent",
+      "name": "Talent & Culture",
+      "name_de": "Talent & Kultur",
+      "icon": "👥",
+      "weight": 0.1,
+      "description": "AI literacy, talent development, organizational culture, and change management.",
+      "sources": [
+        "Google AI Adoption Framework",
+        "UNESCO",
+        "Microsoft RAI MM"
+      ],
+      "checkpoints": [
+        {
+          "id": "TAL-01",
+          "text": "AI literacy training is available for all employees (not just technical staff)",
+          "text_de": "AI-Literacy-Training ist für alle Mitarbeitenden verfügbar (nicht nur technisches Personal)",
+          "min_level": 2,
+          "sources": [
+            "EU AI Act",
+            "UNESCO",
+            "Google AI Adoption Framework"
+          ],
+          "category": "Training",
+          "evidence_tags": [
+            {
+              "source": "EU AI Act",
+              "reference": "Article 4 — AI Literacy",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            },
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 5 — Education & Skills Development",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            },
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "People Pillar — Organization-Wide Literacy",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        },
+        {
+          "id": "TAL-02",
+          "text": "Dedicated AI/ML engineering team exists with clear career paths",
+          "text_de": "Ein dediziertes AI/ML-Engineering-Team existiert mit klaren Karrierepfaden",
+          "min_level": 3,
+          "sources": [
+            "Google AI Adoption Framework"
+          ],
+          "category": "Team",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "People Pillar — Team Structure & Career Paths",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        },
+        {
+          "id": "TAL-03",
+          "text": "Cross-functional collaboration on AI projects is standard practice",
+          "text_de": "Bereichsübergreifende Zusammenarbeit bei AI-Projekten ist Standardpraxis",
+          "min_level": 3,
+          "sources": [
+            "Google AI Adoption Framework",
+            "UNESCO"
+          ],
+          "category": "Collaboration",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "People Pillar — Cross-Functional Teams",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            },
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 6 — Multi-Disciplinary Collaboration",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            }
+          ]
+        },
+        {
+          "id": "TAL-04",
+          "text": "Recruitment strategy targets identified AI talent gaps",
+          "text_de": "Die Rekrutierungsstrategie adressiert identifizierte AI-Talent-Lücken",
+          "min_level": 3,
+          "sources": [
+            "UNESCO"
+          ],
+          "category": "Recruitment",
+          "evidence_tags": [
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 5 — Talent Acquisition & Retention",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            }
+          ]
+        },
+        {
+          "id": "TAL-05",
+          "text": "Diversity and inclusion goals for AI teams are defined and tracked",
+          "text_de": "Diversitäts- und Inklusionsziele für AI-Teams sind definiert und werden verfolgt",
+          "min_level": 3,
+          "sources": [
+            "NIST AI RMF (GOV-3)",
+            "UNESCO",
+            "Microsoft RAI MM"
+          ],
+          "category": "Diversity",
+          "evidence_tags": [
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "GOVERN 3.2 — Diversity in AI Teams",
+              "url": "https://airc.nist.gov/AI_RMF"
+            },
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 5 — Inclusive Human Capital",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            },
+            {
+              "source": "Microsoft RAI Maturity Model",
+              "reference": "Organizational — Inclusive Design",
+              "url": "https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/"
+            }
+          ]
+        },
+        {
+          "id": "TAL-06",
+          "text": "Innovation time, hackathons, or experimentation programs for AI exist",
+          "text_de": "Innovationszeit, Hackathons oder Experimentierprogramme für AI existieren",
+          "min_level": 3,
+          "sources": [
+            "Google AI Adoption Framework"
+          ],
+          "category": "Culture",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Process Pillar — Innovation Programs",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        },
+        {
+          "id": "TAL-07",
+          "text": "Center of Excellence (CoE) for AI is established",
+          "text_de": "Ein Center of Excellence (CoE) für AI ist etabliert",
+          "min_level": 4,
+          "sources": [
+            "Google AI Adoption Framework"
+          ],
+          "category": "Organization",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "People Pillar — Center of Excellence",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        },
+        {
+          "id": "TAL-08",
+          "text": "Organization-wide AI literacy has been achieved with continuous learning culture",
+          "text_de": "Organisationsweite AI-Literacy wurde erreicht mit einer Kultur des kontinuierlichen Lernens",
+          "min_level": 5,
+          "sources": [
+            "Google AI Adoption Framework"
+          ],
+          "category": "Culture",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "People Pillar — Learning Organization",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ethics",
+      "name": "Ethics & Responsible AI",
+      "name_de": "Ethik & Responsible AI",
+      "icon": "🛡️",
+      "weight": 0.15,
+      "description": "Fairness, transparency, accountability, privacy, and ethical AI practices.",
+      "sources": [
+        "Microsoft RAI MM",
+        "NIST AI RMF (Measure)",
+        "UNESCO"
+      ],
+      "checkpoints": [
+        {
+          "id": "ETH-01",
+          "text": "Ethical guidelines for AI development and deployment are documented",
+          "text_de": "Ethische Richtlinien für AI-Entwicklung und -Einsatz sind dokumentiert",
+          "min_level": 2,
+          "sources": [
+            "Microsoft RAI MM",
+            "UNESCO"
+          ],
+          "category": "Policy",
+          "evidence_tags": [
+            {
+              "source": "Microsoft RAI Maturity Model",
+              "reference": "Principles — Ethical AI Policy",
+              "url": "https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/"
+            },
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 1 — Ethical Framework",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            }
+          ]
+        },
+        {
+          "id": "ETH-02",
+          "text": "Ethics impact assessments are conducted before AI project initiation",
+          "text_de": "Ethik-Folgenabschätzungen werden vor Beginn von AI-Projekten durchgeführt",
+          "min_level": 3,
+          "sources": [
+            "Microsoft RAI MM"
+          ],
+          "category": "Assessment",
+          "evidence_tags": [
+            {
+              "source": "Microsoft RAI Maturity Model",
+              "reference": "Practices — Impact Assessment",
+              "url": "https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/"
+            }
+          ]
+        },
+        {
+          "id": "ETH-03",
+          "text": "Bias assessment methodologies are defined and applied to AI systems",
+          "text_de": "Bias-Bewertungsmethoden sind definiert und werden auf AI-Systeme angewendet",
+          "min_level": 3,
+          "sources": [
+            "Microsoft RAI MM",
+            "NIST AI RMF (MEA-2)"
+          ],
+          "category": "Fairness",
+          "evidence_tags": [
+            {
+              "source": "Microsoft RAI Maturity Model",
+              "reference": "Fairness — Bias Detection Tools",
+              "url": "https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/"
+            },
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "MEASURE 2.6 — Bias Assessment",
+              "url": "https://airc.nist.gov/AI_RMF"
+            }
+          ]
+        },
+        {
+          "id": "ETH-04",
+          "text": "Fairness metrics are tracked continuously across AI systems",
+          "text_de": "Fairness-Metriken werden kontinuierlich über alle AI-Systeme hinweg getrackt",
+          "min_level": 4,
+          "sources": [
+            "Microsoft RAI MM",
+            "NIST AI RMF"
+          ],
+          "category": "Fairness",
+          "evidence_tags": [
+            {
+              "source": "Microsoft RAI Maturity Model",
+              "reference": "Fairness — Continuous Monitoring",
+              "url": "https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/"
+            },
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "MEASURE 2 — Fairness Metrics",
+              "url": "https://airc.nist.gov/AI_RMF"
+            }
+          ]
+        },
+        {
+          "id": "ETH-05",
+          "text": "Model documentation (model cards or equivalent) is maintained for all production models",
+          "text_de": "Modelldokumentation (Model Cards oder Äquivalent) wird für alle Produktionsmodelle gepflegt",
+          "min_level": 3,
+          "sources": [
+            "Microsoft RAI MM"
+          ],
+          "category": "Transparency",
+          "evidence_tags": [
+            {
+              "source": "Microsoft RAI Maturity Model",
+              "reference": "Transparency — Model Cards",
+              "url": "https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/"
+            }
+          ]
+        },
+        {
+          "id": "ETH-06",
+          "text": "Decision explanation capabilities exist for AI-driven outcomes",
+          "text_de": "Entscheidungserklärungsfähigkeiten existieren für AI-getriebene Ergebnisse",
+          "min_level": 3,
+          "sources": [
+            "Microsoft RAI MM",
+            "EU AI Act"
+          ],
+          "category": "Transparency",
+          "evidence_tags": [
+            {
+              "source": "Microsoft RAI Maturity Model",
+              "reference": "Transparency — Explainability",
+              "url": "https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/"
+            },
+            {
+              "source": "EU AI Act",
+              "reference": "Article 13 — Transparency & Provision of Information",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            }
+          ]
+        },
+        {
+          "id": "ETH-07",
+          "text": "Privacy-by-design principles are applied (data minimization, consent management)",
+          "text_de": "Privacy-by-Design-Prinzipien werden angewendet (Datenminimierung, Einwilligungsmanagement)",
+          "min_level": 3,
+          "sources": [
+            "Microsoft RAI MM",
+            "UNESCO",
+            "EU AI Act"
+          ],
+          "category": "Privacy",
+          "evidence_tags": [
+            {
+              "source": "Microsoft RAI Maturity Model",
+              "reference": "Privacy — Privacy by Design",
+              "url": "https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/"
+            },
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 1 — Privacy & Data Protection",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            },
+            {
+              "source": "EU AI Act",
+              "reference": "Recital 45 — Data Protection Compliance",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            }
+          ]
+        },
+        {
+          "id": "ETH-08",
+          "text": "Red team exercises for AI systems are conducted regularly",
+          "text_de": "Red-Team-Übungen für AI-Systeme werden regelmäßig durchgeführt",
+          "min_level": 4,
+          "sources": [
+            "Microsoft RAI MM"
+          ],
+          "category": "Safety",
+          "evidence_tags": [
+            {
+              "source": "Microsoft RAI Maturity Model",
+              "reference": "Safety — Red Teaming",
+              "url": "https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/"
+            }
+          ]
+        },
+        {
+          "id": "ETH-09",
+          "text": "Users are transparently informed when interacting with AI systems",
+          "text_de": "Nutzer werden transparent informiert, wenn sie mit AI-Systemen interagieren",
+          "min_level": 2,
+          "sources": [
+            "EU AI Act",
+            "UNESCO"
+          ],
+          "category": "Transparency",
+          "evidence_tags": [
+            {
+              "source": "EU AI Act",
+              "reference": "Article 50 — Transparency Obligations for AI Interaction",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
+            },
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 1 — Transparency & Explainability",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            }
+          ]
+        },
+        {
+          "id": "ETH-10",
+          "text": "External responsible AI transparency reports are published",
+          "text_de": "Externe Responsible-AI-Transparenzberichte werden veröffentlicht",
+          "min_level": 5,
+          "sources": [
+            "Microsoft RAI MM"
+          ],
+          "category": "Accountability",
+          "evidence_tags": [
+            {
+              "source": "Microsoft RAI Maturity Model",
+              "reference": "Accountability — External Transparency Reports",
+              "url": "https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "processes",
+      "name": "Processes & Scaling",
+      "name_de": "Prozesse & Skalierung",
+      "icon": "🔄",
+      "weight": 0.1,
+      "description": "AI project lifecycle management, scaling from pilots to production, and change management.",
+      "sources": [
+        "NIST AI RMF (Manage)",
+        "OWASP AIMA",
+        "Google AI Adoption Framework"
+      ],
+      "checkpoints": [
+        {
+          "id": "PRC-01",
+          "text": "Standardized AI project management methodology is in place",
+          "text_de": "Eine standardisierte AI-Projektmanagement-Methodik ist etabliert",
+          "min_level": 3,
+          "sources": [
+            "UNESCO",
+            "OWASP AIMA"
+          ],
+          "category": "Project Management",
+          "evidence_tags": [
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 6 — Project Governance",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            },
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "Secure Development Lifecycle",
+              "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
+            }
+          ]
+        },
+        {
+          "id": "PRC-02",
+          "text": "Clear process for transitioning AI from pilot/prototype to production exists",
+          "text_de": "Ein klarer Prozess für den Übergang von AI-Pilot/Prototyp zur Produktion existiert",
+          "min_level": 3,
+          "sources": [
+            "Google AI Adoption Framework",
+            "OWASP AIMA"
+          ],
+          "category": "Lifecycle",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Process Pillar — Pilot to Production",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            },
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "Production Readiness Checklist",
+              "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
+            }
+          ]
+        },
+        {
+          "id": "PRC-03",
+          "text": "Change management processes accompany AI-driven organizational changes",
+          "text_de": "Change-Management-Prozesse begleiten AI-getriebene organisatorische Veränderungen",
+          "min_level": 3,
+          "sources": [
+            "UNESCO"
+          ],
+          "category": "Change Management",
+          "evidence_tags": [
+            {
+              "source": "UNESCO AI Readiness",
+              "reference": "Pillar 6 — Organizational Change Management",
+              "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics"
+            }
+          ]
+        },
+        {
+          "id": "PRC-04",
+          "text": "Operational runbooks for AI system maintenance and troubleshooting exist",
+          "text_de": "Operationale Runbooks für AI-System-Wartung und Fehlerbehebung existieren",
+          "min_level": 3,
+          "sources": [
+            "OWASP AIMA"
+          ],
+          "category": "Operations",
+          "evidence_tags": [
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "Operational Runbooks & Playbooks",
+              "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
+            }
+          ]
+        },
+        {
+          "id": "PRC-05",
+          "text": "Lessons learned from AI projects/incidents are documented and shared",
+          "text_de": "Lessons Learned aus AI-Projekten/Vorfällen werden dokumentiert und geteilt",
+          "min_level": 3,
+          "sources": [
+            "NIST AI RMF (MAN-1)",
+            "Microsoft RAI MM"
+          ],
+          "category": "Improvement",
+          "evidence_tags": [
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "MANAGE 1.3 — Post-Deployment Lessons",
+              "url": "https://airc.nist.gov/AI_RMF"
+            },
+            {
+              "source": "Microsoft RAI Maturity Model",
+              "reference": "Practices — Knowledge Sharing",
+              "url": "https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/"
+            }
+          ]
+        },
+        {
+          "id": "PRC-06",
+          "text": "AI is deployed across multiple business units with repeatable delivery patterns",
+          "text_de": "AI wird über mehrere Geschäftsbereiche hinweg mit wiederholbaren Delivery-Patterns eingesetzt",
+          "min_level": 4,
+          "sources": [
+            "Google AI Adoption Framework"
+          ],
+          "category": "Scaling",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Process Pillar — Scaling AI Across BUs",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        },
+        {
+          "id": "PRC-07",
+          "text": "Capacity planning for AI compute resources is performed regularly",
+          "text_de": "Kapazitätsplanung für AI-Compute-Ressourcen wird regelmäßig durchgeführt",
+          "min_level": 4,
+          "sources": [
+            "OWASP AIMA"
+          ],
+          "category": "Operations",
+          "evidence_tags": [
+            {
+              "source": "OWASP AI Security Matrix",
+              "reference": "Resource & Capacity Management",
+              "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
+            }
+          ]
+        },
+        {
+          "id": "PRC-08",
+          "text": "Continuous experimentation culture (A/B testing, rapid iteration) is established",
+          "text_de": "Eine Kultur des kontinuierlichen Experimentierens (A/B-Tests, schnelle Iteration) ist etabliert",
+          "min_level": 4,
+          "sources": [
+            "Google AI Adoption Framework"
+          ],
+          "category": "Culture",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Process Pillar — Experimentation Culture",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        },
+        {
+          "id": "PRC-09",
+          "text": "AI agents are integrated into daily workflows across the organization",
+          "text_de": "AI-Agenten sind in die täglichen Arbeitsabläufe der gesamten Organisation integriert",
+          "min_level": 5,
+          "sources": [
+            "Google AI Adoption Framework"
+          ],
+          "category": "Transformation",
+          "evidence_tags": [
+            {
+              "source": "Google Cloud AI Adoption Framework",
+              "reference": "Transformation Pillar — Ambient AI Integration",
+              "url": "https://cloud.google.com/adoption-framework/ai"
+            }
+          ]
+        },
+        {
+          "id": "CP_pr_10",
+          "text": "Recurring AI use cases across multiple departments are identified and documented to establish shared standards and reduce redundant work.",
+          "text_de": "Wiederkehrende KI-Anwendungsfälle über mehrere Abteilungen hinweg werden identifiziert und dokumentiert, um gemeinsame Standards zu etablieren und redundante Arbeit zu reduzieren.",
+          "min_level": 2,
+          "category": "Process Standardization",
+          "sources": [
+            "The AI Maturity Journey: How to Move from Experiments to Enterprise Transformation"
+          ],
+          "evidence_tags": []
+        },
+        {
+          "id": "CP_pr_11",
+          "text": "Manual data preparation and operational processes are systematically automated to eliminate bottlenecks and enable AI scalability.",
+          "text_de": "Manuelle Datenaufbereitungs- und Betriebsprozesse werden systematisch automatisiert, um Engpässe zu beseitigen und die Skalierbarkeit von KI zu ermöglichen.",
+          "min_level": 3,
+          "category": "Operational Efficiency",
+          "sources": [
+            "The AI Maturity Journey: How to Move from Experiments to Enterprise Transformation"
+          ],
+          "evidence_tags": []
+        },
+        {
+          "id": "CP_pr_12",
+          "text": "AI capabilities are expanded beyond isolated tasks to optimize and automate complete end-to-end cross-functional business processes.",
+          "text_de": "KI-Fähigkeiten werden über isolierte Aufgaben hinaus erweitert, um vollständige, abteilungsübergreifende End-to-End-Geschäftsprozesse zu optimieren und zu automatisieren.",
+          "min_level": 4,
+          "category": "Process Automation",
+          "sources": [
+            "The AI Maturity Journey: How to Move from Experiments to Enterprise Transformation"
+          ],
+          "evidence_tags": [],
+          "added_at": "2026-04-17T20:45:38.790408+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_pr_13",
+          "text": "Autonomous workflows are implemented that dynamically adjust their routing and decision logic based on changing conditions and real-time AI intelligence.",
+          "text_de": "Autonome Workflows sind implementiert, die ihre Routing- und Entscheidungslogik basierend auf veränderten Bedingungen und Echtzeit-KI-Intelligenz dynamisch anpassen.",
+          "min_level": 5,
+          "category": "Process Automation",
+          "sources": [
+            "The AI Maturity Journey: How to Move from Experiments to Enterprise Transformation"
+          ],
+          "evidence_tags": [],
+          "added_at": "2026-04-17T20:45:38.790408+00:00",
+          "added_by": "framework_builder"
+        }
+      ]
+    }
+  ]
+}

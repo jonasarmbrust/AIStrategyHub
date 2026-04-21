@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AI Strategy Hub — Assess your organization's AI readiness with synthesized best practices from NIST, EU AI Act, Google, Microsoft, OWASP, and UNESCO." />
+    <title>AI Strategy Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔷</text></svg>">
+</head>
+<body>
+    <div id="app">
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🔷</span>
+                    <div class="logo-text">
+                        <h1>AI Strategy Hub</h1>
+                        <span class="logo-subtitle">Powered by OAIMM Framework</span>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#dashboard" class="nav-link active" data-page="dashboard"><span class="nav-icon">📊</span>Dashboard</a></li>
+                <li><a href="#explorer" class="nav-link" data-page="explorer"><span class="nav-icon">🗺️</span>Framework Explorer</a></li>
+                <li><a href="#assessment" class="nav-link" data-page="assessment"><span class="nav-icon">✅</span>Assessment</a></li>
+                <li><a href="#analyzer" class="nav-link" data-page="analyzer"><span class="nav-icon">🔍</span>Document Analyzer</a></li>
+                <li><a href="#framework-builder" class="nav-link" data-page="framework-builder"><span class="nav-icon">🏗️</span>Framework Builder</a></li>
+                <li><a href="#research" class="nav-link" data-page="research"><span class="nav-icon">🔬</span>Research Agent</a></li>
+                <li><a href="#meta-strategy" class="nav-link" data-page="meta-strategy"><span class="nav-icon">🧭</span>Meta Strategy</a></li>
+                <li><a href="#eu-ai-act" class="nav-link" data-page="eu-ai-act" style="color: #06b6d4;"><span class="nav-icon">⚖️</span>EU AI Act Engine</a></li>
+                <li><a href="#roadmap" class="nav-link" data-page="roadmap"><span class="nav-icon">🗺️</span>Roadmap</a></li>
+                <li><a href="#advisor" class="nav-link" data-page="advisor" style="color: #a78bfa;"><span class="nav-icon">🧠</span>AI Strategy Advisor</a></li>
+                <li><a href="#simulator" class="nav-link" data-page="simulator" style="color: #2dd4bf;"><span class="nav-icon">🎮</span>Gap Simulator</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="api-status" id="api-status">
+                    <span class="status-dot offline"></span>
+                    <span>Backend Offline</span>
+                </div>
+            </div>
+        </nav>
+        <main id="main-content" class="main-content">
+            <!-- Pages rendered here by router -->
+        </main>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
