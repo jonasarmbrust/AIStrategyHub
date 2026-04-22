@@ -69,7 +69,7 @@ async def import_url(url: str = Form(...), title: str = Form("Imported Source"))
     # Fetch content
     try:
         async with httpx.AsyncClient(follow_redirects=True, timeout=30) as client:
-            resp = await client.get(url, headers={"User-Agent": "OAIMM Bot/1.0"})
+            resp = await client.get(url, headers={"User-Agent": "AI-Strategy-Hub/2.0"})
             resp.raise_for_status()
             raw_content = resp.text
     except Exception as e:

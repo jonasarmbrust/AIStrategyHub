@@ -1,5 +1,5 @@
 """
-Pydantic models for the OAIMM (Open AI Maturity Meta-Model) API.
+Pydantic models for the AI Strategy Hub API.
 Defines request/response schemas for all endpoints.
 """
 

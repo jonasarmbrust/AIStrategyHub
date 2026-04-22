@@ -27,7 +27,7 @@ export function renderAdvisor(container) {
           <div class="advisor-avatar">🧠</div>
           <div class="advisor-bubble">
             <div class="advisor-bubble-content">
-              <strong>Welcome!</strong> I'm your AI Strategy Advisor, powered by Gemini Pro and grounded in the full OAIMM framework.<br><br>
+              <strong>Welcome!</strong> I'm your AI Strategy Advisor, powered by Gemini Pro and grounded in the full maturity framework.<br><br>
               I know your current assessment scores, gaps, strengths, and research sources. Ask me anything about your AI maturity strategy.
             </div>
             <div class="advisor-suggestions">

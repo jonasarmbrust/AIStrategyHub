@@ -9,7 +9,7 @@ export function renderAnalyzer(container) {
   container.innerHTML = `
     <div class="page-header">
       <h1 class="page-title">Document Analyzer</h1>
-      <p class="page-description">Upload your AI strategy documents — the RAG pipeline checks them against all checkpoints of the OAIMM meta-model using Gemini.</p>
+      <p class="page-description">Upload your AI strategy documents — the RAG pipeline checks them against all checkpoints of the maturity model using Gemini.</p>
     </div>
 
     <div class="grid-2 mb-xl">

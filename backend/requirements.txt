@@ -1,4 +1,4 @@
-# OAIMM — Open AI Maturity Meta-Model Backend Dependencies
+# AI Strategy Hub — Backend Dependencies
 fastapi==0.115.0
 uvicorn[standard]==0.30.0
 pydantic==2.9.0

@@ -1,5 +1,5 @@
 /**
- * AI Strategy Hub — Powered by the OAIMM Framework
+ * AI Strategy Hub
  * Main Application Entry Point
  * SPA Router, API client, and toast notifications.
  */
@@ -65,7 +65,7 @@ export const api = {
     const blob = await res.blob();
     const disposition = res.headers.get('Content-Disposition') || '';
     const match = disposition.match(/filename=(.+)/);
-    const filename = match ? match[1] : 'oaimm_report';
+    const filename = match ? match[1] : 'ai_strategy_hub_report';
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;

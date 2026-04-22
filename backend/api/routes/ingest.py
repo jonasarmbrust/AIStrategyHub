@@ -1,6 +1,6 @@
 """
 Source Ingestion API — Analyze external sources and integrate insights
-into the OAIMM maturity model.
+into the maturity model.
 
 Workflow:
 1. User provides URL or uploads file
@@ -90,7 +90,7 @@ async def analyze_url(url: str = Form(...), title: str = Form("")):
     # Fetch content
     try:
         async with httpx.AsyncClient(follow_redirects=True, timeout=30) as client:
-            resp = await client.get(url, headers={"User-Agent": "OAIMM Research Bot/1.0"})
+            resp = await client.get(url, headers={"User-Agent": "AI-Strategy-Hub/2.0"})
             resp.raise_for_status()
             raw_content = resp.text
     except Exception as e:

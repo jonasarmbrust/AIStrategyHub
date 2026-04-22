@@ -1,30 +1,33 @@
 # 🔷 AI Strategy Hub
 
-**Assess, analyze, and optimize your organization's AI maturity — powered by the OAIMM (Open AI Maturity Meta-Model) framework.**
+**Assess, analyze, and optimize your organization's AI maturity — powered by a unified framework synthesizing 6 globally recognized standards.**
 
-AI Strategy Hub is a full-stack AI strategy assessment platform that synthesizes best practices from **6 globally recognized frameworks** (NIST AI RMF, EU AI Act, Google, Microsoft, OWASP, UNESCO) into a unified, actionable maturity model with 7 dimensions and 69+ checkpoints.
+AI Strategy Hub is a full-stack AI strategy assessment platform that combines best practices from **NIST AI RMF**, **EU AI Act**, **Google**, **Microsoft**, **OWASP**, and **UNESCO** into a single, actionable maturity model with 7 dimensions and 69+ checkpoints.
 
 ---
 
 ## ✨ Key Features
 
 ### 🧠 AI Strategy Advisor
-An interactive chatbot powered by **Gemini 3.1 Pro** that acts as your personal AI strategy consultant. It knows your current assessment scores, gaps, and research sources — and provides actionable, context-aware advice grounded in the OAIMM framework.
+An interactive chatbot powered by **Gemini 3.1 Pro** that acts as your personal AI strategy consultant. It knows your current assessment scores, gaps, and research sources — and provides actionable, context-aware advice.
 
 ### 📊 Maturity Assessment
-Interactive checklist across 7 dimensions with automated scoring, level classification (1-5), and radar chart visualization. Checkpoints are traced to their original framework source for full transparency.
+Interactive checklist across 7 dimensions with automated scoring, level classification (1–5), and radar chart visualization. Every checkpoint is traced to its original framework source for full transparency.
 
 ### 🔍 Document Analyzer (RAG Pipeline)
-Upload your AI strategy documents (PDF, DOCX, TXT) — the RAG pipeline uses ChromaDB embeddings + Gemini to check them against all checkpoints. Each checkpoint receives a coverage verdict with confidence score and evidence.
+Drag & drop your AI strategy documents (PDF, DOCX, TXT) — the RAG pipeline uses embeddings + Gemini to check them against all checkpoints. Each checkpoint receives a coverage verdict with confidence score and evidence.
+
+### 🔗 Evidence Chain (Traceability)
+Click any analyzed checkpoint to see the AI's reasoning: coverage status, confidence percentage, evidence text, recommendation, and the original source text chunks.
 
 ### 🔬 Research Agent
 Automated AI-powered research using Tavily API. Discovers new frameworks, regulations, and best practices — automatically evaluated for relevance to your maturity model.
 
 ### 🏗️ Framework Builder
-Extract novel checkpoints from any research document and integrate them into the living OAIMM meta-model. The framework evolves as you feed it new knowledge.
+Extract novel checkpoints from any research document and integrate them into the living meta-model. The framework evolves as you feed it new knowledge.
 
 ### ⚖️ EU AI Act Compliance Engine
-Maps your assessment gaps directly to EU AI Act requirements. Shows compliance readiness score, regulatory exposure level, and links gaps to specific EU AI Act articles with fine amounts.
+Maps your assessment gaps directly to EU AI Act requirements. Shows compliance readiness score, regulatory exposure level, and links gaps to specific articles with fine amounts.
 
 ### 🎮 Gap Simulator ("What-If Analysis")
 Interactive score simulation — toggle unfulfilled checkpoints and see the exact impact on your maturity score in real-time. Discover which actions have the highest ROI.
@@ -106,8 +109,8 @@ cd backend
 pip install -r requirements.txt
 
 # Create .env file
-echo "GEMINI_API_KEY=your_key_here" > ../.env
-echo "TAVILY_API_KEY=your_key_here" >> ../.env
+cp ../.env.example ../.env
+# Then edit .env with your API keys
 
 # Frontend setup
 cd ../frontend
@@ -123,9 +126,9 @@ Then open **http://localhost:8000** in your browser.
 
 ---
 
-## 📊 The OAIMM Framework
+## 📊 The Maturity Framework
 
-The **Open AI Maturity Meta-Model** synthesizes 6 globally recognized frameworks into 7 unified dimensions:
+The model synthesizes 6 globally recognized frameworks into 7 unified dimensions:
 
 | Dimension | Weight | Focus |
 |-----------|--------|-------|
@@ -137,15 +140,26 @@ The **Open AI Maturity Meta-Model** synthesizes 6 globally recognized frameworks
 | 🛡️ Ethics & Responsible AI | 15% | Bias testing, explainability, privacy, human oversight |
 | 🔄 Processes & Scaling | 10% | Pilot-to-production, change management, platformization |
 
+### Source Frameworks
+
+Every checkpoint is traceable to its origin:
+
+- **NIST AI RMF** — Risk management & governance structure
+- **EU AI Act** — Regulatory compliance & risk classification
+- **Google AI Adoption Framework** — Cloud-native AI scaling
+- **Microsoft Responsible AI Maturity Model** — RAI practices at scale
+- **OWASP AI Security Matrix** — AI-specific security threats
+- **UNESCO AI Readiness** — National & organizational readiness indicators
+
 ### Maturity Levels
 
 | Level | Name | Score Range |
 |-------|------|-------------|
-| 1 | Initial | 0-24% |
-| 2 | Developing | 25-49% |
-| 3 | Defined | 50-69% |
-| 4 | Managed | 70-89% |
-| 5 | Optimizing | 90-100% |
+| 1 | Initial | 0–24% |
+| 2 | Developing | 25–49% |
+| 3 | Defined | 50–69% |
+| 4 | Managed | 70–89% |
+| 5 | Optimizing | 90–100% |
 
 ---
 
@@ -189,8 +203,8 @@ AIStrategyHub/
 │           ├── roadmap.js      # Strategic Roadmap
 │           └── simulator.js    # Gap Simulator
 └── data/
-    ├── strategy_hub.db         # SQLite database
-    └── dimensions.json         # OAIMM framework definition
+    ├── strategy_hub.db         # SQLite database (gitignored)
+    └── dimensions.json         # Framework definition
 ```
 
 ---
@@ -198,8 +212,8 @@ AIStrategyHub/
 ## 🔑 Data Flow
 
 ```
-Research Agent → finds sources → Document Analyzer → evaluates checkpoints
-                                                          ↓
+Research Agent → discovers sources → Document Analyzer → evaluates checkpoints
+                                                              ↓
 Framework Builder ← extracts novel checkpoints ← Research sources
         ↓
   dimensions.json (living meta-model)

@@ -21,7 +21,7 @@ const STRATEGIC_GUIDANCE = {
       { text: 'Establish cross-functional AI steering committees with business + tech representation', level: 3, source: 'NIST AI RMF' },
       { text: 'Conduct quarterly AI portfolio reviews to assess ROI and strategic fit', level: 4, source: 'Microsoft RAI' },
       { text: 'Build an AI Center of Excellence (CoE) that drives org-wide standards', level: 4, source: 'Google AI Adoption' },
-      { text: 'Benchmark against industry peers using maturity models like OAIMM', level: 3, source: 'UNESCO + NIST' },
+      { text: 'Benchmark against industry peers using structured maturity models', level: 3, source: 'UNESCO + NIST' },
     ],
     donts: [
       { text: 'Don\'t start AI projects without a clear business problem to solve', severity: 'critical' },
@@ -254,7 +254,7 @@ export function renderMetaStrategy(container) {
         <button class="btn btn-primary btn-sm" id="btn-ai-recommend">🤖 Generate AI Recommendations</button>
       </div>
       <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">
-        The OAIMM meta-model synthesizes <strong>6 frameworks</strong> (NIST, EU AI Act, Google, Microsoft, OWASP, UNESCO) into <strong>7 dimensions</strong> with <strong>69 checkpoints</strong>. 
+        This meta-model synthesizes <strong>6 frameworks</strong> (NIST, EU AI Act, Google, Microsoft, OWASP, UNESCO) into <strong>7 dimensions</strong> with <strong>69 checkpoints</strong>. 
         This page distills the strategic essence — what the world's leading frameworks agree on, where they differ, and what you should (and should not) do at each maturity level.
       </div>
       <div class="grid-3" id="framework-stats">

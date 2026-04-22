@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "model_name": "Open AI Maturity Meta-Model (OAIMM)",
+  "model_name": "AI Strategy Hub Maturity Model",
   "description": "A meta-model for AI maturity assessment synthesized from global best practices: NIST AI RMF, EU AI Act, Google Cloud AI Adoption Framework, Microsoft RAI Maturity Model, OWASP AI Security Matrix, and UNESCO AI Readiness Framework. Every recommendation is traceable to its original source.",
   "maturity_levels": [
     {

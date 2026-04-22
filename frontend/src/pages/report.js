@@ -130,7 +130,7 @@ export async function renderReport(container) {
           </div>
           
           <div style="margin-top: 3rem; text-align: center; border-top: 1px solid #e5e7eb; padding-top: 1rem; color: #9ca3af; font-size: 0.8em;">
-            AI Strategy Hub &nbsp;•&nbsp; Powered by OAIMM Framework &nbsp;•&nbsp; Gemini 3.1 Pro
+            AI Strategy Hub &nbsp;•&nbsp; Built on NIST, EU AI Act & 4 more &nbsp;•&nbsp; Gemini 3.1 Pro
           </div>
         </div>
       </div>
@@ -237,7 +237,7 @@ async function generatePDF() {
     y += 6;
     doc.setFontSize(8);
     doc.setTextColor(150, 150, 150);
-    doc.text('AI Strategy Hub  •  Powered by OAIMM Framework  •  Gemini 3.1 Pro', pageWidth / 2, y, { align: 'center' });
+    doc.text('AI Strategy Hub  •  Built on NIST, EU AI Act & 4 more  •  Gemini 3.1 Pro', pageWidth / 2, y, { align: 'center' });
 
     // Save
     doc.save(`AI_Strategy_Hub_Executive_Briefing_${new Date().toISOString().split('T')[0]}.pdf`);

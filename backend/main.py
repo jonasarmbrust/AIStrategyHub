@@ -1,5 +1,5 @@
 """
-AI Strategy Hub — Powered by the OAIMM Framework
+AI Strategy Hub
 FastAPI Backend — Main application entry point.
 """
 

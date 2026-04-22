@@ -183,7 +183,7 @@ function renderMatrix() {
         const res = await fetch('/api/analysis/deep-dive', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: cpText, context: `OAIMM Checkpoint ${cpId}` })
+          body: JSON.stringify({ text: cpText, context: `Checkpoint ${cpId}` })
         });
         const data = await res.json();
         
