@@ -64,5 +64,15 @@ async def init_db():
                 gaps TEXT DEFAULT '[]',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
+
+            CREATE TABLE IF NOT EXISTS framework_activity (
+                id TEXT PRIMARY KEY,
+                action TEXT NOT NULL,
+                source_id TEXT,
+                checkpoint_id TEXT,
+                dimension_id TEXT,
+                details TEXT DEFAULT '{}',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
         """)
         await db.commit()

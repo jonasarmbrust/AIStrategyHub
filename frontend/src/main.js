@@ -16,6 +16,7 @@ import { renderEuAiAct } from './pages/eu_ai_act.js';
 import { renderFrameworkBuilder } from './pages/framework_builder.js';
 import { renderAdvisor } from './pages/advisor.js';
 import { renderSimulator } from './pages/simulator.js';
+import { renderSources } from './pages/sources.js';
 // ── Config ─────────────────────────────────────────────────
 const API_BASE = '/api';
 
@@ -127,6 +128,7 @@ const routes = {
   'framework-builder': renderFrameworkBuilder,
   advisor: renderAdvisor,
   simulator: renderSimulator,
+  sources: renderSources,
 };
 
 function navigateTo(page) {

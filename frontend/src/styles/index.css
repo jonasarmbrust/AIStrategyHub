@@ -828,6 +828,13 @@ select.input option:checked {
   color: var(--accent-emerald);
 }
 
+.fw-extract-panel {
+  margin: 0 var(--space-lg) var(--space-md);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  animation: slideDown 0.3s ease;
+}
+
 /* ── Analysis Items ────────────────────────────────────────── */
 .analysis-item {
   display: flex;

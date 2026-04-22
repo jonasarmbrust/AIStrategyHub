@@ -16,7 +16,7 @@ from typing import Optional
 from database import get_db
 from knowledge_base.checklist_generator import get_maturity_model
 
-DIMENSION_QUERIES = {
+_BASE_DIMENSION_QUERIES = {
     "strategy": "AI strategy leadership enterprise roadmap business alignment",
     "data": "AI data infrastructure governance quality pipeline enterprise",
     "governance": "AI governance compliance EU AI Act regulation risk management framework",
@@ -25,6 +25,48 @@ DIMENSION_QUERIES = {
     "ethics": "responsible AI ethics fairness bias transparency accountability",
     "processes": "AI scaling enterprise pilot to production change management",
 }
+
+
+def get_dimension_queries() -> dict[str, str]:
+    """
+    Dynamic queries enriched by framework_builder checkpoint additions.
+    Creates a feedback loop: integrated checkpoints refine future research.
+    """
+    queries = dict(_BASE_DIMENSION_QUERIES)
+    try:
+        model = get_maturity_model()
+        for dim in model.dimensions:
+            # Find checkpoints added by framework_builder
+            recent_cps = []
+            for cp in dim.checkpoints:
+                # Check raw dict access for added_by field
+                if hasattr(cp, 'added_by') or (hasattr(cp, '__dict__') and cp.__dict__.get('added_by')):
+                    recent_cps.append(cp)
+            # Also check via model_extra or direct attribute
+            if not recent_cps:
+                # Fallback: scan dimensions.json directly for added_by markers
+                import json
+                from pathlib import Path
+                dims_path = Path(__file__).parent.parent / "knowledge_base" / "dimensions.json"
+                if dims_path.exists():
+                    with open(dims_path, "r", encoding="utf-8") as f:
+                        raw = json.load(f)
+                    for raw_dim in raw.get("dimensions", []):
+                        if raw_dim["id"] == dim.id:
+                            for cp_raw in raw_dim.get("checkpoints", []):
+                                if cp_raw.get("added_by") == "framework_builder":
+                                    recent_cps.append(type('CP', (), {'text': cp_raw['text']})())
+            if recent_cps:
+                # Take keywords from up to 3 most recent additions
+                extra_terms = []
+                for cp in recent_cps[-3:]:
+                    words = cp.text.split()[:6]
+                    extra_terms.extend(words)
+                if extra_terms:
+                    queries[dim.id] = f"{queries.get(dim.id, '')} {' '.join(extra_terms)}"
+    except Exception as e:
+        print(f"[Research] Could not enrich queries from framework: {e}")
+    return queries
 
 RELEVANCE_PROMPT = """You are an AI Strategy Research Analyst. Evaluate the relevance of a search result for an AI Strategy Maturity Assessment knowledge base.
 
@@ -115,15 +157,16 @@ async def search_and_store(
         )
 
     # ── Build Search Queries ─────────────────────────────────────
+    dim_queries = get_dimension_queries()
     queries = []
     if query:
         queries.append(query)
     elif dimensions:
-        queries = [DIMENSION_QUERIES[d] for d in dimensions if d in DIMENSION_QUERIES]
+        queries = [dim_queries[d] for d in dimensions if d in dim_queries]
     else:
         # Pick 3 diverse dimensions to avoid rate limits
         selected = ["governance", "strategy", "technology"]
-        queries = [DIMENSION_QUERIES[d] for d in selected]
+        queries = [dim_queries[d] for d in selected]
 
     # ── Execute Tavily Searches ──────────────────────────────────
     all_results = []

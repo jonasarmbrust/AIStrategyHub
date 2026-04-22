@@ -381,6 +381,37 @@ async function loadSources() {
         }
       });
     });
+
+    // Extract for Framework events
+    el.querySelectorAll('.btn-extract-fw').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.id;
+        const panel = document.getElementById(`fw-panel-${id}`);
+        if (!panel) return;
+
+        // Toggle panel if already open
+        if (panel.style.display === 'block') {
+          panel.style.display = 'none';
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = '⏳ ...';
+        panel.style.display = 'block';
+        panel.innerHTML = `<div style="padding: 16px; text-align: center;"><div class="spinner" style="width: 20px; height: 20px; border-width: 2px; display: inline-block;"></div><span style="margin-left: 8px; font-size: 0.82rem; color: var(--text-secondary);">Extracting novel checkpoints...</span></div>`;
+
+        try {
+          const result = await api.post(`/research/sources/${id}/extract-for-framework`);
+          renderInlineProposals(panel, result, id);
+        } catch (err) {
+          panel.innerHTML = `<div style="padding: 12px; font-size: 0.82rem; color: #ef4444;">❌ ${err.message}</div>`;
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '🏗️ Extract';
+        }
+      });
+    });
   } catch {
     el.innerHTML = `
       <div class="empty-state">
@@ -426,8 +457,10 @@ function renderSourceCard(source) {
       </div>
       <div style="display: flex; flex-direction: column; gap: 4px; flex-shrink: 0;">
         ${!source.is_read ? `<button class="btn btn-ghost btn-sm btn-mark-read" data-id="${source.id}">✓ Read</button>` : ''}
+        <button class="btn btn-ghost btn-sm btn-extract-fw" data-id="${source.id}" data-title="${source.title}" title="Extract novel checkpoints for the Framework Builder">🏗️ Extract</button>
       </div>
     </div>
+    <div id="fw-panel-${source.id}" class="fw-extract-panel" style="display: none;"></div>
   `;
 }
 
@@ -606,4 +639,90 @@ function renderIngestResults(result) {
       btn.textContent = '⚡ Integrate All Selected';
     }
   });
+}
+
+// ── Inline Framework Proposal Renderer (One-Click Pipeline) ──────────────
+
+function renderInlineProposals(panel, result, sourceId) {
+  const proposals = result.proposals || [];
+
+  if (proposals.length === 0) {
+    panel.innerHTML = '<div style="padding:16px;border-top:1px solid var(--border-color);background:rgba(16,185,129,0.04);"><div style="font-size:0.85rem;color:var(--accent-emerald);">No novel insights found — the Meta-Model already covers this source.</div></div>';
+    return;
+  }
+
+  const dimColors = {
+    strategy: '#3b82f6', data: '#06b6d4', governance: '#f59e0b',
+    technology: '#8b5cf6', talent: '#10b981', ethics: '#ef4444', processes: '#f97316',
+  };
+
+  let html = '<div style="padding:16px;border-top:1px solid var(--border-color);background:rgba(59,130,246,0.03);">';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">';
+  html += '<span style="font-size:0.85rem;font-weight:600;">&#127959; ' + proposals.length + ' Novel Checkpoint Proposals</span>';
+  html += '<button class="btn btn-primary btn-sm" id="btn-fw-int-' + sourceId + '">&#10133; Integrate Selected (' + proposals.length + ')</button>';
+  html += '</div>';
+
+  proposals.forEach(function(p, idx) {
+    const dc = dimColors[p.dimension_id] || '#8890b5';
+    const dl = DIM_LABELS[p.dimension_id] ? DIM_LABELS[p.dimension_id].name : p.dimension_id;
+    const di = DIM_LABELS[p.dimension_id] ? DIM_LABELS[p.dimension_id].icon : '';
+    const tags = (p.evidence_tags || []).map(function(t) {
+      const shortSrc = (t.source || '').split(' ').slice(0, 3).join(' ');
+      return '<span style="font-size:0.6rem;padding:1px 6px;border-radius:999px;background:rgba(59,130,246,0.08);color:var(--accent-blue);" title="' + (t.reference || '') + '">&#128218; ' + shortSrc + '</span>';
+    }).join('');
+
+    html += '<div style="padding:10px 12px;margin-bottom:8px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;">';
+    html += '<div style="display:flex;align-items:flex-start;gap:8px;">';
+    html += '<input type="checkbox" class="fw-prop-cb" data-idx="' + idx + '" checked style="margin-top:3px;accent-color:' + dc + ';" />';
+    html += '<div style="flex:1;">';
+    html += '<div style="font-size:0.82rem;color:var(--text-primary);line-height:1.4;margin-bottom:4px;">' + p.text + '</div>';
+    html += '<div style="font-size:0.72rem;color:var(--text-muted);font-style:italic;margin-bottom:4px;">&#127465;&#127466; ' + p.text_de + '</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center;">';
+    html += '<span style="font-size:0.6rem;padding:1px 6px;border-radius:999px;background:' + dc + '18;color:' + dc + ';font-weight:600;">' + di + ' ' + dl + '</span>';
+    html += '<span style="font-size:0.6rem;padding:1px 6px;border-radius:999px;background:rgba(255,255,255,0.05);color:var(--text-muted);">L' + p.min_level + ' &middot; ' + p.category + '</span>';
+    html += tags;
+    html += '</div>';
+    if (p.rationale) {
+      html += '<div style="font-size:0.68rem;color:var(--text-secondary);margin-top:4px;">&#128161; ' + p.rationale + '</div>';
+    }
+    html += '</div></div></div>';
+  });
+
+  html += '</div>';
+  panel.innerHTML = html;
+
+  // Checkbox counter
+  var updateCount = function() {
+    var checked = panel.querySelectorAll('.fw-prop-cb:checked').length;
+    var intBtn = document.getElementById('btn-fw-int-' + sourceId);
+    if (intBtn) {
+      intBtn.textContent = '➕ Integrate Selected (' + checked + ')';
+      intBtn.disabled = checked === 0;
+    }
+  };
+  panel.querySelectorAll('.fw-prop-cb').forEach(function(cb) { cb.addEventListener('change', updateCount); });
+
+  // Integrate handler
+  var intBtn = document.getElementById('btn-fw-int-' + sourceId);
+  if (intBtn) {
+    intBtn.addEventListener('click', async function() {
+      var checked = Array.from(panel.querySelectorAll('.fw-prop-cb:checked'));
+      var selected = checked.map(function(cb) { return proposals[parseInt(cb.dataset.idx)]; });
+      if (selected.length === 0) return;
+
+      intBtn.disabled = true;
+      intBtn.textContent = 'Integrating...';
+
+      try {
+        var res = await api.post('/framework/integrate', { checkpoints: selected });
+        var count = res.added || 0;
+        showToast(count + ' checkpoints integrated into the Meta-Model!', 'success');
+        panel.innerHTML = '<div style="padding:16px;border-top:1px solid var(--border-color);background:rgba(16,185,129,0.06);"><div style="font-size:0.85rem;color:var(--accent-emerald);">✅ ' + count + ' checkpoints successfully integrated! <a href="#explorer" style="color:var(--accent-blue);margin-left:8px;">View in Explorer →</a></div></div>';
+      } catch (e) {
+        showToast('Integration failed: ' + e.message, 'error');
+        intBtn.disabled = false;
+        intBtn.textContent = '➕ Integrate Selected';
+      }
+    });
+  }
 }

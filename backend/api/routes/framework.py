@@ -2,6 +2,11 @@
 Framework Integration API routes.
 Allows extracting missing checkpoints from new research documents
 and merging them into the active Meta-Model.
+
+Enhanced with:
+- Auto-enrichment of proposals with research evidence (improvement #2)
+- Research coverage analysis endpoint (improvement #3)
+- Activity logging on integrate (improvement #5)
 """
 
 from __future__ import annotations
@@ -13,7 +18,7 @@ from pathlib import Path
 from typing import List
 
 import google.generativeai as genai
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 
 from database import get_db
@@ -40,6 +45,11 @@ class IntegrableCheckpoint(BaseModel):
     category: str
     sources: List[str]
     rationale: str
+    # New: optional fields from research enrichment
+    research_source_id: str = ""
+    research_source_url: str = ""
+    research_source_title: str = ""
+    evidence_tags: list = []
 
 
 class IntegrateRequest(BaseModel):
@@ -112,7 +122,7 @@ Respond EXACTLY in this JSON format:
 """
 
     try:
-        gemini_model = genai.GenerativeModel("gemini-3.1-pro-preview")
+        gemini_model = genai.GenerativeModel("gemini-2.5-flash")
         response = gemini_model.generate_content(
             prompt,
             generation_config=genai.GenerationConfig(
@@ -127,6 +137,9 @@ Respond EXACTLY in this JSON format:
         for p in proposals:
             short_id = str(uuid.uuid4())[:6].upper()
             p["id"] = f"NEW_{short_id}"
+
+        # ── Auto-Enrich: attach matching research sources as evidence_tags ──
+        proposals = await _enrich_proposals_with_research(proposals)
             
         return {"proposals": proposals}
     except Exception as e:
@@ -143,6 +156,7 @@ async def integrate_checkpoints(request: IntegrateRequest):
         data = json.load(f)
 
     added_count = 0
+    added_details = []
     for new_cp in request.checkpoints:
         # Find the targeted dimension
         target_dim = next((d for d in data.get("dimensions", []) if d["id"] == new_cp.dimension_id), None)
@@ -152,6 +166,16 @@ async def integrate_checkpoints(request: IntegrateRequest):
             final_id = f"CP_{target_dim['id'][:2]}_{cp_count + 1:02d}"
             
             from datetime import datetime, timezone
+            
+            # Build evidence tags from research enrichment
+            evidence_tags = []
+            if new_cp.evidence_tags:
+                evidence_tags = [
+                    {"source": t.get("source", ""), "reference": t.get("reference", ""), "url": t.get("url", "")}
+                    for t in new_cp.evidence_tags
+                    if t.get("source")
+                ]
+            
             checkpoint_obj = {
                 "id": final_id,
                 "text": new_cp.text,
@@ -159,12 +183,18 @@ async def integrate_checkpoints(request: IntegrateRequest):
                 "min_level": new_cp.min_level,
                 "category": new_cp.category,
                 "sources": new_cp.sources,
-                "evidence_tags": [],
+                "evidence_tags": evidence_tags,
                 "added_at": datetime.now(timezone.utc).isoformat(),
                 "added_by": "framework_builder"
             }
             target_dim["checkpoints"].append(checkpoint_obj)
             added_count += 1
+            added_details.append({
+                "id": final_id,
+                "dimension": new_cp.dimension_id,
+                "text": new_cp.text[:60],
+                "research_source": new_cp.research_source_title or "",
+            })
 
     if added_count > 0:
         with open(DIMENSIONS_PATH, "w", encoding="utf-8") as f:
@@ -174,4 +204,165 @@ async def integrate_checkpoints(request: IntegrateRequest):
         from knowledge_base.checklist_generator import clear_cache
         clear_cache()
 
-    return {"status": "success", "added": added_count}
+        # ── Log activity for each integrated checkpoint ──
+        for detail in added_details:
+            await _log_activity(
+                action="checkpoint_integrated",
+                checkpoint_id=detail["id"],
+                dimension_id=detail["dimension"],
+                details=json.dumps({
+                    "text": detail["text"],
+                    "research_source": detail.get("research_source", ""),
+                }),
+            )
+
+    return {"status": "success", "added": added_count, "details": added_details}
+
+
+# ── Research Coverage Analysis (improvement #3) ───────────────────────────
+
+@router.get("/coverage")
+async def coverage_analysis():
+    """
+    Analyze research coverage per dimension.
+    Shows which dimensions have the most/least research backing,
+    helping users focus their research efforts.
+    """
+    # Load model
+    model = _load_model()
+    
+    # Count research sources per dimension from DB
+    db = await get_db()
+    try:
+        cursor = await db.execute(
+            "SELECT relevant_dimensions, relevance_score FROM research_sources"
+        )
+        rows = await cursor.fetchall()
+    finally:
+        await db.close()
+
+    # Parse and aggregate
+    dim_source_counts = {}
+    dim_avg_relevance = {}
+    for row in rows:
+        dims = json.loads(row["relevant_dimensions"] or "[]")
+        score = row["relevance_score"] or 0
+        for d in dims:
+            dim_source_counts[d] = dim_source_counts.get(d, 0) + 1
+            if d not in dim_avg_relevance:
+                dim_avg_relevance[d] = []
+            dim_avg_relevance[d].append(score)
+
+    # Build coverage report
+    coverage = []
+    for dim in model.dimensions:
+        cp_count = len(dim.checkpoints)
+        source_count = dim_source_counts.get(dim.id, 0)
+        avg_rel = 0
+        if dim.id in dim_avg_relevance and dim_avg_relevance[dim.id]:
+            avg_rel = sum(dim_avg_relevance[dim.id]) / len(dim_avg_relevance[dim.id])
+        
+        # Coverage ratio: sources per checkpoint (normalized)
+        ratio = min(source_count / max(cp_count, 1), 1.0)
+        
+        if ratio >= 0.6:
+            status = "well-covered"
+        elif ratio >= 0.3:
+            status = "moderate"
+        else:
+            status = "under-researched"
+
+        # Count framework_builder additions
+        fb_count = 0
+        with open(DIMENSIONS_PATH, "r", encoding="utf-8") as f:
+            raw = json.load(f)
+        for raw_dim in raw.get("dimensions", []):
+            if raw_dim["id"] == dim.id:
+                fb_count = sum(1 for cp in raw_dim.get("checkpoints", []) if cp.get("added_by") == "framework_builder")
+
+        coverage.append({
+            "dimension_id": dim.id,
+            "dimension_name": dim.name,
+            "icon": dim.icon,
+            "checkpoints": cp_count,
+            "research_sources": source_count,
+            "framework_builder_additions": fb_count,
+            "avg_relevance": round(avg_rel, 2),
+            "coverage_ratio": round(ratio, 2),
+            "status": status,
+        })
+
+    # Sort by coverage ratio ascending (most gaps first)
+    coverage.sort(key=lambda x: x["coverage_ratio"])
+
+    return {
+        "coverage": coverage,
+        "total_checkpoints": sum(c["checkpoints"] for c in coverage),
+        "total_sources": sum(c["research_sources"] for c in coverage),
+        "total_fb_additions": sum(c["framework_builder_additions"] for c in coverage),
+    }
+
+
+# ── Helper: Auto-enrich proposals with research evidence ──────────────────
+
+async def _enrich_proposals_with_research(proposals: list) -> list:
+    """
+    Cross-reference proposed checkpoints with existing research sources
+    to auto-attach relevant evidence tags.
+    """
+    if not proposals:
+        return proposals
+
+    db = await get_db()
+    try:
+        for p in proposals:
+            dim_id = p.get("dimension_id", "")
+            if not dim_id:
+                continue
+            
+            cursor = await db.execute(
+                "SELECT title, url, relevance_score FROM research_sources "
+                "WHERE relevant_dimensions LIKE ? AND relevance_score >= 0.5 "
+                "ORDER BY relevance_score DESC LIMIT 3",
+                (f"%{dim_id}%",),
+            )
+            matches = await cursor.fetchall()
+            
+            if matches:
+                evidence_tags = p.get("evidence_tags", [])
+                for m in matches:
+                    evidence_tags.append({
+                        "source": m["title"],
+                        "reference": f"Research Agent (relevance: {m['relevance_score']:.0%})",
+                        "url": m["url"],
+                    })
+                p["evidence_tags"] = evidence_tags
+    finally:
+        await db.close()
+
+    return proposals
+
+
+# ── Helper: Activity logging ──────────────────────────────────────────────
+
+async def _log_activity(
+    action: str,
+    source_id: str = None,
+    checkpoint_id: str = None,
+    dimension_id: str = None,
+    details: str = "{}",
+):
+    """Log an activity to the framework_activity table."""
+    activity_id = str(uuid.uuid4())[:8]
+    db = await get_db()
+    try:
+        await db.execute(
+            """INSERT INTO framework_activity (id, action, source_id, checkpoint_id, dimension_id, details)
+               VALUES (?, ?, ?, ?, ?, ?)""",
+            (activity_id, action, source_id, checkpoint_id, dimension_id, details),
+        )
+        await db.commit()
+    except Exception as e:
+        print(f"[Activity] Failed to log: {e}")
+    finally:
+        await db.close()
