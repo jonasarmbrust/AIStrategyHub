@@ -18,8 +18,6 @@ from analyzer.embedder import delete_collection, search_chunks, store_chunks
 from database import get_db
 from knowledge_base.checklist_generator import get_maturity_model
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY", ""))
-
 UPLOAD_DIR = Path(__file__).parent.parent.parent / "data" / "uploads"
 
 EVALUATION_PROMPT = """You are an AI Strategy Maturity Assessor. You are evaluating whether a company document addresses a specific checkpoint from an AI maturity framework.
@@ -98,6 +96,8 @@ async def evaluate_document(analysis_id: str):
 
     import asyncio
 
+    assessment_dict = {}  # Track covered checkpoints for scoring
+    genai.configure(api_key=os.getenv("GEMINI_API_KEY", ""))
     gemini_model = genai.GenerativeModel("gemini-2.5-flash")
     semaphore = asyncio.Semaphore(5)  # Max 5 concurrent API calls
 

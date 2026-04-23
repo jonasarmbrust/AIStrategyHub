@@ -1,8 +1,18 @@
 # NIST AI Risk Management Framework (AI RMF 1.0)
 
+<!--
+ATTRIBUTION & LICENSE NOTICE
+This document is an independent summary created for the AI Strategy Hub project.
+It is NOT a reproduction of the original NIST publication.
+All content is paraphrased and restructured in the author's own words.
+The original framework is a U.S. Government publication and is in the public domain.
+For the authoritative source, refer to the official URL below.
+-->
+
 > Source: National Institute of Standards and Technology (NIST)
 > URL: https://airc.nist.gov/AI_RMF_Playbook
 > Type: Voluntary, non-prescriptive framework
+> License: Public Domain (U.S. Government Work)
 > Last Updated: 2023 (with ongoing Playbook updates)
 
 ## Overview

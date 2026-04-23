@@ -294,6 +294,209 @@
           "evidence_tags": [],
           "added_at": "2026-04-17T20:45:38.790408+00:00",
           "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_st_15",
+          "text": "A formal data strategy specifically tailored to support AI initiatives and their maturity roadmap is defined and actively managed.",
+          "text_de": "Eine formale Datenstrategie, die speziell auf die Unterstützung von KI-Initiativen und deren Reifegrad-Roadmap zugeschnitten ist, ist definiert und wird aktiv verwaltet.",
+          "min_level": 3,
+          "category": "AI Strategy & Planning",
+          "sources": [
+            "Data Strategy for AI Maturity Model: Stages, Assessment, and Roadmap"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Data Strategy for AI Maturity Model: Stages, Assessment, and Roadmap",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://agility-at-scale.com/ai/data/data-strategy-for-ai-maturity-model/"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity Is Defined and Measured - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2025/12/30/demystifying-ai-industry-frameworks-how-ai-maturity-is-defined-and-measured"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity is Defined and Measured?",
+              "reference": "Related Research Source",
+              "url": "https://www.linkedin.com/pulse/demystifying-ai-industry-frameworks-how-maturity-dr-irina-steenbeek-45vve"
+            }
+          ],
+          "added_at": "2026-04-22T15:29:57.373687+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_st_16",
+          "text": "A methodology is established to assess and quantify the business value and potential ROI of key data assets, specifically in the context of enabling and enhancing AI capabilities.",
+          "text_de": "Eine Methodik zur Bewertung und Quantifizierung des Geschäftswerts und des potenziellen ROI wichtiger Datenbestände ist etabliert, speziell im Kontext der Ermöglichung und Verbesserung von KI-Fähigkeiten.",
+          "min_level": 4,
+          "category": "Strategic Asset Management",
+          "sources": [
+            "Data Strategy for AI Maturity Model: Stages, Assessment, and Roadmap"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Data Strategy for AI Maturity Model: Stages, Assessment, and Roadmap",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://agility-at-scale.com/ai/data/data-strategy-for-ai-maturity-model/"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity Is Defined and Measured - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2025/12/30/demystifying-ai-industry-frameworks-how-ai-maturity-is-defined-and-measured"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity is Defined and Measured?",
+              "reference": "Related Research Source",
+              "url": "https://www.linkedin.com/pulse/demystifying-ai-industry-frameworks-how-maturity-dr-irina-steenbeek-45vve"
+            }
+          ],
+          "added_at": "2026-04-22T15:29:57.373687+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_st_17",
+          "text": "A systematic process is in place to proactively identify and evaluate new AI opportunities across the entire business value chain, beyond existing use cases.",
+          "text_de": "Ein systematischer Prozess ist etabliert, um proaktiv neue KI-Möglichkeiten über die gesamte Wertschöpfungskette des Unternehmens hinweg zu identifizieren und zu bewerten, über bestehende Anwendungsfälle hinaus.",
+          "min_level": 3,
+          "category": "Opportunity Identification",
+          "sources": [
+            "[PDF] Elements of a Comprehensive AI Strategy - appliedAI"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] Elements of a Comprehensive AI Strategy - appliedAI",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://www.appliedai.de/uploads/files/elemente-einer-umfassenden-ki-strategie/Elements-Comprehensive-AI-Strategy-Whitepaper.pdf?v=1743423710"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity Is Defined and Measured - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2025/12/30/demystifying-ai-industry-frameworks-how-ai-maturity-is-defined-and-measured"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity is Defined and Measured?",
+              "reference": "Related Research Source",
+              "url": "https://www.linkedin.com/pulse/demystifying-ai-industry-frameworks-how-maturity-dr-irina-steenbeek-45vve"
+            }
+          ],
+          "added_at": "2026-04-22T15:35:04.503791+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_st_18",
+          "text": "Strategic partnerships with AI technology providers, research institutions, and industry consortia are actively pursued to augment internal capabilities and accelerate innovation.",
+          "text_de": "Strategische Partnerschaften mit KI-Technologieanbietern, Forschungseinrichtungen und Industriekonsortien werden aktiv verfolgt, um interne Fähigkeiten zu erweitern und Innovationen zu beschleunigen.",
+          "min_level": 3,
+          "category": "Ecosystem Engagement",
+          "sources": [
+            "[PDF] Elements of a Comprehensive AI Strategy - appliedAI"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] Elements of a Comprehensive AI Strategy - appliedAI",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://www.appliedai.de/uploads/files/elemente-einer-umfassenden-ki-strategie/Elements-Comprehensive-AI-Strategy-Whitepaper.pdf?v=1743423710"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity Is Defined and Measured - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2025/12/30/demystifying-ai-industry-frameworks-how-ai-maturity-is-defined-and-measured"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity is Defined and Measured?",
+              "reference": "Related Research Source",
+              "url": "https://www.linkedin.com/pulse/demystifying-ai-industry-frameworks-how-maturity-dr-irina-steenbeek-45vve"
+            }
+          ],
+          "added_at": "2026-04-22T15:35:04.503791+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_st_19",
+          "text": "A clearly defined target AI maturity level and a strategic roadmap outlining the steps, investments, and timelines required to achieve it.",
+          "text_de": "Ein klar definiertes Ziel-KI-Reifegradniveau und eine strategische Roadmap, die die erforderlichen Schritte, Investitionen und Zeitpläne zu dessen Erreichung darlegt.",
+          "min_level": 3,
+          "category": "AI Maturity Planning",
+          "sources": [
+            "Understanding AI Maturity: Where Are You Today, and Where Do You Want to Be?"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Understanding AI Maturity: Where Are You Today, and Where Do You Want to Be?",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://www.ciso.inc/blog-posts/understanding-ai-maturity/"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity Is Defined and Measured - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2025/12/30/demystifying-ai-industry-frameworks-how-ai-maturity-is-defined-and-measured"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity is Defined and Measured?",
+              "reference": "Related Research Source",
+              "url": "https://www.linkedin.com/pulse/demystifying-ai-industry-frameworks-how-maturity-dr-irina-steenbeek-45vve"
+            }
+          ],
+          "added_at": "2026-04-22T15:36:42.356723+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_st_20",
+          "text": "The outcomes of AI maturity assessments are directly linked to and actively inform the refinement of the overall AI strategy, investment priorities, and resource allocation.",
+          "text_de": "Die Ergebnisse von KI-Reifegradbewertungen sind direkt mit der Verfeinerung der gesamten KI-Strategie, den Investitionsprioritäten und der Ressourcenallokation verknüpft und fließen aktiv in diese ein.",
+          "min_level": 3,
+          "category": "Strategic Alignment",
+          "sources": [
+            "Understanding AI Maturity: Where Are You Today, and Where Do You Want to Be?"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Understanding AI Maturity: Where Are You Today, and Where Do You Want to Be?",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://www.ciso.inc/blog-posts/understanding-ai-maturity/"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity Is Defined and Measured - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2025/12/30/demystifying-ai-industry-frameworks-how-ai-maturity-is-defined-and-measured"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity is Defined and Measured?",
+              "reference": "Related Research Source",
+              "url": "https://www.linkedin.com/pulse/demystifying-ai-industry-frameworks-how-maturity-dr-irina-steenbeek-45vve"
+            }
+          ],
+          "added_at": "2026-04-22T15:36:42.356723+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_st_21",
+          "text": "A structured framework or methodology is adopted to guide the organization through a defined AI maturity journey, ensuring progressive development across all relevant dimensions (e.g., strategy, data, governance, technology, talent, ethics, processes).",
+          "text_de": "Ein strukturiertes Framework oder eine Methodik wird angewendet, um die Organisation durch eine definierte KI-Reifegradreise zu führen und eine progressive Entwicklung in allen relevanten Dimensionen (z.B. Strategie, Daten, Governance, Technologie, Talent, Ethik, Prozesse) sicherzustellen.",
+          "min_level": 3,
+          "category": "AI Maturity Framework",
+          "sources": [
+            "Understanding AI Maturity: Where Are You Today, and Where Do You Want to Be?"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Understanding AI Maturity: Where Are You Today, and Where Do You Want to Be?",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://www.ciso.inc/blog-posts/understanding-ai-maturity/"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity Is Defined and Measured - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2025/12/30/demystifying-ai-industry-frameworks-how-ai-maturity-is-defined-and-measured"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity is Defined and Measured?",
+              "reference": "Related Research Source",
+              "url": "https://www.linkedin.com/pulse/demystifying-ai-industry-frameworks-how-maturity-dr-irina-steenbeek-45vve"
+            }
+          ],
+          "added_at": "2026-04-22T15:36:42.356723+00:00",
+          "added_by": "framework_builder"
         }
       ]
     },
@@ -521,6 +724,122 @@
               "url": "https://cloud.google.com/adoption-framework/ai"
             }
           ]
+        },
+        {
+          "id": "CP_da_11",
+          "text": "A dedicated and evolving data architecture blueprint is maintained, specifically designed to optimize data flow, storage, and access patterns for diverse AI model training, inference, and continuous learning requirements.",
+          "text_de": "Ein dedizierter und sich entwickelnder Datenarchitektur-Blueprint wird gepflegt, der speziell darauf ausgelegt ist, Datenfluss, Speicherung und Zugriffsmuster für vielfältige Anforderungen an KI-Modelltraining, Inferenz und kontinuierliches Lernen zu optimieren.",
+          "min_level": 3,
+          "category": "Data Architecture",
+          "sources": [
+            "Data Strategy for AI Maturity Model: Stages, Assessment, and Roadmap"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Data Strategy for AI Maturity Model: Stages, Assessment, and Roadmap",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://agility-at-scale.com/ai/data/data-strategy-for-ai-maturity-model/"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity Is Defined and Measured - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2025/12/30/demystifying-ai-industry-frameworks-how-ai-maturity-is-defined-and-measured"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity is Defined and Measured?",
+              "reference": "Related Research Source",
+              "url": "https://www.linkedin.com/pulse/demystifying-ai-industry-frameworks-how-maturity-dr-irina-steenbeek-45vve"
+            }
+          ],
+          "added_at": "2026-04-22T15:29:57.373687+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_da_12",
+          "text": "Data assets are treated as internal products, with defined ownership, service level agreements (SLAs), and discoverable APIs to facilitate efficient consumption by AI models and applications.",
+          "text_de": "Datenbestände werden als interne Produkte behandelt, mit definierter Eigentümerschaft, Service Level Agreements (SLAs) und auffindbaren APIs, um eine effiziente Nutzung durch KI-Modelle und -Anwendungen zu ermöglichen.",
+          "min_level": 4,
+          "category": "Data Management",
+          "sources": [
+            "Data Strategy for AI Maturity Model: Stages, Assessment, and Roadmap"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Data Strategy for AI Maturity Model: Stages, Assessment, and Roadmap",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://agility-at-scale.com/ai/data/data-strategy-for-ai-maturity-model/"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity Is Defined and Measured - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2025/12/30/demystifying-ai-industry-frameworks-how-ai-maturity-is-defined-and-measured"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity is Defined and Measured?",
+              "reference": "Related Research Source",
+              "url": "https://www.linkedin.com/pulse/demystifying-ai-industry-frameworks-how-maturity-dr-irina-steenbeek-45vve"
+            }
+          ],
+          "added_at": "2026-04-22T15:29:57.373687+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_da_13",
+          "text": "Feedback loops are established to continuously improve data quality, completeness, and relevance based on the observed performance and data requirements of deployed AI models.",
+          "text_de": "Feedbackschleifen sind etabliert, um die Datenqualität, Vollständigkeit und Relevanz kontinuierlich zu verbessern, basierend auf der beobachteten Leistung und den Datenanforderungen der eingesetzten KI-Modelle.",
+          "min_level": 3,
+          "category": "Data Quality & Lifecycle",
+          "sources": [
+            "Data Strategy for AI Maturity Model: Stages, Assessment, and Roadmap"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Data Strategy for AI Maturity Model: Stages, Assessment, and Roadmap",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://agility-at-scale.com/ai/data/data-strategy-for-ai-maturity-model/"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity Is Defined and Measured - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2025/12/30/demystifying-ai-industry-frameworks-how-ai-maturity-is-defined-and-measured"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity is Defined and Measured?",
+              "reference": "Related Research Source",
+              "url": "https://www.linkedin.com/pulse/demystifying-ai-industry-frameworks-how-maturity-dr-irina-steenbeek-45vve"
+            }
+          ],
+          "added_at": "2026-04-22T15:29:57.373687+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_da_14",
+          "text": "A formal strategy for data acquisition, including external data partnerships, synthetic data generation, and potential data monetization, is defined and managed to ensure a sustainable supply of high-quality data for AI.",
+          "text_de": "Eine formale Strategie für die Datenakquise, einschließlich externer Datenpartnerschaften, der Generierung synthetischer Daten und potenzieller Datenmonetarisierung, ist definiert und wird verwaltet, um eine nachhaltige Versorgung mit hochwertigen Daten für KI sicherzustellen.",
+          "min_level": 3,
+          "category": "Data Sourcing & Strategy",
+          "sources": [
+            "[PDF] Elements of a Comprehensive AI Strategy - appliedAI"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] Elements of a Comprehensive AI Strategy - appliedAI",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://www.appliedai.de/uploads/files/elemente-einer-umfassenden-ki-strategie/Elements-Comprehensive-AI-Strategy-Whitepaper.pdf?v=1743423710"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity Is Defined and Measured - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2025/12/30/demystifying-ai-industry-frameworks-how-ai-maturity-is-defined-and-measured"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity is Defined and Measured?",
+              "reference": "Related Research Source",
+              "url": "https://www.linkedin.com/pulse/demystifying-ai-industry-frameworks-how-maturity-dr-irina-steenbeek-45vve"
+            }
+          ],
+          "added_at": "2026-04-22T15:35:04.503791+00:00",
+          "added_by": "framework_builder"
         }
       ]
     },
@@ -817,6 +1136,93 @@
             "The AI Maturity Journey: How to Move from Experiments to Enterprise Transformation"
           ],
           "evidence_tags": []
+        },
+        {
+          "id": "CP_go_14",
+          "text": "Data governance policies are specifically extended and adapted to address the unique requirements and risks of the AI data lifecycle, including data acquisition, synthetic data generation, anonymization, and model-specific data retention.",
+          "text_de": "Datengovernance-Richtlinien werden speziell erweitert und angepasst, um die einzigartigen Anforderungen und Risiken des KI-Datenlebenszyklus zu adressieren, einschließlich Datenerfassung, Generierung synthetischer Daten, Anonymisierung und modellspezifischer Datenaufbewahrung.",
+          "min_level": 3,
+          "category": "Data Governance",
+          "sources": [
+            "Data Strategy for AI Maturity Model: Stages, Assessment, and Roadmap"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Data Strategy for AI Maturity Model: Stages, Assessment, and Roadmap",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://agility-at-scale.com/ai/data/data-strategy-for-ai-maturity-model/"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity Is Defined and Measured - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2025/12/30/demystifying-ai-industry-frameworks-how-ai-maturity-is-defined-and-measured"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity is Defined and Measured?",
+              "reference": "Related Research Source",
+              "url": "https://www.linkedin.com/pulse/demystifying-ai-industry-frameworks-how-maturity-dr-irina-steenbeek-45vve"
+            }
+          ],
+          "added_at": "2026-04-22T15:29:57.373687+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_go_15",
+          "text": "Dedicated legal and compliance expertise for AI-specific regulations, intellectual property, and liability frameworks is integrated into the AI governance structure.",
+          "text_de": "Dedizierte Rechts- und Compliance-Expertise für KI-spezifische Vorschriften, geistiges Eigentum und Haftungsrahmen ist in die KI-Governance-Struktur integriert.",
+          "min_level": 3,
+          "category": "Legal & Compliance",
+          "sources": [
+            "[PDF] Elements of a Comprehensive AI Strategy - appliedAI"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] Elements of a Comprehensive AI Strategy - appliedAI",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://www.appliedai.de/uploads/files/elemente-einer-umfassenden-ki-strategie/Elements-Comprehensive-AI-Strategy-Whitepaper.pdf?v=1743423710"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity Is Defined and Measured - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2025/12/30/demystifying-ai-industry-frameworks-how-ai-maturity-is-defined-and-measured"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity is Defined and Measured?",
+              "reference": "Related Research Source",
+              "url": "https://www.linkedin.com/pulse/demystifying-ai-industry-frameworks-how-maturity-dr-irina-steenbeek-45vve"
+            }
+          ],
+          "added_at": "2026-04-22T15:35:04.503791+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_go_16",
+          "text": "Formalized processes and policies for continuously monitoring and validating the trustworthiness, reliability, and ethical performance of deployed AI systems in operational decision-making.",
+          "text_de": "Formalisierte Prozesse und Richtlinien zur kontinuierlichen Überwachung und Validierung der Vertrauenswürdigkeit, Zuverlässigkeit und ethischen Leistung von eingesetzten KI-Systemen in der operativen Entscheidungsfindung.",
+          "min_level": 3,
+          "category": "AI Trust & Assurance",
+          "sources": [
+            "Understanding AI Maturity: Where Are You Today, and Where Do You Want to Be?"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Understanding AI Maturity: Where Are You Today, and Where Do You Want to Be?",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://www.ciso.inc/blog-posts/understanding-ai-maturity/"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity Is Defined and Measured - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2025/12/30/demystifying-ai-industry-frameworks-how-ai-maturity-is-defined-and-measured"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity is Defined and Measured?",
+              "reference": "Related Research Source",
+              "url": "https://www.linkedin.com/pulse/demystifying-ai-industry-frameworks-how-maturity-dr-irina-steenbeek-45vve"
+            }
+          ],
+          "added_at": "2026-04-22T15:36:42.356723+00:00",
+          "added_by": "framework_builder"
         }
       ]
     },
@@ -1243,6 +1649,122 @@
               "url": "https://cloud.google.com/adoption-framework/ai"
             }
           ]
+        },
+        {
+          "id": "CP_ta_09",
+          "text": "Targeted data literacy and upskilling programs are in place for business users, data scientists, and engineers to enhance their understanding of data's role in AI, data preparation, and responsible data usage for model development.",
+          "text_de": "Gezielte Datenkompetenz- und Weiterbildungsprogramme sind für Geschäftsbenutzer, Datenwissenschaftler und Ingenieure etabliert, um ihr Verständnis der Rolle von Daten in der KI, der Datenaufbereitung und der verantwortungsvollen Datennutzung für die Modellentwicklung zu verbessern.",
+          "min_level": 3,
+          "category": "AI Talent Development",
+          "sources": [
+            "Data Strategy for AI Maturity Model: Stages, Assessment, and Roadmap"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Data Strategy for AI Maturity Model: Stages, Assessment, and Roadmap",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://agility-at-scale.com/ai/data/data-strategy-for-ai-maturity-model/"
+            },
+            {
+              "source": "Complying with the EU AI Act Using Industry Frameworks - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2026/02/16/complying-with-the-eu-ai-act-using-industry-frameworks/"
+            },
+            {
+              "source": "AI Risk Management and Compliance: Frameworks and Strategies",
+              "reference": "Related Research Source",
+              "url": "https://agility-at-scale.com/ai/governance/risk-management-and-compliance/"
+            }
+          ],
+          "added_at": "2026-04-22T15:29:57.373687+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_ta_10",
+          "text": "Programs and incentives are established to foster an organization-wide culture of continuous AI-driven innovation, experimentation, and knowledge sharing, beyond formal training.",
+          "text_de": "Programme und Anreize sind etabliert, um eine unternehmensweite Kultur der kontinuierlichen KI-gesteuerten Innovation, des Experimentierens und des Wissensaustauschs zu fördern, über formale Schulungen hinaus.",
+          "min_level": 3,
+          "category": "Innovation Culture",
+          "sources": [
+            "[PDF] Elements of a Comprehensive AI Strategy - appliedAI"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] Elements of a Comprehensive AI Strategy - appliedAI",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://www.appliedai.de/uploads/files/elemente-einer-umfassenden-ki-strategie/Elements-Comprehensive-AI-Strategy-Whitepaper.pdf?v=1743423710"
+            },
+            {
+              "source": "Complying with the EU AI Act Using Industry Frameworks - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2026/02/16/complying-with-the-eu-ai-act-using-industry-frameworks/"
+            },
+            {
+              "source": "AI Risk Management and Compliance: Frameworks and Strategies",
+              "reference": "Related Research Source",
+              "url": "https://agility-at-scale.com/ai/governance/risk-management-and-compliance/"
+            }
+          ],
+          "added_at": "2026-04-22T15:35:04.503791+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_ta_11",
+          "text": "Structured programs and resources are in place to empower business users and decision-makers with the skills to effectively interact with, interpret, and critically evaluate AI-driven insights and recommendations.",
+          "text_de": "Strukturierte Programme und Ressourcen sind vorhanden, um Geschäftsbenutzer und Entscheidungsträger mit den Fähigkeiten auszustatten, effektiv mit KI-gesteuerten Erkenntnissen und Empfehlungen zu interagieren, diese zu interpretieren und kritisch zu bewerten.",
+          "min_level": 3,
+          "category": "AI User Empowerment",
+          "sources": [
+            "Understanding AI Maturity: Where Are You Today, and Where Do You Want to Be?"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Understanding AI Maturity: Where Are You Today, and Where Do You Want to Be?",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://www.ciso.inc/blog-posts/understanding-ai-maturity/"
+            },
+            {
+              "source": "Complying with the EU AI Act Using Industry Frameworks - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2026/02/16/complying-with-the-eu-ai-act-using-industry-frameworks/"
+            },
+            {
+              "source": "AI Risk Management and Compliance: Frameworks and Strategies",
+              "reference": "Related Research Source",
+              "url": "https://agility-at-scale.com/ai/governance/risk-management-and-compliance/"
+            }
+          ],
+          "added_at": "2026-04-22T15:36:42.356723+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_ta_12",
+          "text": "Organizational structures, roles, and responsibilities are periodically re-evaluated and adapted to effectively support and leverage increasing AI integration into core business operations.",
+          "text_de": "Organisationsstrukturen, Rollen und Verantwortlichkeiten werden regelmäßig neu bewertet und angepasst, um die zunehmende KI-Integration in die Kerngeschäftsabläufe effektiv zu unterstützen und zu nutzen.",
+          "min_level": 3,
+          "category": "Organizational Adaptation",
+          "sources": [
+            "Understanding AI Maturity: Where Are You Today, and Where Do You Want to Be?"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Understanding AI Maturity: Where Are You Today, and Where Do You Want to Be?",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://www.ciso.inc/blog-posts/understanding-ai-maturity/"
+            },
+            {
+              "source": "Complying with the EU AI Act Using Industry Frameworks - Data Crossroads",
+              "reference": "Related Research Source",
+              "url": "https://datacrossroads.nl/2026/02/16/complying-with-the-eu-ai-act-using-industry-frameworks/"
+            },
+            {
+              "source": "AI Risk Management and Compliance: Frameworks and Strategies",
+              "reference": "Related Research Source",
+              "url": "https://agility-at-scale.com/ai/governance/risk-management-and-compliance/"
+            }
+          ],
+          "added_at": "2026-04-22T15:36:42.356723+00:00",
+          "added_by": "framework_builder"
         }
       ]
     },
@@ -1470,6 +1992,35 @@
               "url": "https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/"
             }
           ]
+        },
+        {
+          "id": "CP_et_11",
+          "text": "Ethical AI principles and responsible design considerations are actively integrated into the entire AI product development lifecycle, from ideation and design to deployment and post-monitoring.",
+          "text_de": "Ethische KI-Prinzipien und verantwortungsvolle Designüberlegungen werden aktiv in den gesamten KI-Produktentwicklungslebenszyklus integriert, von der Ideenfindung und dem Design bis zur Bereitstellung und Nachüberwachung.",
+          "min_level": 3,
+          "category": "Responsible Design Integration",
+          "sources": [
+            "[PDF] Elements of a Comprehensive AI Strategy - appliedAI"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] Elements of a Comprehensive AI Strategy - appliedAI",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://www.appliedai.de/uploads/files/elemente-einer-umfassenden-ki-strategie/Elements-Comprehensive-AI-Strategy-Whitepaper.pdf?v=1743423710"
+            },
+            {
+              "source": "Demystifying AI Industry Frameworks: How AI Maturity is Defined and Measured?",
+              "reference": "Related Research Source",
+              "url": "https://www.linkedin.com/pulse/demystifying-ai-industry-frameworks-how-maturity-dr-irina-steenbeek-45vve"
+            },
+            {
+              "source": "AI Governance: Enterprise Compliance & Risk Management Guide ...",
+              "reference": "Related Research Source",
+              "url": "https://secureprivacy.ai/blog/ai-governance"
+            }
+          ],
+          "added_at": "2026-04-22T15:35:04.503791+00:00",
+          "added_by": "framework_builder"
         }
       ]
     },
@@ -1703,6 +2254,64 @@
           ],
           "evidence_tags": [],
           "added_at": "2026-04-17T20:45:38.790408+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_pr_14",
+          "text": "Core business processes are systematically re-evaluated and redesigned to strategically embed AI capabilities, aiming for transformative outcomes beyond mere automation or efficiency gains.",
+          "text_de": "Kernprozesse des Unternehmens werden systematisch neu bewertet und neu gestaltet, um KI-Fähigkeiten strategisch einzubetten, mit dem Ziel transformativer Ergebnisse über bloße Automatisierung oder Effizienzsteigerungen hinaus.",
+          "min_level": 3,
+          "category": "Business Process Re-engineering",
+          "sources": [
+            "[PDF] Elements of a Comprehensive AI Strategy - appliedAI"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] Elements of a Comprehensive AI Strategy - appliedAI",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://www.appliedai.de/uploads/files/elemente-einer-umfassenden-ki-strategie/Elements-Comprehensive-AI-Strategy-Whitepaper.pdf?v=1743423710"
+            },
+            {
+              "source": "AI Governance: Enterprise Compliance & Risk Management Guide ...",
+              "reference": "Related Research Source",
+              "url": "https://secureprivacy.ai/blog/ai-governance"
+            },
+            {
+              "source": "EU AI Act Maturity Assessment | EY - Netherlands",
+              "reference": "Related Research Source",
+              "url": "https://www.ey.com/en_nl/services/ai/eu-ai-act-maturity-assessment"
+            }
+          ],
+          "added_at": "2026-04-22T15:35:04.503791+00:00",
+          "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_pr_15",
+          "text": "A systematic methodology is applied to identify, prioritize, and scope business processes that are prime candidates for AI integration, considering both efficiency gains and transformative potential.",
+          "text_de": "Eine systematische Methodik wird angewendet, um Geschäftsprozesse zu identifizieren, zu priorisieren und abzugrenzen, die primäre Kandidaten für die KI-Integration sind, unter Berücksichtigung von Effizienzgewinnen und transformativem Potenzial.",
+          "min_level": 3,
+          "category": "AI Process Identification",
+          "sources": [
+            "Understanding AI Maturity: Where Are You Today, and Where Do You Want to Be?"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Understanding AI Maturity: Where Are You Today, and Where Do You Want to Be?",
+              "reference": "Research Agent — One-Click Extraction",
+              "url": "https://www.ciso.inc/blog-posts/understanding-ai-maturity/"
+            },
+            {
+              "source": "AI Governance: Enterprise Compliance & Risk Management Guide ...",
+              "reference": "Related Research Source",
+              "url": "https://secureprivacy.ai/blog/ai-governance"
+            },
+            {
+              "source": "EU AI Act Maturity Assessment | EY - Netherlands",
+              "reference": "Related Research Source",
+              "url": "https://www.ey.com/en_nl/services/ai/eu-ai-act-maturity-assessment"
+            }
+          ],
+          "added_at": "2026-04-22T15:36:42.356723+00:00",
           "added_by": "framework_builder"
         }
       ]

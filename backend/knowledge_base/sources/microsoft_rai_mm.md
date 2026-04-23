@@ -1,8 +1,19 @@
 # Microsoft Responsible AI Maturity Model (RAI MM)
 
+<!--
+ATTRIBUTION & LICENSE NOTICE
+This document is an independent summary created for the AI Strategy Hub project.
+It is NOT a reproduction of Microsoft's original publication.
+All content is paraphrased and restructured in the author's own words based on
+publicly available research papers and documentation from Microsoft.
+Microsoft and Responsible AI are trademarks of Microsoft Corporation.
+For the authoritative source, refer to the official URL below.
+-->
+
 > Source: Microsoft
 > URL: https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/
 > Type: Maturity model for responsible AI practices
+> License: Summary based on publicly available research; not affiliated with Microsoft
 > Focus: 24 dimensions across 3 categories
 
 ## Overview

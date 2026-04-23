@@ -1,8 +1,18 @@
 # OWASP AI Maturity Assessment (AIMA)
 
+<!--
+ATTRIBUTION & LICENSE NOTICE
+This document is an independent summary created for the AI Strategy Hub project.
+It is NOT a reproduction of the original OWASP publication.
+All content is paraphrased and restructured in the author's own words.
+OWASP materials are published under Creative Commons Attribution-ShareAlike 4.0 (CC BY-SA 4.0).
+For the authoritative source, refer to the official URL below.
+-->
+
 > Source: OWASP Foundation (Open Web Application Security Project)
 > URL: https://owasp.org/www-project-ai-maturity-assessment/
 > Type: Community-driven, open-source assessment framework
+> License: Original under CC BY-SA 4.0; this summary is independently authored
 > Focus: Security and operational maturity of AI systems
 
 ## Overview

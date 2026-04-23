@@ -1,8 +1,18 @@
 # UNESCO AI Readiness Assessment Framework
 
+<!--
+ATTRIBUTION & LICENSE NOTICE
+This document is an independent summary created for the AI Strategy Hub project.
+It is NOT a reproduction of the original UNESCO publication.
+All content is paraphrased and restructured in the author's own words.
+UNESCO's AI Recommendation was adopted by 193 member states and is publicly accessible.
+For the authoritative source, refer to the official URL below.
+-->
+
 > Source: UNESCO (United Nations Educational, Scientific and Cultural Organization)
 > URL: https://www.unesco.org/en/artificial-intelligence
 > Type: International advisory framework
+> License: Publicly accessible UN recommendation
 > Focus: Public and private sector AI readiness across 6 pillars
 
 ## Overview

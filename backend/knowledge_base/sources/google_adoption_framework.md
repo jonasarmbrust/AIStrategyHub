@@ -1,8 +1,19 @@
 # Google Cloud AI Adoption Framework
 
+<!--
+ATTRIBUTION & LICENSE NOTICE
+This document is an independent summary created for the AI Strategy Hub project.
+It is NOT a reproduction of Google's original publication.
+All content is paraphrased and restructured in the author's own words based on
+publicly available information from Google Cloud's website.
+Google Cloud and the AI Adoption Framework are trademarks of Google LLC.
+For the authoritative source, refer to the official URL below.
+-->
+
 > Source: Google Cloud
 > URL: https://cloud.google.com/adoption-framework/ai
-> Type: Advisory framework
+> Type: Advisory framework (proprietary thought leadership)
+> License: Summary based on publicly available content; not affiliated with Google
 > Focus: Organizational AI maturity across People, Process, Technology, Data
 
 ## Overview

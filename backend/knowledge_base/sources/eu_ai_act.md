@@ -1,8 +1,18 @@
 # EU AI Act — Compliance Framework
 
+<!--
+ATTRIBUTION & LICENSE NOTICE
+This document is an independent summary created for the AI Strategy Hub project.
+It is NOT a reproduction of the official EU regulation text.
+All content is paraphrased and restructured in the author's own words.
+EU legislation is publicly accessible and freely citable under EU law.
+For the binding legal text, refer to the official URL below.
+-->
+
 > Source: European Union Regulation (EU) 2024/1689
 > URL: https://eur-lex.europa.eu/eli/reg/2024/1689
 > Type: Mandatory regulation (EU member states)
+> License: Freely citable (EU public legislation)
 > Enforcement: Phased from Feb 2025 to Aug 2027
 
 ## Overview

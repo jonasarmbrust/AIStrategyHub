@@ -13,10 +13,18 @@ from typing import Optional
 
 import google.generativeai as genai
 
-# Configure Gemini
-genai.configure(api_key=os.getenv("GEMINI_API_KEY", ""))
+# NOTE: genai.configure() is called lazily in each function to ensure
+# the .env file has been loaded before we read the API key.
 
 EMBED_DIR = Path(__file__).parent.parent.parent / "data" / "embeddings"
+
+
+def _ensure_configured():
+    """Lazily configure Gemini API key (only once)."""
+    key = os.getenv("GEMINI_API_KEY", "")
+    if not key:
+        raise RuntimeError("GEMINI_API_KEY not set. Cannot generate embeddings.")
+    genai.configure(api_key=key)
 
 
 def _cosine_distance(v1: list[float], v2: list[float]) -> float:
@@ -31,20 +39,36 @@ def _cosine_distance(v1: list[float], v2: list[float]) -> float:
 
 async def embed_text(text: str) -> list[float]:
     """Generate embedding for a text using Gemini."""
-    result = genai.embed_content(
-        model="models/gemini-embedding-2-preview",
-        content=text,
-        task_type="retrieval_document",
+    _ensure_configured()
+    import asyncio
+    import functools
+    loop = asyncio.get_event_loop()
+    result = await loop.run_in_executor(
+        None,
+        functools.partial(
+            genai.embed_content,
+            model="models/gemini-embedding-2-preview",
+            content=text,
+            task_type="retrieval_document",
+        )
     )
     return result["embedding"]
 
 
 async def embed_query(text: str) -> list[float]:
     """Generate embedding for a query using Gemini."""
-    result = genai.embed_content(
-        model="models/gemini-embedding-2-preview",
-        content=text,
-        task_type="retrieval_query",
+    _ensure_configured()
+    import asyncio
+    import functools
+    loop = asyncio.get_event_loop()
+    result = await loop.run_in_executor(
+        None,
+        functools.partial(
+            genai.embed_content,
+            model="models/gemini-embedding-2-preview",
+            content=text,
+            task_type="retrieval_query",
+        )
     )
     return result["embedding"]
 
