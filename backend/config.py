@@ -39,8 +39,16 @@ AUTH_ENABLED = bool(API_AUTH_KEY)
 
 # ── Rate Limiting ─────────────────────────────────────────────────────────────
 
-RATE_LIMIT_DEFAULT = os.getenv("RATE_LIMIT_DEFAULT", "60/minute")
-RATE_LIMIT_LLM = os.getenv("RATE_LIMIT_LLM", "5/minute")
+def _normalize_rate_limit(value: str) -> str:
+    """Ensure rate limit has a valid format like '60/minute'. Auto-fix bare numbers."""
+    value = value.strip()
+    if "/" not in value:
+        # Bare number → assume per minute
+        return f"{value}/minute"
+    return value
+
+RATE_LIMIT_DEFAULT = _normalize_rate_limit(os.getenv("RATE_LIMIT_DEFAULT", "60/minute"))
+RATE_LIMIT_LLM = _normalize_rate_limit(os.getenv("RATE_LIMIT_LLM", "5/minute"))
 
 # ── Logging ───────────────────────────────────────────────────────────────────
 
