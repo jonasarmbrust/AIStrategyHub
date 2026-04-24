@@ -30,7 +30,7 @@
 
 <p align="center">
   <strong>🚀 <a href="https://ai-strategy-hub-384210760656.europe-west1.run.app">Try the Live Demo →</a></strong><br>
-  <sub>Hosted on Google Cloud Run — no setup required. Explore all features instantly.</sub>
+  <sub>Hosted on Google Cloud Run — protected instance. <a href="https://github.com/jonasarmbrust/AIStrategyHub/issues/new?title=Demo+Access+Request&labels=demo-access">Request access</a> or <a href="mailto:jonas.armbrust@outlook.de">contact me</a> for a demo key.</sub>
 </p>
 
 ---
