@@ -10,6 +10,7 @@
 <p align="center">
   <a href="https://github.com/jonasarmbrust/AIStrategyHub/actions/workflows/ci.yml"><img src="https://github.com/jonasarmbrust/AIStrategyHub/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+  <a href="https://ai-strategy-hub-384210760656.europe-west1.run.app"><img src="https://img.shields.io/badge/🚀_Live_Demo-Cloud_Run-4285F4?style=flat&logo=googlecloud&logoColor=white" alt="Live Demo"></a>
   <img src="https://img.shields.io/badge/python-3.12-blue?logo=python&logoColor=white" alt="Python 3.12">
   <img src="https://img.shields.io/badge/checkpoints-101-10b981" alt="101 Checkpoints">
   <img src="https://img.shields.io/badge/dimensions-7-6366f1" alt="7 Dimensions">
@@ -23,6 +24,13 @@
   <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite">
   <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
   <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
+</p>
+
+---
+
+<p align="center">
+  <strong>🚀 <a href="https://ai-strategy-hub-384210760656.europe-west1.run.app">Try the Live Demo →</a></strong><br>
+  <sub>Hosted on Google Cloud Run — no setup required. Explore all features instantly.</sub>
 </p>
 
 ---
