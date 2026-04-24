@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/YOUR_USERNAME/AIStrategyHub/actions/workflows/ci.yml"><img src="https://github.com/YOUR_USERNAME/AIStrategyHub/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/jonasarmbrust/AIStrategyHub/actions/workflows/ci.yml"><img src="https://github.com/jonasarmbrust/AIStrategyHub/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
   <img src="https://img.shields.io/badge/python-3.12-blue?logo=python&logoColor=white" alt="Python 3.12">
   <img src="https://img.shields.io/badge/checkpoints-101-10b981" alt="101 Checkpoints">
@@ -182,7 +182,7 @@ graph TB
 ### Setup
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/AIStrategyHub.git
+git clone https://github.com/jonasarmbrust/AIStrategyHub.git
 cd AIStrategyHub
 cp .env.example .env
 # ⚠️ Edit .env with your API keys!
@@ -382,5 +382,5 @@ NIST is a registered trademark of the National Institute of Standards and Techno
 <p align="center">
   <strong>AI Strategy Hub</strong> — Built with Gemini, FastAPI, and a lot of ☕<br>
   <em>Assess. Analyze. Optimize.</em><br><br>
-  <a href="https://github.com/YOUR_USERNAME/AIStrategyHub">⭐ Star this repo</a> if you find it useful!
+  <a href="https://github.com/jonasarmbrust/AIStrategyHub">⭐ Star this repo</a> if you find it useful!
 </p>

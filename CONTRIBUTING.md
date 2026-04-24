@@ -27,7 +27,7 @@ If you want to contribute to the codebase (Python/FastAPI backend or Vanilla JS/
 1. **Fork the repository** on GitHub.
 2. **Clone your fork** locally:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/AIStrategyHub.git
+   git clone https://github.com/jonasarmbrust/AIStrategyHub.git
    ```
 3. **Create a new branch** for your feature or bugfix:
    ```bash
