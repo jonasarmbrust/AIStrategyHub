@@ -17,6 +17,7 @@ import { renderFrameworkBuilder } from './pages/framework_builder.js';
 import { renderAdvisor } from './pages/advisor.js';
 import { renderSimulator } from './pages/simulator.js';
 import { renderSources } from './pages/sources.js';
+import { renderDependencies } from './pages/dependencies.js';
 import { t, getLang, toggleLang, updateStaticDOM } from './i18n.js';
 import { sanitizeHTML, escapeHTML } from './sanitize.js';
 export { sanitizeHTML, escapeHTML };
@@ -148,6 +149,7 @@ const routes = {
   'framework-builder': renderFrameworkBuilder,
   advisor: renderAdvisor,
   simulator: renderSimulator,
+  dependencies: renderDependencies,
   sources: renderSources,
 };
 
@@ -213,9 +215,38 @@ function init() {
     });
   }
 
+  // Theme toggle
+  initTheme();
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ash_theme', next);
+      updateThemeIcon(next);
+    });
+  }
+
   // Health check
   checkBackendHealth();
   setInterval(checkBackendHealth, 15000);
+}
+
+function initTheme() {
+  const saved = localStorage.getItem('ash_theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon(saved);
+  } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+    document.documentElement.setAttribute('data-theme', 'light');
+    updateThemeIcon('light');
+  }
+}
+
+function updateThemeIcon(theme) {
+  const icon = document.getElementById('theme-icon');
+  if (icon) icon.textContent = theme === 'light' ? '🌙' : '☀️';
 }
 
 // ── Level helpers ──────────────────────────────────────────

@@ -38,6 +38,33 @@ export function renderDashboard(container) {
       </div>
     </div>
 
+    <div class="card mb-xl fade-in" style="animation-delay: 190ms">
+      <div class="card-header">
+        <span class="card-title">📋 Checkpoint Progress</span>
+        <span id="cp-progress-label" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">— / 101</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 24px; padding: 8px 0;">
+        <div style="position: relative; width: 90px; height: 90px; flex-shrink: 0;">
+          <svg viewBox="0 0 36 36" style="width: 90px; height: 90px; transform: rotate(-90deg);">
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+            <circle id="cp-ring" cx="18" cy="18" r="15.5" fill="none" stroke="url(#cp-gradient)" stroke-width="3"
+              stroke-dasharray="97.4" stroke-dashoffset="97.4" stroke-linecap="round"
+              style="transition: stroke-dashoffset 1.2s ease;"/>
+            <defs>
+              <linearGradient id="cp-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#3b82f6"/>
+                <stop offset="100%" stop-color="#8b5cf6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
+            <span id="cp-ring-pct" style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary);">0%</span>
+          </div>
+        </div>
+        <div id="cp-dim-bars" style="flex: 1; display: flex; flex-direction: column; gap: 6px;"></div>
+      </div>
+    </div>
+
     <div class="grid-2 mb-xl">
       <div class="card fade-in" style="animation-delay: 200ms">
         <div class="card-header">
@@ -139,6 +166,9 @@ async function loadDashboardData() {
     document.getElementById('stat-analyses').textContent = stats.total_analyses || 0;
     document.getElementById('stat-sources').textContent = stats.total_sources || 0;
 
+    // Checkpoint progress (Feature 8)
+    renderCheckpointProgress(stats.checkpoints_fulfilled || 0, stats.checkpoints_total || 101);
+
     // Render radar chart
     if (stats.dimension_averages && Object.keys(stats.dimension_averages).length > 0) {
       renderRadarChart(stats.dimension_averages);
@@ -157,10 +187,138 @@ async function loadDashboardData() {
       const trendEmpty = document.getElementById('trend-empty');
       if (trendEmpty) trendEmpty.style.display = 'block';
     }
+
+    // Load timeline (Feature 1)
+    loadTimeline();
   } catch (e) {
     console.log('Dashboard data not available — trying localStorage fallback');
     renderFromLocalStorage();
+    renderCheckpointProgressFromLocalStorage();
   }
+}
+
+function renderCheckpointProgress(fulfilled, total) {
+  const pctLabel = document.getElementById('cp-progress-label');
+  const ring = document.getElementById('cp-ring');
+  const pctEl = document.getElementById('cp-ring-pct');
+  const barsEl = document.getElementById('cp-dim-bars');
+
+  if (pctLabel) pctLabel.textContent = `${fulfilled} / ${total}`;
+
+  const pct = total > 0 ? fulfilled / total : 0;
+  if (ring) {
+    const circumference = 97.4;
+    setTimeout(() => {
+      ring.style.strokeDashoffset = circumference * (1 - pct);
+    }, 100);
+  }
+  if (pctEl) pctEl.textContent = `${Math.round(pct * 100)}%`;
+
+  // Per-dimension bars from localStorage if no API data
+  if (barsEl) renderDimensionProgressBars(barsEl);
+}
+
+function renderCheckpointProgressFromLocalStorage() {
+  try {
+    const saved = localStorage.getItem('oaimm_assessments');
+    if (!saved) return;
+    const assessments = JSON.parse(saved);
+    const fulfilled = Object.values(assessments).filter(v => v?.fulfilled).length;
+    renderCheckpointProgress(fulfilled, 101);
+  } catch {}
+}
+
+function renderDimensionProgressBars(container) {
+  const dims = [
+    { id: 'strategy', name: 'Strategy', icon: '🎯', color: '#3b82f6' },
+    { id: 'data', name: 'Data', icon: '🗄️', color: '#10b981' },
+    { id: 'governance', name: 'Governance', icon: '⚖️', color: '#f59e0b' },
+    { id: 'technology', name: 'Technology', icon: '⚙️', color: '#8b5cf6' },
+    { id: 'talent', name: 'Talent', icon: '👥', color: '#ec4899' },
+    { id: 'ethics', name: 'Ethics', icon: '🛡️', color: '#06b6d4' },
+    { id: 'processes', name: 'Processes', icon: '🔄', color: '#f97316' },
+  ];
+
+  // Try to get assessments from localStorage for per-dim counts
+  let assessments = {};
+  try {
+    const saved = localStorage.getItem('oaimm_assessments');
+    if (saved) assessments = JSON.parse(saved);
+  } catch {}
+
+  // Try to get model for checkpoint-to-dimension mapping
+  api.get('/checklist/model').then(model => {
+    if (!model?.dimensions) return;
+
+    container.innerHTML = model.dimensions.map(dim => {
+      const d = dims.find(dd => dd.id === dim.id) || { name: dim.name, color: '#888', icon: '📌' };
+      const total = dim.checkpoints.length;
+      const fulfilled = dim.checkpoints.filter(cp => assessments[cp.id]?.fulfilled).length;
+      const pct = total > 0 ? (fulfilled / total * 100) : 0;
+
+      return `<div style="display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 0.7rem; width: 18px;">${d.icon}</span>
+        <span style="font-size: 0.72rem; color: var(--text-muted); width: 72px; flex-shrink: 0;">${d.name}</span>
+        <div class="progress-bar" style="flex: 1; height: 6px;">
+          <div class="progress-fill" style="width: ${pct}%; background: ${d.color}; transition: width 1s ease;"></div>
+        </div>
+        <span style="font-size: 0.7rem; color: var(--text-muted); width: 36px; text-align: right;">${fulfilled}/${total}</span>
+      </div>`;
+    }).join('');
+  }).catch(() => {});
+}
+
+async function loadTimeline() {
+  try {
+    const data = await api.get('/dashboard/timeline');
+    if (data.snapshots && data.snapshots.length > 1) {
+      renderTimelineSection(data.snapshots);
+    }
+  } catch {}
+}
+
+function renderTimelineSection(snapshots) {
+  // Find the history card and insert timeline before it
+  const historyCard = document.getElementById('history-list')?.closest('.card');
+  if (!historyCard) return;
+
+  const timelineCard = document.createElement('div');
+  timelineCard.className = 'card mb-xl fade-in';
+  timelineCard.innerHTML = `
+    <div class="card-header">
+      <span class="card-title">🕐 Assessment Timeline</span>
+      <span style="font-size: 0.82rem; color: var(--text-muted);">${snapshots.length} snapshots</span>
+    </div>
+    <div style="overflow-x: auto; padding: 16px 0;">
+      <div style="display: flex; gap: 0; min-width: max-content; position: relative; padding: 0 16px;">
+        ${snapshots.map((s, i) => {
+          const date = new Date(s.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+          const score = Math.round(s.overall_score);
+          const color = getScoreColor(score);
+          const icon = s.type === 'manual' ? '✅' : '📄';
+          const isLast = i === snapshots.length - 1;
+          const delta = i > 0 ? score - Math.round(snapshots[i-1].overall_score) : 0;
+          const deltaStr = delta > 0 ? `<span style="color: var(--accent-emerald);">+${delta}</span>` : delta < 0 ? `<span style="color: var(--accent-red);">${delta}</span>` : '';
+
+          return `
+            <div style="display: flex; align-items: center;">
+              <div style="text-align: center; min-width: 80px; position: relative;">
+                <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">${date}</div>
+                <div style="width: 36px; height: 36px; border-radius: 50%; background: ${isLast ? 'var(--gradient-primary)' : 'rgba(255,255,255,0.06)'}; border: 2px solid ${color}; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 0.7rem; font-weight: 700; color: ${isLast ? '#fff' : color};">
+                  ${score}
+                </div>
+                <div style="font-size: 0.65rem; margin-top: 4px;">${icon} ${deltaStr}</div>
+                <div style="font-size: 0.6rem; color: var(--text-muted); margin-top: 2px; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${s.label}</div>
+              </div>
+              ${!isLast ? '<div style="width: 40px; height: 2px; background: rgba(255,255,255,0.08); margin: 0 -4px;"></div>' : ''}
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+
+  historyCard.parentNode.insertBefore(timelineCard, historyCard);
 }
 
 function renderFromLocalStorage() {
