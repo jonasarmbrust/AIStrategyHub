@@ -68,6 +68,12 @@ Maps gaps directly to EU AI Act requirements with compliance readiness score, re
 ### 🎮 Gap Simulator
 "What-If Analysis" — toggle checkpoints and see real-time impact on your maturity score. Discover highest-ROI actions.
 
+### 🕐 Assessment Timeline `NEW`
+Track your AI maturity over time. Every assessment is saved as a snapshot — the dashboard shows score progression with deltas and visual comparison.
+
+### 📋 Checkpoint Progress `NEW`
+Animated progress ring showing X/101 checkpoints fulfilled with per-dimension mini bars. See exactly where you stand at a glance.
+
 </td><td width="50%">
 
 ### 🔬 Research Agent
@@ -87,6 +93,12 @@ Comprehensive Do's & Don'ts guide per dimension — what each framework recommen
 
 ### 🌍 Fully Bilingual (EN/DE)
 Every UI element, report, and AI response is available in **English and German** — toggle with one click.
+
+### 🔗 Dependency Map `NEW`
+Interactive force-directed graph visualization of checkpoint relationships. Nodes colored by dimension, sized by maturity level. Drag, click, explore.
+
+### ☀️ Dark / Light Mode `NEW`
+Premium dark mode by default with full light theme toggle. Respects OS preference, persists across sessions.
 
 </td></tr>
 </table>
