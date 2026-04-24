@@ -200,6 +200,83 @@
   --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ── Light Theme ───────────────────────────────────────────── */
+[data-theme="light"] {
+  --bg-primary: #f5f7fb;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #eef1f8;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card-hover: rgba(245, 248, 255, 0.95);
+
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(100, 120, 200, 0.15);
+  --glass-shadow: 0 8px 32px rgba(100, 120, 180, 0.12);
+
+  --text-primary: #1a1f36;
+  --text-secondary: #4a5078;
+  --text-muted: #8890b5;
+  --text-accent: #3b6cf6;
+
+  --gradient-surface: linear-gradient(145deg, rgba(240, 245, 255, 0.8), rgba(230, 235, 250, 0.9));
+  --gradient-glow: radial-gradient(ellipse at 50% 0%, rgba(59, 130, 246, 0.06), transparent 70%);
+}
+
+[data-theme="light"] body::before {
+  background: radial-gradient(ellipse at 30% 10%, rgba(59, 130, 246, 0.06), transparent 60%),
+              radial-gradient(ellipse at 70% 80%, rgba(139, 92, 246, 0.04), transparent 60%);
+}
+
+[data-theme="light"] .sidebar {
+  background: linear-gradient(180deg, #1e2846, #141b33);
+}
+
+[data-theme="light"] .card {
+  border-color: rgba(100, 120, 200, 0.12);
+  box-shadow: 0 2px 12px rgba(100, 120, 180, 0.08);
+}
+
+[data-theme="light"] .progress-bar {
+  background: rgba(100, 120, 180, 0.12);
+}
+
+[data-theme="light"] .analysis-item {
+  border-color: rgba(100, 120, 200, 0.1);
+}
+
+[data-theme="light"] .analysis-item:hover {
+  background: rgba(59, 130, 246, 0.04);
+}
+
+[data-theme="light"] .quick-action-card {
+  background: rgba(240, 245, 255, 0.8);
+  border-color: rgba(100, 120, 200, 0.12);
+}
+
+[data-theme="light"] .quick-action-card:hover {
+  background: rgba(59, 130, 246, 0.06);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
 /* ── Base ───────────────────────────────────────────────────── */
 html {
   font-size: 15px;
