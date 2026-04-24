@@ -139,7 +139,7 @@ async def list_sources(
             "new_count": new_count,
         }
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
 
 @router.patch("/sources/{source_id}/read")
@@ -155,7 +155,7 @@ async def mark_source_read(source_id: str):
         await db.commit()
         return {"id": source_id, "is_read": True}
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
 
 @router.delete("/sources/{source_id}")
@@ -171,7 +171,7 @@ async def delete_source(source_id: str):
         await db.commit()
         return {"deleted": True, "id": source_id}
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
 
 # ── One-Click Pipeline: Research Source → Framework Extraction ─────────────
@@ -194,7 +194,7 @@ async def extract_source_for_framework(source_id: str):
             raise HTTPException(status_code=404, detail="Research source not found")
         source = dict(row)
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
     title = source.get("title", "Unknown")
     url = source.get("url", "")
@@ -321,7 +321,7 @@ Respond EXACTLY in this JSON format:
                         "url": m["url"],
                     })
         finally:
-            await db.close()
+            pass  # singleton connection, no close needed
 
         # Log the extraction activity
         await _log_activity(
@@ -366,7 +366,7 @@ async def get_activity_feed(limit: int = Query(30, ge=1, le=100)):
             activities.append(activity)
         return {"activities": activities}
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
 
 # ── Helper ─────────────────────────────────────────────────────────────────
@@ -391,4 +391,4 @@ async def _log_activity(
     except Exception as e:
         print(f"[Activity] Failed to log: {e}")
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed

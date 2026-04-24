@@ -10,8 +10,7 @@ from pathlib import Path
 from typing import Optional
 
 from models.schemas import Checkpoint, ChecklistResponse, Dimension, MaturityModel
-
-_DIMENSIONS_PATH = Path(__file__).parent / "dimensions.json"
+from config import DIMENSIONS_PATH
 
 _model_cache: Optional[MaturityModel] = None
 
@@ -20,7 +19,7 @@ def _load_model() -> MaturityModel:
     """Load and cache the maturity model from dimensions.json."""
     global _model_cache
     if _model_cache is None:
-        with open(_DIMENSIONS_PATH, "r", encoding="utf-8") as f:
+        with open(DIMENSIONS_PATH, "r", encoding="utf-8") as f:
             data = json.load(f)
         _model_cache = MaturityModel(**data)
     return _model_cache
@@ -131,14 +130,22 @@ def calculate_maturity_score(
         fulfilled = 0
         total = len(dim.checkpoints)
         level_sum = 0
+        weighted_score_sum = 0
 
         for cp in dim.checkpoints:
             assessment = assessments.get(cp.id, {})
             if assessment.get("fulfilled", False):
+                confidence = assessment.get("confidence", 0.5)
+                evidence_depth = assessment.get("evidence_depth", 1)
+                # Weight: confidence (0-1) * depth bonus (1.0/1.15/1.3)
+                depth_bonus = 1.0 + (evidence_depth - 1) * 0.15
+                weight = min(confidence * depth_bonus, 1.0)
                 fulfilled += 1
+                weighted_score_sum += weight
                 level_sum += assessment.get("level", cp.min_level)
 
-        score = (fulfilled / total * 100) if total > 0 else 0
+        # Weighted score: considers confidence/depth, not just binary
+        score = (weighted_score_sum / total * 100) if total > 0 else 0
         avg_level = (level_sum / fulfilled) if fulfilled > 0 else 1
 
         # Determine dimension maturity level based on score

@@ -4,6 +4,8 @@
  * Assessment-aware: highlights what's relevant based on current maturity level.
  */
 import { api, showToast, getLevelBadge, getScoreColor, LEVEL_NAMES, renderEvidenceTags, getSourceColor } from '../main.js';
+import { t } from '../i18n.js';
+import { sanitizeHTML, escapeHTML } from '../sanitize.js';
 
 const STORAGE_KEY = 'oaimm_assessments';
 
@@ -244,44 +246,43 @@ export function renderMetaStrategy(container) {
 
   container.innerHTML = `
     <div class="page-header">
-      <h1 class="page-title">Meta Strategy</h1>
-      <p class="page-description">Strategic synthesis of all 6 global AI frameworks — actionable Do's & Don'ts, framework-specific insights, and maturity-aware recommendations for every dimension.</p>
+      <h1 class="page-title">${t('meta.title')}</h1>
+      <p class="page-description">${t('meta.desc')}</p>
     </div>
 
     <div class="card mb-xl" id="meta-overview">
       <div class="card-header">
-        <span class="card-title">🧭 Strategic Overview</span>
-        <button class="btn btn-primary btn-sm" id="btn-ai-recommend">🤖 Generate AI Recommendations</button>
+        <span class="card-title">${t('meta.overviewTitle')}</span>
+        <button class="btn btn-primary btn-sm" id="btn-ai-recommend">${t('meta.generateAiRec')}</button>
       </div>
       <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">
-        This meta-model synthesizes <strong>6 frameworks</strong> (NIST, EU AI Act, Google, Microsoft, OWASP, UNESCO) into <strong>7 dimensions</strong> with <strong>69 checkpoints</strong>. 
-        This page distills the strategic essence — what the world's leading frameworks agree on, where they differ, and what you should (and should not) do at each maturity level.
+        ${t('meta.metaSummary')}
       </div>
       <div class="grid-3" id="framework-stats">
         <div style="text-align: center; padding: 12px;">
           <div style="font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">6</div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">Global Frameworks</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">${t('meta.globalFws')}</div>
         </div>
         <div style="text-align: center; padding: 12px;">
           <div style="font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #10b981, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">7</div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">Dimensions</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">${t('meta.dimensions')}</div>
         </div>
         <div style="text-align: center; padding: 12px;">
           <div style="font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">69</div>
-          <div style="font-size: 0.75rem; color: var(--text-muted);">Checkpoints</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">${t('meta.checkpoints')}</div>
         </div>
       </div>
     </div>
 
     <div id="ai-recommendations" class="card mb-xl" style="display: none;">
       <div class="card-header">
-        <span class="card-title">🤖 Personalized AI Recommendations</span>
+        <span class="card-title">${t('meta.aiRecTitle')}</span>
       </div>
       <div id="ai-rec-content"></div>
     </div>
 
     <div id="strategy-dimensions">
-      <div class="loading-overlay"><div class="spinner"></div><span>Loading strategic guidance...</span></div>
+      <div class="loading-overlay"><div class="spinner"></div><span>${t('meta.loadingGuidance')}</span></div>
     </div>
   `;
 
@@ -320,9 +321,9 @@ function renderDimensions() {
           <div class="flex items-center gap-md">
             <span style="font-size: 2rem;">${guidance.icon}</span>
             <div>
-              <h2 class="strategy-dim-title">${guidance.title}</h2>
+              <h2 class="strategy-dim-title">${t('dimensions.' + dimId)}</h2>
               <div style="font-size: 0.78rem; color: var(--text-muted);">
-                ${modelDim ? `${modelDim.checkpoints.length} Checkpoints · Weight: ${Math.round(modelDim.weight * 100)}%` : ''}
+                ${modelDim ? `${modelDim.checkpoints.length} ${t('meta.checkpointsLabel')} · ${t('meta.weightLabel')} ${Math.round(modelDim.weight * 100)}%` : ''}
               </div>
             </div>
           </div>
@@ -346,8 +347,8 @@ function renderDimensions() {
           <!-- DO's -->
           <div class="strategy-list-card do-card">
             <div class="strategy-list-header do-header">
-              <span>✅ Do's</span>
-              <span style="font-size: 0.65rem; opacity: 0.7;">${guidance.dos.length} recommendations</span>
+              <span>${t('meta.dosTitle')}</span>
+              <span style="font-size: 0.65rem; opacity: 0.7;">${t('meta.recsCount').replace('{count}', guidance.dos.length)}</span>
             </div>
             <div class="strategy-list-items">
               ${guidance.dos.map(item => {
@@ -358,12 +359,12 @@ function renderDimensions() {
                 <div class="strategy-item do-item ${isAchieved ? 'achieved' : ''}">
                   <div class="strategy-item-text">${item.text}</div>
                   <div class="strategy-item-meta">
-                    <span class="strategy-level-pill" style="--pill-color: ${['','#ef4444','#f97316','#eab308','#22c55e','#3b82f6'][item.level]}">L${item.level}+</span>
+                    <span class="strategy-level-pill" style="--pill-color: ${['','#ef4444','#f97316','#eab308','#22c55e','#3b82f6'][item.level]}">${t('roadmap.levelPlus').replace('{level}', item.level)}</span>
                     <span class="strategy-source-pill" style="--pill-color: ${getSourceColor(item.source)}">${item.source}</span>
-                    ${isAchieved ? '<span style="font-size: 0.6rem; color: #10b981;">✓ achieved</span>' : ''}
+                    ${isAchieved ? `<span style="font-size: 0.6rem; color: #10b981;">${t('meta.achieved')}</span>` : ''}
                   </div>
                   <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
-                    <button class="btn btn-deep-dive" data-text="${item.text.replace(/"/g, '&quot;')}" data-context="Meta Strategy Action Item DO" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; cursor: pointer; transition: all 0.2s;">🤖 Deep Dive</button>
+                    <button class="btn btn-deep-dive" data-text="${item.text.replace(/"/g, '&quot;')}" data-context="Meta Strategy Action Item DO" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; cursor: pointer; transition: all 0.2s;">${t('meta.deepDiveBtn')}</button>
                   </div>
                   <div class="deep-dive-result" style="display: none; margin-top: 8px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px; font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; border-left: 2px solid var(--accent-blue);"></div>
                 </div>
@@ -374,8 +375,8 @@ function renderDimensions() {
           <!-- DON'Ts -->
           <div class="strategy-list-card dont-card">
             <div class="strategy-list-header dont-header">
-              <span>❌ Don'ts</span>
-              <span style="font-size: 0.65rem; opacity: 0.7;">${guidance.donts.length} warnings</span>
+              <span>${t('meta.dontsTitle')}</span>
+              <span style="font-size: 0.65rem; opacity: 0.7;">${t('meta.warningsCount').replace('{count}', guidance.donts.length)}</span>
             </div>
             <div class="strategy-list-items">
               ${guidance.donts.map(item => {
@@ -386,7 +387,7 @@ function renderDimensions() {
                     <div class="strategy-item-text">${item.text}</div>
                     <span class="strategy-severity" style="--sev-color: ${sevColor}">${item.severity}</span>
                     <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
-                      <button class="btn btn-deep-dive" data-text="${item.text.replace(/"/g, '&quot;')}" data-context="Meta Strategy Action Item DONT" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; cursor: pointer; transition: all 0.2s;">🤖 Deep Dive</button>
+                      <button class="btn btn-deep-dive" data-text="${item.text.replace(/"/g, '&quot;')}" data-context="Meta Strategy Action Item DONT" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; cursor: pointer; transition: all 0.2s;">${t('meta.deepDiveBtn')}</button>
                     </div>
                     <div class="deep-dive-result" style="display: none; margin-top: 8px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px; font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; border-left: 2px solid var(--accent-red);"></div>
                   </div>
@@ -398,7 +399,7 @@ function renderDimensions() {
 
         <!-- What the Frameworks Say -->
         <div class="strategy-frameworks-section">
-          <div class="strategy-frameworks-header">🔍 What the Frameworks Say</div>
+          <div class="strategy-frameworks-header">${t('meta.whatFrameworksSay')}</div>
           <div class="strategy-frameworks-grid">
             ${guidance.frameworks_say.map(fw => `
               <div class="strategy-fw-card" style="--fw-color: ${getSourceColor(fw.source)}">
@@ -426,7 +427,7 @@ function renderDimensions() {
       }
 
       btn.disabled = true;
-      btn.textContent = '⏳ Analyzing...';
+      btn.textContent = t('meta.analyzing');
       try {
         const res = await fetch('/api/analysis/deep-dive', {
           method: 'POST',
@@ -447,14 +448,14 @@ function renderDimensions() {
           .replace(/^# (.*$)/gim, '<h2>$1</h2>')
           .replace(/<p><\/p>/g, '');
           
-        resultDiv.innerHTML = `<p>${html}</p>`;
+        resultDiv.innerHTML = `<p>${sanitizeHTML(html)}</p>`;
         resultDiv.style.display = 'block';
       } catch (e) {
-        resultDiv.textContent = 'Failed to generate deep dive: ' + e.message;
+        resultDiv.textContent = t('meta.failedDeepDive').replace('{msg}', e.message);
         resultDiv.style.display = 'block';
       } finally {
         btn.disabled = false;
-        btn.textContent = '🤖 Deep Dive';
+        btn.textContent = t('meta.deepDiveBtn');
       }
     });
   });
@@ -467,20 +468,20 @@ async function generateAIRecommendations() {
   const content = document.getElementById('ai-rec-content');
 
   if (!maturityModel) {
-    showToast('Model not loaded yet', 'error');
+    showToast(t('meta.modelNotLoaded'), 'error');
     return;
   }
 
   const hasData = Object.keys(assessments).length > 0;
   if (!hasData) {
-    showToast('Complete the Assessment first to get personalized recommendations', 'error');
+    showToast(t('meta.assessmentRequired'), 'error');
     return;
   }
 
   btn.disabled = true;
-  btn.textContent = '⏳ Generating...';
+  btn.textContent = t('meta.generatingBtn');
   panel.style.display = 'block';
-  content.innerHTML = '<div class="loading-overlay"><div class="spinner"></div><span>Gemini is analyzing your maturity profile...</span></div>';
+  content.innerHTML = `<div class="loading-overlay"><div class="spinner"></div><span>${t('meta.geminiAnalyzing')}</span></div>`;
 
   // Build dimension scores for the prompt
   const dimScores = {};
@@ -504,17 +505,17 @@ async function generateAIRecommendations() {
     const data = await res.json();
     renderAIRecommendations(data);
   } catch (e) {
-    content.innerHTML = `<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">Could not generate recommendations: ${e.message}</div></div>`;
+    content.innerHTML = `<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">${t('meta.generationFailed').replace('{msg}', e.message)}</div></div>`;
   } finally {
     btn.disabled = false;
-    btn.textContent = '🤖 Generate AI Recommendations';
+    btn.textContent = t('meta.generateAiRec');
   }
 }
 
 function renderAIRecommendations(data) {
   const content = document.getElementById('ai-rec-content');
   if (!content || !data?.recommendations) {
-    content.innerHTML = '<div class="empty-state"><div class="empty-state-text">No recommendations generated</div></div>';
+    content.innerHTML = `<div class="empty-state"><div class="empty-state-text">${t('meta.noRecommendations')}</div></div>`;
     return;
   }
 
@@ -528,7 +529,7 @@ function renderAIRecommendations(data) {
       <div class="strategy-key-insight mb-lg">
         <span class="strategy-insight-icon">📋</span>
         <div>
-          <div style="font-weight: 600; margin-bottom: 4px; color: var(--text-primary);">Executive Summary</div>
+          <div style="font-weight: 600; margin-bottom: 4px; color: var(--text-primary);">${t('meta.executiveSummary')}</div>
           <span>${data.executive_summary}</span>
         </div>
       </div>
@@ -546,7 +547,7 @@ function renderAIRecommendations(data) {
             </div>
             <div style="font-size: 0.85rem; color: var(--text-primary); font-weight: 600; margin-bottom: 4px;">${rec.action}</div>
             ${rec.reasoning ? `<div style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5;">${rec.reasoning}</div>` : ''}
-            ${rec.expected_impact ? `<div style="font-size: 0.7rem; color: #10b981; margin-top: 4px;">📈 Expected impact: ${rec.expected_impact}</div>` : ''}
+            ${rec.expected_impact ? `<div style="font-size: 0.7rem; color: #10b981; margin-top: 4px;">${t('meta.expectedImpact')} ${rec.expected_impact}</div>` : ''}
           </div>
         `;
       }).join('')}

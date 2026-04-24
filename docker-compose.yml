@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  ai-strategy-hub:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/backend/.env
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped

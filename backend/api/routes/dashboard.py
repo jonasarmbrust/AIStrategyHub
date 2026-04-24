@@ -74,7 +74,7 @@ async def get_dashboard_stats():
             "dimension_averages": dimension_averages,
         }
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
 
 @router.get("/history")
@@ -108,4 +108,4 @@ async def get_history():
 
         return history[:20]
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed

@@ -4,6 +4,9 @@
  */
 import { api, getScoreColor, getLevelBadge, LEVEL_NAMES } from '../main.js';
 
+import { t } from '../i18n.js';
+import { sanitizeHTML, escapeHTML } from '../sanitize.js';
+
 let model = null;
 let currentAssessments = {};
 let simAssessments = {};
@@ -13,17 +16,17 @@ export async function renderSimulator(container) {
     <div class="page-header">
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="page-title">🎮 Gap Simulator</h1>
-          <p class="page-description">Toggle checkpoints to simulate score changes — discover which actions have the highest impact on your maturity level.</p>
+          <h1 class="page-title">${t('simulator.title')}</h1>
+          <p class="page-description">${t('simulator.desc')}</p>
         </div>
-        <button id="btn-reset-sim" class="btn btn-secondary btn-sm" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">↩️ Reset</button>
+        <button id="btn-reset-sim" class="btn btn-secondary btn-sm" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">${t('simulator.resetBtn')}</button>
       </div>
     </div>
 
     <div class="grid-2 mb-xl">
       <div class="card fade-in" style="animation-delay: 0ms">
         <div class="card-header border-none" style="margin-bottom: 4px;">
-          <span class="card-title">📊 Current State</span>
+          <span class="card-title">${t('simulator.currentState')}</span>
         </div>
         <div style="text-align: center; padding: 8px 0;">
           <div id="sim-current-score" class="stat-value" style="font-size: 2.5rem;">—</div>
@@ -33,7 +36,7 @@ export async function renderSimulator(container) {
       <div class="card fade-in" style="animation-delay: 60ms; position: relative; overflow: hidden;">
         <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gradient-primary);"></div>
         <div class="card-header border-none" style="margin-bottom: 4px;">
-          <span class="card-title">🎯 Simulated State</span>
+          <span class="card-title">${t('simulator.simState')}</span>
         </div>
         <div style="text-align: center; padding: 8px 0;">
           <div id="sim-new-score" class="stat-value" style="font-size: 2.5rem;">—</div>
@@ -45,8 +48,8 @@ export async function renderSimulator(container) {
 
     <div class="card mb-xl fade-in" style="animation-delay: 120ms">
       <div class="card-header">
-        <span class="card-title">⚡ Highest Impact Checkpoints</span>
-        <span style="font-size: 0.75rem; color: var(--text-muted);">Sorted by score impact — toggle to simulate</span>
+        <span class="card-title">${t('simulator.impactTitle')}</span>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">${t('simulator.impactSub')}</span>
       </div>
       <div id="sim-impact-list"></div>
     </div>
@@ -66,7 +69,7 @@ async function loadSimulatorData() {
   try {
     model = await api.get('/checklist/model');
   } catch {
-    document.getElementById('sim-dimensions').innerHTML = '<div class="empty-state"><div class="empty-state-text">Could not load framework model.</div></div>';
+    document.getElementById('sim-dimensions').innerHTML = `<div class="empty-state"><div class="empty-state-text">${t('simulator.failedLoad')}</div></div>`;
     return;
   }
 
@@ -124,11 +127,11 @@ function renderSimulation() {
   const delta = simulated.score - current.score;
   if (deltaEl) {
     if (delta > 0) {
-      deltaEl.innerHTML = `<span style="color: var(--accent-emerald);">📈 +${delta} points</span>`;
+      deltaEl.innerHTML = `<span style="color: var(--accent-emerald);">${t('simulator.ptsIncrease').replace('{pts}', delta)}</span>`;
     } else if (delta < 0) {
-      deltaEl.innerHTML = `<span style="color: var(--accent-red);">📉 ${delta} points</span>`;
+      deltaEl.innerHTML = `<span style="color: var(--accent-red);">${t('simulator.ptsDecrease').replace('{pts}', delta)}</span>`;
     } else {
-      deltaEl.innerHTML = `<span style="color: var(--text-muted);">No change</span>`;
+      deltaEl.innerHTML = `<span style="color: var(--text-muted);">${t('simulator.noChange')}</span>`;
     }
   }
 
@@ -161,7 +164,7 @@ function renderImpactList(current) {
   const top = unfulfilled.slice(0, 10);
 
   if (top.length === 0) {
-    el.innerHTML = '<div style="padding: 16px; color: var(--accent-emerald); font-size: 0.85rem;">🎉 All checkpoints fulfilled!</div>';
+    el.innerHTML = `<div style="padding: 16px; color: var(--accent-emerald); font-size: 0.85rem;">${t('simulator.allFulfilled')}</div>`;
     return;
   }
 
@@ -203,7 +206,7 @@ function renderDimensionBreakdown(current, simulated) {
   el.innerHTML = `
     <div class="card">
       <div class="card-header">
-        <span class="card-title">📊 Dimension Impact</span>
+        <span class="card-title">${t('simulator.dimImpactTitle')}</span>
       </div>
       <div style="display: flex; flex-direction: column; gap: 12px;">
         ${model.dimensions.map(dim => {

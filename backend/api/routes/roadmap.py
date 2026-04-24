@@ -158,6 +158,6 @@ async def roadmap_from_latest_assessment(
         else:
             assessments = {}
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
     return generate_roadmap(assessments=assessments, target_level=target_level)

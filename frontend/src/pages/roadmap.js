@@ -4,6 +4,9 @@
  */
 import { api, showToast, getLevelBadge, getScoreColor, LEVEL_NAMES, renderEvidenceTags } from '../main.js';
 
+import { t } from '../i18n.js';
+import { sanitizeHTML, escapeHTML } from '../sanitize.js';
+
 let roadmapData = null;
 
 export function renderRoadmap(container) {
@@ -11,23 +14,23 @@ export function renderRoadmap(container) {
     <div class="page-header">
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="page-title">Actionable Roadmap</h1>
-          <p class="page-description">See what's needed to reach your next maturity level — prioritized by impact and effort.</p>
+          <h1 class="page-title">${t('roadmap.title')}</h1>
+          <p class="page-description">${t('roadmap.desc')}</p>
         </div>
         <div class="flex gap-md">
-          <button class="btn btn-secondary btn-sm" id="btn-export-md">📄 Export MD</button>
-          <button class="btn btn-secondary btn-sm" id="btn-export-pdf">📕 Export PDF</button>
+          <button class="btn btn-secondary btn-sm" id="btn-export-md">${t('roadmap.exportMd')}</button>
+          <button class="btn btn-secondary btn-sm" id="btn-export-pdf">${t('roadmap.exportPdf')}</button>
         </div>
       </div>
     </div>
 
     <div class="card mb-xl">
       <div class="card-header">
-        <span class="card-title">🎯 Target Configuration</span>
+        <span class="card-title">${t('roadmap.targetConfig')}</span>
       </div>
       <div class="flex gap-md items-center" style="flex-wrap: wrap;">
         <div>
-          <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Target Maturity Level</label>
+          <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 6px;">${t('roadmap.targetLevel')}</label>
           <div class="flex gap-sm" id="target-level-selector">
             ${[1,2,3,4,5].map(l => `
               <button class="btn btn-sm target-level-btn ${l === 3 ? 'active' : ''}" data-level="${l}"
@@ -37,7 +40,7 @@ export function renderRoadmap(container) {
             `).join('')}
           </div>
         </div>
-        <button class="btn btn-primary" id="btn-generate" style="margin-left: auto;">Generate Roadmap</button>
+        <button class="btn btn-primary" id="btn-generate" style="margin-left: auto;">${t('roadmap.generateBtn')}</button>
       </div>
     </div>
 
@@ -45,19 +48,19 @@ export function renderRoadmap(container) {
       <div class="grid-4 mb-lg">
         <div class="card stat-card">
           <div class="stat-value gradient-blue" id="rm-current-score">—</div>
-          <div class="stat-label">Current Score</div>
+          <div class="stat-label">${t('roadmap.currentScore')}</div>
         </div>
         <div class="card stat-card">
           <div id="rm-current-level" style="margin-bottom: 8px">—</div>
-          <div class="stat-label">Current Level</div>
+          <div class="stat-label">${t('roadmap.currentLevel')}</div>
         </div>
         <div class="card stat-card">
           <div class="stat-value gradient-warm" id="rm-total-gaps">0</div>
-          <div class="stat-label">Open Gaps</div>
+          <div class="stat-label">${t('roadmap.openGaps')}</div>
         </div>
         <div class="card stat-card">
           <div class="stat-value gradient-green" id="rm-quick-wins">0</div>
-          <div class="stat-label">Quick Wins</div>
+          <div class="stat-label">${t('roadmap.quickWins')}</div>
         </div>
       </div>
     </div>
@@ -65,21 +68,21 @@ export function renderRoadmap(container) {
     <div id="roadmap-content" class="mb-xl" style="display: none;">
       <div class="card mb-lg" id="quick-wins-card" style="display: none;">
         <div class="card-header">
-          <span class="card-title">⚡ Quick Wins — Low effort, high impact</span>
+          <span class="card-title">${t('roadmap.qwTitle')}</span>
         </div>
         <div id="quick-wins-list"></div>
       </div>
 
       <div class="card mb-lg" id="dimension-gaps-card">
         <div class="card-header">
-          <span class="card-title">📊 Gaps by Dimension</span>
+          <span class="card-title">${t('roadmap.gapsTitle')}</span>
         </div>
         <div id="dimension-gaps-chart"></div>
       </div>
 
       <div class="card">
         <div class="card-header">
-          <span class="card-title">📋 Full Roadmap</span>
+          <span class="card-title">${t('roadmap.fullRoadmapTitle')}</span>
           <span class="card-subtitle" id="roadmap-count"></span>
         </div>
         <div id="roadmap-items-list"></div>
@@ -89,7 +92,7 @@ export function renderRoadmap(container) {
     <div id="roadmap-empty" class="card">
       <div class="empty-state">
         <div class="empty-state-icon">🗺️</div>
-        <div class="empty-state-text">Select a target level and click "Generate Roadmap" to see your prioritized action items.</div>
+        <div class="empty-state-text">${t('roadmap.emptyStateMsg')}</div>
       </div>
     </div>
   `;
@@ -120,12 +123,12 @@ function setupRoadmapEvents() {
 async function generateRoadmap() {
   const btn = document.getElementById('btn-generate');
   btn.disabled = true;
-  btn.textContent = '⏳ Generating…';
+  btn.textContent = t('roadmap.generatingBtn');
 
   try {
     roadmapData = await api.get(`/roadmap/from-latest?target_level=${targetLevel}`);
     renderRoadmapResults();
-    showToast(`Roadmap generated: ${roadmapData.total_gaps} gaps found`, 'success');
+    showToast(t('roadmap.roadmapGenerated').replace('{count}', roadmapData.total_gaps), 'success');
   } catch (e) {
     // Try with empty assessments
     try {
@@ -135,11 +138,11 @@ async function generateRoadmap() {
       });
       renderRoadmapResults();
     } catch {
-      showToast('Could not generate roadmap. Is the backend running?', 'error');
+      showToast(t('roadmap.roadmapFailed'), 'error');
     }
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Generate Roadmap';
+    btn.textContent = t('roadmap.generateBtn');
   }
 }
 
@@ -172,7 +175,7 @@ function renderRoadmapResults() {
 
   // Full roadmap
   const count = document.getElementById('roadmap-count');
-  count.textContent = `${roadmapData.items.length} items · Target: Level ${targetLevel} ${LEVEL_NAMES[targetLevel]}`;
+  count.textContent = t('roadmap.roadmapItemsCount').replace('{count}', roadmapData.items.length).replace('{level}', targetLevel).replace('{levelName}', LEVEL_NAMES[targetLevel]);
 
   const itemsList = document.getElementById('roadmap-items-list');
   itemsList.innerHTML = roadmapData.items.map(item => renderRoadmapItem(item)).join('');
@@ -180,7 +183,7 @@ function renderRoadmapResults() {
 
 function renderRoadmapItem(item, isQuickWin = false) {
   const effortColors = { low: '#10b981', medium: '#f59e0b', high: '#ef4444' };
-  const effortLabels = { low: 'Low', medium: 'Medium', high: 'High' };
+  const effortLabels = { low: t('roadmap.effortLow'), medium: t('roadmap.effortMed'), high: t('roadmap.effortHigh') };
   const effortColor = effortColors[item.effort] || '#8890b5';
 
   return `
@@ -196,13 +199,13 @@ function renderRoadmapItem(item, isQuickWin = false) {
             <div class="roadmap-item-meta">
               <span class="roadmap-dim-badge">${item.dimension_name}</span>
               <span class="roadmap-effort" style="--effort-color: ${effortColor}">
-                ${effortLabels[item.effort]} effort
+                ${t('roadmap.effortSuffix').replace('{effort}', effortLabels[item.effort])}
               </span>
-              <span style="font-size: 0.7rem; color: var(--text-muted)">Level ${item.min_level}+</span>
+              <span style="font-size: 0.7rem; color: var(--text-muted)">${t('roadmap.levelPlus').replace('{level}', item.min_level)}</span>
             </div>
           </div>
         </div>
-        ${isQuickWin ? '<span class="quick-win-badge">⚡ Quick Win</span>' : ''}
+        ${isQuickWin ? `<span class="quick-win-badge">${t('roadmap.qwBadge')}</span>` : ''}
       </div>
       <div class="roadmap-item-tags">
         ${renderEvidenceTags(item.evidence_tags || [])}
@@ -234,7 +237,7 @@ function renderDimensionGaps(gaps) {
     return `
       <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
         <span style="font-size: 1rem; width: 24px">${meta.icon}</span>
-        <span style="font-size: 0.82rem; width: 100px; font-weight: 500">${meta.name}</span>
+        <span style="font-size: 0.82rem; width: 100px; font-weight: 500">${t('dimensions.' + dimId)}</span>
         <div style="flex: 1">
           <div class="progress-bar">
             <div class="progress-fill" style="width: ${pct}%; background: ${color}; transition: width 0.8s ease;"></div>
@@ -249,8 +252,8 @@ function renderDimensionGaps(gaps) {
 async function exportReport(format) {
   try {
     await api.postDownload(`/export/${format}`, {});
-    showToast(`${format.toUpperCase()} report downloaded!`, 'success');
+    showToast(t('roadmap.exportSuccess').replace('{format}', format.toUpperCase()), 'success');
   } catch (e) {
-    showToast(`Export failed: ${e.message}`, 'error');
+    showToast(t('roadmap.exportFailed').replace('{msg}', e.message), 'error');
   }
 }

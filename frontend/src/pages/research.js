@@ -3,6 +3,8 @@
  * Enhanced with synchronous feedback, API key status check, and error messages.
  */
 import { api, showToast } from '../main.js';
+import { t } from '../i18n.js';
+import { sanitizeHTML, escapeHTML } from '../sanitize.js';
 
 const DIM_LABELS = {
   strategy: { name: 'Strategy', icon: '🎯' },
@@ -19,42 +21,42 @@ export function renderResearch(container) {
     <div class="page-header">
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="page-title">Research Agent</h1>
-          <p class="page-description">Discover new AI strategy frameworks, regulations, and best practices — automatically evaluated for relevance to your maturity model.</p>
+          <h1 class="page-title">${t('research.title')}</h1>
+          <p class="page-description">${t('research.desc')}</p>
         </div>
-        <button class="btn btn-primary" id="btn-search">🔬 Run Research</button>
+        <button class="btn btn-primary" id="btn-search">${t('research.runResearch')}</button>
       </div>
     </div>
 
     <div class="card mb-xl" id="ingest-panel">
       <div class="card-header" style="cursor: pointer;" id="ingest-toggle">
-        <span class="card-title">📥 Source Ingestion — Analyze & Integrate New Sources</span>
+        <span class="card-title">${t('research.ingestTitle')}</span>
         <span class="expand-icon" id="ingest-arrow">▼</span>
       </div>
       <div id="ingest-content" style="display: none;">
         <div style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6;">
-          Feed a URL or upload a document (PDF, TXT, DOCX). Gemini extracts key arguments and maps them to the 7 maturity dimensions. You can then selectively integrate them into your model.
+          ${t('research.ingestDesc')}
         </div>
         <div class="grid-2 mb-lg">
           <div>
-            <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Analyze URL</label>
+            <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 6px;">${t('research.analyzeUrl')}</label>
             <div class="flex gap-md">
               <input class="input" id="ingest-url" placeholder="https://example.com/ai-framework.pdf" style="flex: 1;" />
-              <button class="btn btn-primary btn-sm" id="btn-ingest-url">Analyze</button>
+              <button class="btn btn-primary btn-sm" id="btn-ingest-url">${t('research.analyzeBtn')}</button>
             </div>
           </div>
           <div>
-            <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Upload File</label>
+            <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 6px;">${t('research.uploadFile')}</label>
             <div class="dropzone" id="ingest-dropzone" style="padding: 20px;">
               <div class="dropzone-icon" style="font-size: 2rem; margin-bottom: 8px;">📂</div>
-              <div class="dropzone-text" style="font-size: 0.82rem;">Drag & drop or click to browse</div>
-              <div class="dropzone-hint">PDF, TXT, DOCX, MD</div>
+              <div class="dropzone-text" style="font-size: 0.82rem;">${t('research.dragDropText')}</div>
+              <div class="dropzone-hint">${t('research.dragDropHint')}</div>
               <input type="file" id="ingest-file" accept=".pdf,.txt,.md,.docx" style="display: none;" />
             </div>
             <div id="ingest-file-info" style="display: none; margin-top: 8px; padding: 8px 12px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15); border-radius: 8px; font-size: 0.8rem;">
               <div class="flex justify-between items-center">
                 <span id="ingest-file-name" style="color: var(--text-primary); font-weight: 500;"></span>
-                <button class="btn btn-primary btn-sm" id="btn-ingest-file" style="padding: 4px 14px;">🔍 Analyze</button>
+                <button class="btn btn-primary btn-sm" id="btn-ingest-file" style="padding: 4px 14px;">🔍 ${t('research.analyzeBtn')}</button>
               </div>
             </div>
           </div>
@@ -68,12 +70,12 @@ export function renderResearch(container) {
       <div style="display: flex; align-items: flex-start; gap: 12px; padding: 4px;">
         <span style="font-size: 1.5rem;">⚠️</span>
         <div>
-          <div style="font-weight: 600; margin-bottom: 4px;">API Keys nicht konfiguriert</div>
+          <div style="font-weight: 600; margin-bottom: 4px;">${t('research.apiKeysMissing')}</div>
           <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6;" id="api-key-message">
-            Der Research Agent benötigt API-Keys. Erstelle eine <code>.env</code> Datei im Projektroot:
+            ${t('research.apiKeysDesc')}
             <pre style="margin-top: 8px; padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px; font-size: 0.75rem; overflow-x: auto;">TAVILY_API_KEY=dein_key_hier    # https://tavily.com (kostenlos)
 GEMINI_API_KEY=dein_key_hier    # https://aistudio.google.com/apikey</pre>
-            Dann Backend neu starten.
+            ${t('research.apiKeysRestart')}
           </div>
         </div>
       </div>
@@ -81,38 +83,38 @@ GEMINI_API_KEY=dein_key_hier    # https://aistudio.google.com/apikey</pre>
 
     <div class="card mb-xl" id="search-panel">
       <div class="card-header">
-        <span class="card-title">🔎 Research Configuration</span>
+        <span class="card-title">${t('research.searchConfig')}</span>
       </div>
       <div class="mb-lg">
-        <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Custom Search Query (optional)</label>
-        <input class="input" id="search-query" placeholder="e.g., AI governance best practices 2026 enterprise" />
+        <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 6px;">${t('research.customQuery')}</label>
+        <input class="input" id="search-query" placeholder="${t('research.customQueryPlaceholder')}" />
       </div>
       <div class="mb-lg">
-        <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 8px;">Focus Dimensions</label>
+        <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 8px;">${t('research.focusDims')}</label>
         <div class="flex gap-md" style="flex-wrap: wrap;" id="dimension-filters">
           ${Object.entries(DIM_LABELS).map(([id, dim]) => `
             <button class="btn btn-ghost btn-sm dim-toggle" data-dim="${id}">
-              ${dim.icon} ${dim.name}
+              ${dim.icon} ${t('dimensions.' + id)}
             </button>
           `).join('')}
         </div>
       </div>
       <div class="flex justify-between items-center">
-        <span style="font-size: 0.75rem; color: var(--text-muted);" id="search-status">💡 Select dimensions or enter a query, then click "Run Research"</span>
+        <span style="font-size: 0.75rem; color: var(--text-muted);" id="search-status">${t('research.statusHelp')}</span>
         <div class="flex gap-md items-center">
           <label style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-secondary); cursor: pointer;">
             <input type="checkbox" id="search-pdf-only" style="accent-color: var(--accent-blue);" />
-            Only search for PDFs
+            ${t('research.pdfOnly')}
           </label>
           <select class="input select" id="search-language" style="width: 140px;">
-            <option value="both">All Languages</option>
-            <option value="english" selected>English</option>
-            <option value="german">Deutsch</option>
+            <option value="both">${t('research.langAll')}</option>
+            <option value="english" selected>${t('research.langEn')}</option>
+            <option value="german">${t('research.langDe')}</option>
           </select>
           <select class="input select" id="max-results" style="width: 120px;">
-            <option value="5">5 results</option>
-            <option value="10" selected>10 results</option>
-            <option value="20">20 results</option>
+            <option value="5">${t('research.resultsCount').replace('{count}', '5')}</option>
+            <option value="10" selected>${t('research.resultsCount').replace('{count}', '10')}</option>
+            <option value="20">${t('research.resultsCount').replace('{count}', '20')}</option>
           </select>
         </div>
       </div>
@@ -120,28 +122,28 @@ GEMINI_API_KEY=dein_key_hier    # https://aistudio.google.com/apikey</pre>
 
     <div class="card mb-lg" id="result-summary" style="display: none;">
       <div class="card-header">
-        <span class="card-title">📊 Last Search Results</span>
+        <span class="card-title">${t('research.lastResults')}</span>
       </div>
       <div id="result-summary-content"></div>
     </div>
 
     <div class="card mb-lg">
       <div class="flex justify-between items-center" style="margin-bottom: 16px;">
-        <div class="card-title">📚 Sources Feed</div>
+        <div class="card-title">${t('research.sourcesFeed')}</div>
         <div class="flex gap-md items-center">
           <span style="font-size: 0.75rem; color: var(--text-muted);" id="source-count">—</span>
           <select class="input select btn-sm" id="filter-category" style="width: 140px; padding: 6px 28px 6px 12px;">
-            <option value="">All Categories</option>
-            <option value="framework">Frameworks</option>
-            <option value="regulation">Regulations</option>
-            <option value="whitepaper">Whitepapers</option>
-            <option value="article">Articles</option>
-            <option value="report">Reports</option>
-            <option value="tool">Tools</option>
+            <option value="">${t('research.catAll')}</option>
+            <option value="framework">${t('research.catFramework')}</option>
+            <option value="regulation">${t('research.catRegulation')}</option>
+            <option value="whitepaper">${t('research.catWhitepaper')}</option>
+            <option value="article">${t('research.catArticle')}</option>
+            <option value="report">${t('research.catReport')}</option>
+            <option value="tool">${t('research.catTool')}</option>
           </select>
           <select class="input select btn-sm" id="filter-dimension" style="width: 140px; padding: 6px 28px 6px 12px;">
-            <option value="">All Dimensions</option>
-            ${Object.entries(DIM_LABELS).map(([id, dim]) => `<option value="${id}">${dim.icon} ${dim.name}</option>`).join('')}
+            <option value="">${t('research.dimAll')}</option>
+            ${Object.entries(DIM_LABELS).map(([id, dim]) => `<option value="${id}">${dim.icon} ${t('dimensions.' + id)}</option>`).join('')}
           </select>
         </div>
       </div>
@@ -266,8 +268,8 @@ async function triggerResearch() {
   const statusEl = document.getElementById('search-status');
 
   btn.disabled = true;
-  btn.textContent = '⏳ Searching…';
-  statusEl.textContent = '🔄 Research agent is searching and evaluating sources…';
+  btn.textContent = t('research.searchingBtn');
+  statusEl.textContent = t('research.searchingStatus');
 
   try {
     const result = await api.post('/research/trigger', {
@@ -279,16 +281,16 @@ async function triggerResearch() {
     });
 
     if (result.status === 'error') {
-      showToast(result.errors?.[0] || 'Research failed', 'error');
-      statusEl.textContent = `❌ ${result.errors?.[0] || 'Research failed'}`;
+      showToast(result.errors?.[0] || t('research.researchFailed'), 'error');
+      statusEl.textContent = `❌ ${result.errors?.[0] || t('research.researchFailed')}`;
       showResultSummary(result);
       return;
     }
 
     // Success
     const msg = result.stored > 0
-      ? `✅ ${result.stored} new sources stored (${result.found} found, ${result.skipped_low_relevance} skipped)`
-      : `ℹ️ ${result.found} found, but no new sources to store`;
+      ? t('research.sourcesStored').replace('{stored}', result.stored).replace('{found}', result.found).replace('{skipped}', result.skipped_low_relevance)
+      : t('research.noNewSources').replace('{found}', result.found);
 
     showToast(msg, result.stored > 0 ? 'success' : 'info');
     statusEl.textContent = msg;
@@ -298,11 +300,11 @@ async function triggerResearch() {
     await loadSources();
 
   } catch (e) {
-    showToast(`Research failed: ${e.message}`, 'error');
+    showToast(`${t('research.researchFailed')}: ${e.message}`, 'error');
     statusEl.textContent = `❌ ${e.message}`;
   } finally {
     btn.disabled = false;
-    btn.textContent = '🔬 Run Research';
+    btn.textContent = t('research.runResearch');
   }
 }
 
@@ -314,10 +316,10 @@ function showResultSummary(result) {
   card.style.display = 'block';
 
   const stats = [
-    { label: 'Found', value: result.found || 0, color: '#3b82f6' },
-    { label: 'New', value: result.new || 0, color: '#8b5cf6' },
-    { label: 'Stored', value: result.stored || 0, color: '#10b981' },
-    { label: 'Low Relevance', value: result.skipped_low_relevance || 0, color: '#f59e0b' },
+    { label: t('research.statFound'), value: result.found || 0, color: '#3b82f6' },
+    { label: t('research.statNew'), value: result.new || 0, color: '#8b5cf6' },
+    { label: t('research.statStored'), value: result.stored || 0, color: '#10b981' },
+    { label: t('research.statSkipped'), value: result.skipped_low_relevance || 0, color: '#f59e0b' },
   ];
 
   const errors = (result.errors || []).map(e =>
@@ -351,14 +353,14 @@ async function loadSources() {
     const data = await api.get(`/research/sources${queryParams}`);
 
     if (countEl) {
-      countEl.textContent = `${data.total_count} sources · ${data.new_count} new`;
+      countEl.textContent = t('research.sourceCountLabel').replace('{total}', data.total_count).replace('{new}', data.new_count);
     }
 
     if (!data.sources || data.sources.length === 0) {
       el.innerHTML = `
         <div class="empty-state">
           <div class="empty-state-icon">🔬</div>
-          <div class="empty-state-text">No sources yet. Run a research search to discover new AI strategy content.</div>
+          <div class="empty-state-text">${t('research.noSourcesYet')}</div>
         </div>
       `;
       return;
@@ -375,9 +377,9 @@ async function loadSources() {
           await api.patch(`/research/sources/${id}/read`);
           btn.closest('.source-card').querySelector('.source-indicator').classList.replace('unread', 'read');
           btn.remove();
-          showToast('Marked as read', 'success');
+          showToast(t('research.markedAsRead'), 'success');
         } catch {
-          showToast('Could not update', 'error');
+          showToast(t('research.couldNotUpdate'), 'error');
         }
       });
     });
@@ -397,9 +399,9 @@ async function loadSources() {
         }
 
         btn.disabled = true;
-        btn.textContent = '⏳ ...';
+        btn.textContent = t('research.extractingBtn');
         panel.style.display = 'block';
-        panel.innerHTML = `<div style="padding: 16px; text-align: center;"><div class="spinner" style="width: 20px; height: 20px; border-width: 2px; display: inline-block;"></div><span style="margin-left: 8px; font-size: 0.82rem; color: var(--text-secondary);">Extracting novel checkpoints...</span></div>`;
+        panel.innerHTML = `<div style="padding: 16px; text-align: center;"><div class="spinner" style="width: 20px; height: 20px; border-width: 2px; display: inline-block;"></div><span style="margin-left: 8px; font-size: 0.82rem; color: var(--text-secondary);">${t('research.extractingMsg')}</span></div>`;
 
         try {
           const result = await api.post(`/research/sources/${id}/extract-for-framework`);
@@ -408,7 +410,7 @@ async function loadSources() {
           panel.innerHTML = `<div style="padding: 12px; font-size: 0.82rem; color: #ef4444;">❌ ${err.message}</div>`;
         } finally {
           btn.disabled = false;
-          btn.textContent = '🏗️ Extract';
+          btn.textContent = t('research.extractBtn');
         }
       });
     });
@@ -416,7 +418,7 @@ async function loadSources() {
     el.innerHTML = `
       <div class="empty-state">
         <div class="empty-state-icon">⚡</div>
-        <div class="empty-state-text">Start the backend to view research sources</div>
+        <div class="empty-state-text">${t('research.startBackendSources')}</div>
       </div>
     `;
     if (countEl) countEl.textContent = '—';
@@ -447,17 +449,17 @@ function renderSourceCard(source) {
         <div class="source-title">
           <a href="${source.url}" target="_blank" rel="noopener">${source.title}</a>
         </div>
-        <div class="source-summary">${source.summary || 'No summary available'}</div>
+        <div class="source-summary">${source.summary || t('research.noSummary')}</div>
         <div class="source-meta">
           <span style="font-size: 0.65rem; padding: 2px 8px; border-radius: 999px; background: ${catColor}20; color: ${catColor};">${source.category}</span>
           ${dims}
-          <span class="source-relevance">📊 ${relevance}% relevant</span>
+          <span class="source-relevance">${t('research.relevantPct').replace('{pct}', relevance)}</span>
           ${source.discovered_at ? `<span class="source-date">${new Date(source.discovered_at).toLocaleDateString('de-DE')}</span>` : ''}
         </div>
       </div>
       <div style="display: flex; flex-direction: column; gap: 4px; flex-shrink: 0;">
-        ${!source.is_read ? `<button class="btn btn-ghost btn-sm btn-mark-read" data-id="${source.id}">✓ Read</button>` : ''}
-        <button class="btn btn-ghost btn-sm btn-extract-fw" data-id="${source.id}" data-title="${source.title}" title="Extract novel checkpoints for the Framework Builder">🏗️ Extract</button>
+        ${!source.is_read ? `<button class="btn btn-ghost btn-sm btn-mark-read" data-id="${source.id}">${t('research.readBtn')}</button>` : ''}
+        <button class="btn btn-ghost btn-sm btn-extract-fw" data-id="${source.id}" data-title="${source.title}" title="${t('research.extractTooltip')}">${t('research.extractBtn')}</button>
       </div>
     </div>
     <div id="fw-panel-${source.id}" class="fw-extract-panel" style="display: none;"></div>
@@ -469,13 +471,13 @@ let lastIngestResult = null;
 
 async function ingestUrl() {
   const url = document.getElementById('ingest-url').value.trim();
-  if (!url) return showToast('Please enter a URL', 'error');
+  if (!url) return showToast(t('research.enterUrl'), 'error');
 
   const statusEl = document.getElementById('ingest-status');
   const btn = document.getElementById('btn-ingest-url');
   btn.disabled = true;
-  btn.textContent = '⏳ Analyzing...';
-  statusEl.textContent = '🔄 Fetching and analyzing source with Gemini...';
+  btn.textContent = t('analyzer.analyzingBtn');
+  statusEl.textContent = t('research.fetchingStatus');
 
   try {
     const formData = new FormData();
@@ -489,14 +491,14 @@ async function ingestUrl() {
     }
     const result = await res.json();
     lastIngestResult = result;
-    statusEl.textContent = `✅ Extracted ${result.arguments?.length || 0} arguments from "${result.source_name || url}"`;
+    statusEl.textContent = t('research.extractedArgs').replace('{count}', result.arguments?.length || 0).replace('{source}', result.source_name || url);
     renderIngestResults(result);
   } catch (e) {
     statusEl.textContent = `❌ ${e.message}`;
-    showToast(`Analysis failed: ${e.message}`, 'error');
+    showToast(t('research.analysisFailed').replace('{msg}', e.message), 'error');
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Analyze';
+    btn.textContent = t('research.analyzeBtn');
   }
 }
 
@@ -520,13 +522,13 @@ function handleIngestFile(file) {
 
 async function ingestFile() {
   const file = pendingIngestFile;
-  if (!file) return showToast('Please select a file first', 'error');
+  if (!file) return showToast(t('research.selectFileFirst'), 'error');
 
   const statusEl = document.getElementById('ingest-status');
   const btn = document.getElementById('btn-ingest-file');
   btn.disabled = true;
-  btn.textContent = '⏳ Analyzing...';
-  statusEl.textContent = `🔄 Analyzing "${file.name}" with Gemini...`;
+  btn.textContent = t('analyzer.analyzingBtn');
+  statusEl.textContent = t('research.analyzingFile').replace('{file}', file.name);
 
   try {
     const formData = new FormData();
@@ -539,14 +541,14 @@ async function ingestFile() {
     }
     const result = await res.json();
     lastIngestResult = result;
-    statusEl.textContent = `✅ Extracted ${result.arguments?.length || 0} arguments from "${result.source_name || file.name}"`;
+    statusEl.textContent = t('research.extractedArgs').replace('{count}', result.arguments?.length || 0).replace('{source}', result.source_name || file.name);
     renderIngestResults(result);
   } catch (e) {
     statusEl.textContent = `❌ ${e.message}`;
-    showToast(`Analysis failed: ${e.message}`, 'error');
+    showToast(t('research.analysisFailed').replace('{msg}', e.message), 'error');
   } finally {
     btn.disabled = false;
-    btn.textContent = '🔍 Analyze';
+    btn.textContent = t('research.analyzeBtn');
     pendingIngestFile = null;
     const info = document.getElementById('ingest-file-info');
     if (info) info.style.display = 'none';
@@ -556,7 +558,7 @@ async function ingestFile() {
 function renderIngestResults(result) {
   const container = document.getElementById('ingest-results');
   if (!container || !result?.arguments?.length) {
-    if (container) container.innerHTML = '<div class="empty-state"><div class="empty-state-text">No arguments extracted</div></div>';
+    if (container) container.innerHTML = `<div class="empty-state"><div class="empty-state-text">${t('research.noArgsExtracted')}</div></div>`;
     return;
   }
 
@@ -567,10 +569,10 @@ function renderIngestResults(result) {
 
   container.innerHTML = `
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-      <div style="font-size: 0.85rem; font-weight: 600;">📋 Extracted Arguments — ${result.source_name || 'Source'}
+      <div style="font-size: 0.85rem; font-weight: 600;">${t('research.extractedArgsTitle').replace('{source}', result.source_name || 'Source')}
         <span style="font-size: 0.7rem; color: var(--text-muted); margin-left: 8px;">${result.source_type || 'article'}</span>
       </div>
-      <button class="btn btn-primary btn-sm" id="btn-integrate-all">⚡ Integrate All Selected</button>
+      <button class="btn btn-primary btn-sm" id="btn-integrate-all">${t('research.integrateAllBtn')}</button>
     </div>
     <div class="ingest-args-list">
       ${result.arguments.map((arg, idx) => {
@@ -600,11 +602,11 @@ function renderIngestResults(result) {
     const checked = Array.from(document.querySelectorAll('.ingest-arg-check:checked'));
     const selectedArgs = checked.map(cb => result.arguments[parseInt(cb.dataset.idx)]);
 
-    if (selectedArgs.length === 0) return showToast('No arguments selected', 'error');
+    if (selectedArgs.length === 0) return showToast(t('research.noArgsSelected'), 'error');
 
     const btn = document.getElementById('btn-integrate-all');
     btn.disabled = true;
-    btn.textContent = '⏳ Integrating...';
+    btn.textContent = t('research.integratingBtn');
 
     try {
       const res = await fetch('/api/ingest/integrate', {
@@ -618,14 +620,14 @@ function renderIngestResults(result) {
       });
       const data = await res.json();
       const cpIds = (data.affected_checkpoints || []).map(cp => cp.id).join(', ');
-      showToast(`✅ ${data.integrated} arguments integrated → ${cpIds || 'model'}`, 'success');
+      showToast(t('research.integrationSuccess').replace('{count}', data.integrated).replace('{target}', cpIds || 'model'), 'success');
       
       // Show detailed feedback
       const statusEl = document.getElementById('ingest-status');
       const cpList = (data.affected_checkpoints || []).map(cp => 
         `<span style="font-size: 0.7rem; padding: 2px 6px; border-radius: 999px; background: rgba(16,185,129,0.1); color: #10b981; margin-right: 4px;">${cp.id}</span>`
       ).join('');
-      statusEl.innerHTML = `✅ ${data.integrated} of ${data.total_requested} integrated into: ${cpList} <a href="#explorer" style="color: var(--accent-blue); font-size: 0.75rem; margin-left: 8px;">View in Explorer →</a>`;
+      statusEl.innerHTML = `${t('research.integrationStatus').replace('{integrated}', data.integrated).replace('{total}', data.total_requested)} ${cpList} <a href="#explorer" style="color: var(--accent-blue); font-size: 0.75rem; margin-left: 8px;">${t('research.viewInExplorer')}</a>`;
       
       // Disable integrated checkboxes
       checked.forEach(cb => {
@@ -633,10 +635,10 @@ function renderIngestResults(result) {
         cb.closest('.ingest-arg-card').style.opacity = '0.5';
       });
     } catch (e) {
-      showToast(`Integration failed: ${e.message}`, 'error');
+      showToast(t('research.integrationFailed').replace('{msg}', e.message), 'error');
     } finally {
       btn.disabled = false;
-      btn.textContent = '⚡ Integrate All Selected';
+      btn.textContent = t('research.integrateAllBtn');
     }
   });
 }
@@ -647,7 +649,7 @@ function renderInlineProposals(panel, result, sourceId) {
   const proposals = result.proposals || [];
 
   if (proposals.length === 0) {
-    panel.innerHTML = '<div style="padding:16px;border-top:1px solid var(--border-color);background:rgba(16,185,129,0.04);"><div style="font-size:0.85rem;color:var(--accent-emerald);">No novel insights found — the Meta-Model already covers this source.</div></div>';
+    panel.innerHTML = `<div style="padding:16px;border-top:1px solid var(--border-color);background:rgba(16,185,129,0.04);"><div style="font-size:0.85rem;color:var(--accent-emerald);">${t('research.noNovelInsights')}</div></div>`;
     return;
   }
 
@@ -658,8 +660,8 @@ function renderInlineProposals(panel, result, sourceId) {
 
   let html = '<div style="padding:16px;border-top:1px solid var(--border-color);background:rgba(59,130,246,0.03);">';
   html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">';
-  html += '<span style="font-size:0.85rem;font-weight:600;">&#127959; ' + proposals.length + ' Novel Checkpoint Proposals</span>';
-  html += '<button class="btn btn-primary btn-sm" id="btn-fw-int-' + sourceId + '">&#10133; Integrate Selected (' + proposals.length + ')</button>';
+  html += '<span style="font-size:0.85rem;font-weight:600;">&#127959; ' + t('research.novelCpProposals').replace('{count}', proposals.length).replace('🏗️ ', '') + '</span>';
+  html += '<button class="btn btn-primary btn-sm" id="btn-fw-int-' + sourceId + '">' + t('research.integrateSelected').replace('{count}', proposals.length) + '</button>';
   html += '</div>';
 
   proposals.forEach(function(p, idx) {
@@ -696,7 +698,7 @@ function renderInlineProposals(panel, result, sourceId) {
     var checked = panel.querySelectorAll('.fw-prop-cb:checked').length;
     var intBtn = document.getElementById('btn-fw-int-' + sourceId);
     if (intBtn) {
-      intBtn.textContent = '➕ Integrate Selected (' + checked + ')';
+      intBtn.textContent = t('research.integrateSelected').replace('{count}', checked);
       intBtn.disabled = checked === 0;
     }
   };
@@ -711,17 +713,17 @@ function renderInlineProposals(panel, result, sourceId) {
       if (selected.length === 0) return;
 
       intBtn.disabled = true;
-      intBtn.textContent = 'Integrating...';
+      intBtn.textContent = t('research.integrating');
 
       try {
         var res = await api.post('/framework/integrate', { checkpoints: selected });
         var count = res.added || 0;
-        showToast(count + ' checkpoints integrated into the Meta-Model!', 'success');
-        panel.innerHTML = '<div style="padding:16px;border-top:1px solid var(--border-color);background:rgba(16,185,129,0.06);"><div style="font-size:0.85rem;color:var(--accent-emerald);">✅ ' + count + ' checkpoints successfully integrated! <a href="#explorer" style="color:var(--accent-blue);margin-left:8px;">View in Explorer →</a></div></div>';
+        showToast(t('research.cpsIntegratedSuccess').replace('{count}', count), 'success');
+        panel.innerHTML = '<div style="padding:16px;border-top:1px solid var(--border-color);background:rgba(16,185,129,0.06);"><div style="font-size:0.85rem;color:var(--accent-emerald);">' + t('research.cpsIntegratedStatus').replace('{count}', count) + ' <a href="#explorer" style="color:var(--accent-blue);margin-left:8px;">' + t('research.viewInExplorer') + '</a></div></div>';
       } catch (e) {
-        showToast('Integration failed: ' + e.message, 'error');
+        showToast(t('research.integrationFailed').replace('{msg}', e.message), 'error');
         intBtn.disabled = false;
-        intBtn.textContent = '➕ Integrate Selected';
+        intBtn.textContent = t('research.integrateSelected').replace('{count}', panel.querySelectorAll('.fw-prop-cb:checked').length);
       }
     });
   }

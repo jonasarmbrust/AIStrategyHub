@@ -79,7 +79,7 @@ async def extract_novel_checkpoints(request: ExtractRequest):
         doc_text = file_path.read_text(encoding="utf-8")
         doc_name = doc_row["document_name"]
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
     # Load master model outline (names and categories) to save context
     model = _load_model()
@@ -239,7 +239,7 @@ async def coverage_analysis():
         )
         rows = await cursor.fetchall()
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
     # Parse and aggregate
     dim_source_counts = {}
@@ -338,7 +338,7 @@ async def _enrich_proposals_with_research(proposals: list) -> list:
                     })
                 p["evidence_tags"] = evidence_tags
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
     return proposals
 
@@ -365,4 +365,4 @@ async def _log_activity(
     except Exception as e:
         print(f"[Activity] Failed to log: {e}")
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed

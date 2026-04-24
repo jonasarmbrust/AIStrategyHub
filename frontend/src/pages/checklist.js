@@ -2,7 +2,9 @@
  * Assessment Page — Interactive maturity checklist with wizard and checklist modes.
  * Enhanced with evidence tags and auto-save to localStorage.
  */
-import { api, showToast, getLevelBadge, getScoreColor, LEVEL_NAMES, renderEvidenceTags } from '../main.js';
+import { api, showToast, getLevelBadge, getScoreColor, renderEvidenceTags } from '../main.js';
+import { t, getLang } from '../i18n.js';
+import { sanitizeHTML, escapeHTML } from '../sanitize.js';
 
 // Local state for assessments
 let assessments = {};
@@ -31,19 +33,19 @@ export function renderAssessment(container) {
     <div class="page-header">
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="page-title">Maturity Assessment</h1>
-          <p class="page-description">Assess your organization's AI readiness across 7 dimensions. Each checkpoint is traced to its original framework source.</p>
+          <h1 class="page-title">${t('assessment.title')}</h1>
+          <p class="page-description">${t('assessment.desc')}</p>
         </div>
         <div class="flex gap-md">
-          <button class="btn btn-ghost btn-sm" id="btn-reset">↺ Reset</button>
-          <button class="btn btn-primary" id="btn-submit">Submit Assessment</button>
+          <button class="btn btn-ghost btn-sm" id="btn-reset">${t('assessment.btnReset')}</button>
+          <button class="btn btn-primary" id="btn-submit">${t('assessment.btnSubmit')}</button>
         </div>
       </div>
     </div>
 
     <div class="card mb-xl" id="score-summary" style="display: none;">
       <div class="card-header">
-        <span class="card-title">🎯 Assessment Result</span>
+        <span class="card-title">${t('assessment.resultTitle')}</span>
         <span id="result-level"></span>
       </div>
       <div class="grid-3 mt-md" id="result-grid"></div>
@@ -51,7 +53,7 @@ export function renderAssessment(container) {
 
     <div class="card mb-lg">
       <div class="flex justify-between items-center" style="margin-bottom: 12px;">
-        <span style="font-size: 0.82rem; color: var(--text-muted);">Overall Progress</span>
+        <span style="font-size: 0.82rem; color: var(--text-muted);">${t('assessment.overallProgress')}</span>
         <span style="font-size: 0.82rem; font-weight: 600;" id="progress-label">0 / 0</span>
       </div>
       <div class="progress-bar" style="height: 8px;">
@@ -62,7 +64,7 @@ export function renderAssessment(container) {
     <div id="checklist-container">
       <div class="loading-overlay">
         <div class="spinner"></div>
-        <span>Loading assessment…</span>
+        <span>${t('assessment.loading')}</span>
       </div>
     </div>
   `;
@@ -90,7 +92,8 @@ async function loadChecklist() {
         }
         if (prefilled > 0) {
           saveAssessments();
-          showToast(`🤖 ${prefilled} checkpoints pre-filled from Document Analyzer ("${suggData.source}")`, 'info');
+          let msg = t('assessment.aiSuggested').replace('{count}', prefilled).replace('{source}', suggData.source);
+          showToast(msg, 'info');
         }
       }
     } catch { /* No analyzer results available */ }
@@ -115,7 +118,7 @@ async function loadChecklist() {
       document.getElementById('checklist-container').innerHTML = `
         <div class="empty-state">
           <div class="empty-state-icon">⚠️</div>
-          <div class="empty-state-text">Could not load checklist. Please start the backend server.</div>
+          <div class="empty-state-text">${t('nav.backendOffline')}</div>
         </div>
       `;
     }
@@ -137,7 +140,7 @@ function renderChecklistDimensions(data) {
           <div class="dimension-left">
             <span class="dimension-icon">${dim.icon}</span>
             <div>
-              <div class="dimension-name">${dim.name}</div>
+              <div class="dimension-name">${t('dimensions.' + dim.id)}</div>
               <div class="dimension-meta">Weight: ${Math.round(dim.weight * 100)}% · ${dim.sources.length} sources · ${total} checkpoints</div>
             </div>
           </div>
@@ -209,6 +212,8 @@ function renderCheckpointItem(cp) {
   const ev = evidenceData[cp.id];
   const hasEvidence = ev && (ev.evidence || ev.relevant_chunks?.length > 0);
   const confidencePct = ev ? Math.round((ev.confidence || 0) * 100) : 0;
+  
+  const text = getLang() === 'de' ? (cp.text_de || cp.text) : cp.text;
 
   return `
     <div class="checkpoint-item">
@@ -217,21 +222,21 @@ function renderCheckpointItem(cp) {
         <div class="checkpoint-text ${isChecked ? 'checked' : ''}">
           ${isNew ? '<span style="background: var(--accent-emerald); color: #fff; font-size: 0.65rem; padding: 1px 6px; border-radius: 4px; margin-right: 6px; font-weight: 600;">🆕 NEW</span>' : ''}
           ${isAI ? '<span style="background: var(--accent-purple); color: #fff; font-size: 0.65rem; padding: 1px 6px; border-radius: 4px; margin-right: 6px; font-weight: 600;">🤖 AI</span>' : ''}
-          ${cp.text}
+          ${text}
         </div>
         <div class="checkpoint-sources">
           ${tags.length > 0 ? renderEvidenceTags(tags) : cp.sources.map(s => `<span class="source-tag">${s}</span>`).join('')}
           <span class="source-tag" style="background: rgba(234, 179, 8, 0.1); color: #eab308;">Level ${cp.min_level}+</span>
-          ${hasEvidence ? `<button class="source-tag btn-evidence" data-cpid="${cp.id}" style="cursor: pointer; background: rgba(59,130,246,0.1); color: #3b82f6; border: none; font-family: inherit; transition: all 0.2s;">🔗 Evidence (${confidencePct}%)</button>` : ''}
+          ${hasEvidence ? `<button class="source-tag btn-evidence" data-cpid="${cp.id}" style="cursor: pointer; background: rgba(59,130,246,0.1); color: #3b82f6; border: none; font-family: inherit; transition: all 0.2s;">🔗 ${t('assessment.showEvidence')} (${confidencePct}%)</button>` : ''}
         </div>
         ${hasEvidence ? `<div class="evidence-panel" id="evidence-${cp.id}" style="display: none; margin-top: 8px; padding: 12px; background: rgba(59,130,246,0.04); border: 1px solid rgba(59,130,246,0.1); border-radius: 8px; font-size: 0.8rem; line-height: 1.6;">
           <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-            <span style="padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; ${ev.covered ? 'background: rgba(16,185,129,0.15); color: #10b981;' : 'background: rgba(239,68,68,0.15); color: #ef4444;'}">${ev.covered ? '✅ Covered' : '❌ Not covered'}</span>
-            <span style="padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; background: rgba(59,130,246,0.1); color: #3b82f6;">Confidence: ${confidencePct}%</span>
+            <span style="padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; ${ev.covered ? 'background: rgba(16,185,129,0.15); color: #10b981;' : 'background: rgba(239,68,68,0.15); color: #ef4444;'}">${ev.covered ? t('assessment.covered') : t('assessment.notCovered')}</span>
+            <span style="padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; background: rgba(59,130,246,0.1); color: #3b82f6;">${t('assessment.confidence').replace('{pct}', confidencePct)}</span>
           </div>
-          ${ev.evidence ? `<div style="color: var(--text-primary); margin-bottom: 8px;"><strong>Evidence:</strong> ${ev.evidence}</div>` : ''}
-          ${ev.recommendation ? `<div style="color: var(--accent-blue);"><strong>💡 Recommendation:</strong> ${ev.recommendation}</div>` : ''}
-          ${ev.relevant_chunks?.length > 0 ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.05);"><strong style="color: var(--text-muted); font-size: 0.7rem;">SOURCE CHUNKS:</strong>${ev.relevant_chunks.map(c => `<div style="margin-top: 4px; padding: 6px 8px; background: rgba(0,0,0,0.2); border-radius: 4px; color: var(--text-secondary); font-size: 0.75rem; font-style: italic;">${c}</div>`).join('')}</div>` : ''}
+          ${ev.evidence ? `<div style="color: var(--text-primary); margin-bottom: 8px;"><strong>${t('assessment.evidenceTitle')}</strong> ${ev.evidence}</div>` : ''}
+          ${ev.recommendation ? `<div style="color: var(--accent-blue);"><strong>${t('assessment.recommendationTitle')}</strong> ${ev.recommendation}</div>` : ''}
+          ${ev.relevant_chunks?.length > 0 ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.05);"><strong style="color: var(--text-muted); font-size: 0.7rem;">${t('assessment.sourceChunksTitle')}</strong>${ev.relevant_chunks.map(c => `<div style="margin-top: 4px; padding: 6px 8px; background: rgba(0,0,0,0.2); border-radius: 4px; color: var(--text-secondary); font-size: 0.75rem; font-style: italic;">${c}</div>`).join('')}</div>` : ''}
         </div>` : ''}
       </div>
     </div>
@@ -265,7 +270,7 @@ function updateProgress() {
 async function submitAssessment() {
   const fulfilled = Object.entries(assessments).filter(([, v]) => v.fulfilled);
   if (fulfilled.length === 0) {
-    showToast('Please check at least one item before submitting', 'error');
+    showToast(t('assessment.submitEmpty'), 'error');
     return;
   }
 
@@ -281,10 +286,10 @@ async function submitAssessment() {
 
   try {
     const result = await api.post('/checklist/assess', payload);
-    showToast(`Assessment saved! Score: ${Math.round(result.overall_score)}`, 'success');
+    showToast(t('assessment.submitSuccess').replace('{score}', Math.round(result.overall_score)), 'success');
     showResult(result);
   } catch (e) {
-    showToast('Could not save assessment. Is the backend running?', 'error');
+    showToast(t('assessment.submitError'), 'error');
     // Calculate locally as fallback
     const localResult = calculateLocalScore();
     showResult(localResult);
@@ -344,14 +349,14 @@ function showResult(result) {
   resultGrid.innerHTML = `
     <div class="stat-card" style="padding: 16px;">
       <div class="stat-value gradient-blue">${Math.round(result.overall_score)}</div>
-      <div class="stat-label">Overall Score</div>
+      <div class="stat-label">${t('assessment.overallScore')}</div>
     </div>
     ${result.dimension_scores.map(ds => `
       <div style="display: flex; align-items: center; gap: 12px; padding: 12px;">
         <span style="font-size: 1.2rem;">${ds.icon}</span>
         <div style="flex: 1;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-            <span style="font-size: 0.8rem; font-weight: 500;">${ds.dimension_name}</span>
+            <span style="font-size: 0.8rem; font-weight: 500;">${t('dimensions.' + ds.dimension_id)}</span>
             <span style="font-size: 0.8rem; font-weight: 600; color: ${getScoreColor(ds.score)};">${Math.round(ds.score)}%</span>
           </div>
           <div class="progress-bar">
@@ -361,8 +366,8 @@ function showResult(result) {
       </div>
     `).join('')}
     <div style="grid-column: 1 / -1; display: flex; gap: 12px; justify-content: center; padding: 12px;">
-      <a href="#roadmap" class="btn btn-primary">🗺️ View Roadmap →</a>
-      <a href="#meta-strategy" class="btn btn-secondary">🧭 Strategic Guidance</a>
+      <a href="#roadmap" class="btn btn-primary">${t('assessment.viewRoadmap')}</a>
+      <a href="#meta-strategy" class="btn btn-secondary">${t('assessment.strategicGuidance')}</a>
     </div>
   `;
 
@@ -370,12 +375,14 @@ function showResult(result) {
 }
 
 function resetChecklist() {
-  assessments = {};
-  saveAssessments();
-  if (checklistData) {
-    renderChecklistDimensions(checklistData);
+  if (confirm(t('assessment.resetConfirm'))) {
+    assessments = {};
+    saveAssessments();
+    if (checklistData) {
+      renderChecklistDimensions(checklistData);
+    }
+    const summary = document.getElementById('score-summary');
+    if (summary) summary.style.display = 'none';
+    showToast(t('assessment.resetSuccess'), 'info');
   }
-  const summary = document.getElementById('score-summary');
-  if (summary) summary.style.display = 'none';
-  showToast('Assessment reset', 'info');
 }

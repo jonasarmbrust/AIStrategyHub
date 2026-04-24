@@ -17,6 +17,9 @@ import { renderFrameworkBuilder } from './pages/framework_builder.js';
 import { renderAdvisor } from './pages/advisor.js';
 import { renderSimulator } from './pages/simulator.js';
 import { renderSources } from './pages/sources.js';
+import { t, getLang, toggleLang, updateStaticDOM } from './i18n.js';
+import { sanitizeHTML, escapeHTML } from './sanitize.js';
+export { sanitizeHTML, escapeHTML };
 // ── Config ─────────────────────────────────────────────────
 const API_BASE = '/api';
 
@@ -159,9 +162,9 @@ async function checkBackendHealth() {
   if (!statusEl) return;
   try {
     await api.get('/health');
-    statusEl.innerHTML = '<span class="status-dot online"></span><span>Backend Online</span>';
+    statusEl.innerHTML = `<span class="status-dot online"></span><span data-i18n="nav.backendOnline">${t('nav.backendOnline')}</span>`;
   } catch {
-    statusEl.innerHTML = '<span class="status-dot offline"></span><span>Backend Offline</span>';
+    statusEl.innerHTML = `<span class="status-dot offline"></span><span data-i18n="nav.backendOffline">${t('nav.backendOffline')}</span>`;
   }
 }
 
@@ -181,7 +184,17 @@ function init() {
   });
 
   // Initial render
+  updateStaticDOM();
   navigateTo(getPage());
+
+  // Lang toggle click
+  const langToggle = document.getElementById('lang-toggle');
+  if (langToggle) {
+    langToggle.addEventListener('click', () => {
+      toggleLang();
+      navigateTo(getPage()); // Re-render current page
+    });
+  }
 
   // Health check
   checkBackendHealth();
@@ -192,8 +205,13 @@ function init() {
 export const LEVEL_NAMES = ['', 'Exploring', 'Experimenting', 'Operationalizing', 'Scaling', 'Transforming'];
 export const LEVEL_COLORS = ['', '#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6'];
 
+export function getLevelName(level) {
+  const levels = ['', t('levels.exploring'), t('levels.experimenting'), t('levels.operationalizing'), t('levels.scaling'), t('levels.transforming')];
+  return levels[level] || 'Unknown';
+}
+
 export function getLevelBadge(level) {
-  return `<span class="level-badge level-${level}">${LEVEL_NAMES[level] || 'Unknown'}</span>`;
+  return `<span class="level-badge level-${level}">${getLevelName(level)}</span>`;
 }
 
 export function getScoreColor(score) {

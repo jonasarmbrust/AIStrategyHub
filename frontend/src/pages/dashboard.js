@@ -2,7 +2,9 @@
  * Dashboard Page — Overview with radar chart, stats, history, and quick actions.
  */
 import { Chart, RadarController, RadialLinearScale, PointElement, LineElement, LineController, CategoryScale, LinearScale, Filler, Tooltip } from 'chart.js';
-import { api, getLevelBadge, getScoreColor, LEVEL_NAMES } from '../main.js';
+import { api, getLevelBadge, getScoreColor } from '../main.js';
+import { t } from '../i18n.js';
+import { sanitizeHTML, escapeHTML } from '../sanitize.js';
 
 Chart.register(RadarController, RadialLinearScale, PointElement, LineElement, LineController, CategoryScale, LinearScale, Filler, Tooltip);
 
@@ -13,33 +15,33 @@ export function renderDashboard(container) {
   container.innerHTML = `
     <div id="onboarding-overlay"></div>
     <div class="page-header">
-      <h1 class="page-title">Dashboard</h1>
-      <p class="page-description">Your AI Maturity at a glance — powered by insights synthesized from NIST, EU AI Act, Google, Microsoft, OWASP, and UNESCO frameworks.</p>
+      <h1 class="page-title">${t('dashboard.title')}</h1>
+      <p class="page-description">${t('dashboard.desc')}</p>
     </div>
 
     <div class="grid-4 mb-xl" id="stat-cards">
       <div class="card stat-card fade-in" style="animation-delay: 0ms">
         <div class="stat-value gradient-blue" id="stat-score">—</div>
-        <div class="stat-label">Maturity Score</div>
+        <div class="stat-label">${t('dashboard.statScore')}</div>
       </div>
       <div class="card stat-card fade-in" style="animation-delay: 60ms">
         <div id="stat-level-badge" style="margin-bottom: 8px">—</div>
-        <div class="stat-label">Maturity Level</div>
+        <div class="stat-label">${t('dashboard.statLevel')}</div>
       </div>
       <div class="card stat-card fade-in" style="animation-delay: 120ms">
         <div class="stat-value gradient-green" id="stat-analyses">0</div>
-        <div class="stat-label">Analyses</div>
+        <div class="stat-label">${t('dashboard.statAnalyses')}</div>
       </div>
       <div class="card stat-card fade-in" style="animation-delay: 180ms">
         <div class="stat-value gradient-warm" id="stat-sources">0</div>
-        <div class="stat-label">Research Sources</div>
+        <div class="stat-label">${t('dashboard.statSources')}</div>
       </div>
     </div>
 
     <div class="grid-2 mb-xl">
       <div class="card fade-in" style="animation-delay: 200ms">
         <div class="card-header">
-          <span class="card-title">📊 Maturity Radar</span>
+          <span class="card-title">${t('dashboard.radarTitle')}</span>
         </div>
         <div style="position: relative; height: 320px;">
           <canvas id="radar-chart"></canvas>
@@ -47,13 +49,13 @@ export function renderDashboard(container) {
       </div>
       <div class="card fade-in" style="animation-delay: 260ms">
         <div class="card-header">
-          <span class="card-title">🎯 Score Breakdown</span>
+          <span class="card-title">${t('dashboard.breakdownTitle')}</span>
         </div>
         <div id="score-breakdown" class="flex flex-col gap-md">
           <div class="empty-state">
-            <div class="empty-state-icon">📋</div>
-            <div class="empty-state-text">Complete an assessment or analyze a document to see your scores</div>
-            <a href="#assessment" class="btn btn-primary btn-sm">Start Assessment</a>
+            <div class="empty-state-icon">${t('dashboard.emptyStateLine1')}</div>
+            <div class="empty-state-text">${t('dashboard.emptyStateLine2')}</div>
+            <a href="#assessment" class="btn btn-primary btn-sm">${t('dashboard.startAssessment')}</a>
           </div>
         </div>
       </div>
@@ -61,61 +63,61 @@ export function renderDashboard(container) {
 
     <div class="card mb-xl fade-in" style="animation-delay: 300ms">
       <div class="card-header">
-        <span class="card-title">⚡ Quick Actions</span>
+        <span class="card-title">${t('dashboard.quickActions')}</span>
       </div>
       <div class="grid-3">
         <a href="#explorer" class="quick-action-card">
           <span class="quick-action-icon">🗺️</span>
-          <span class="quick-action-label">Explore Frameworks</span>
+          <span class="quick-action-label">${t('dashboard.actionExplore')}</span>
         </a>
         <a href="#assessment" class="quick-action-card">
           <span class="quick-action-icon">✅</span>
-          <span class="quick-action-label">Start Assessment</span>
+          <span class="quick-action-label">${t('dashboard.actionAssess')}</span>
         </a>
         <a href="#analyzer" class="quick-action-card">
           <span class="quick-action-icon">🔍</span>
-          <span class="quick-action-label">Analyze Document</span>
+          <span class="quick-action-label">${t('dashboard.actionAnalyze')}</span>
         </a>
         <a href="#framework-builder" class="quick-action-card">
           <span class="quick-action-icon">🏗️</span>
-          <span class="quick-action-label">Framework Builder</span>
+          <span class="quick-action-label">${t('dashboard.actionBuilder')}</span>
         </a>
         <a href="#meta-strategy" class="quick-action-card">
           <span class="quick-action-icon">🧭</span>
-          <span class="quick-action-label">Meta Strategy</span>
+          <span class="quick-action-label">${t('dashboard.actionMeta')}</span>
         </a>
         <a href="#roadmap" class="quick-action-card">
           <span class="quick-action-icon">🗺️</span>
-          <span class="quick-action-label">View Roadmap</span>
+          <span class="quick-action-label">${t('dashboard.actionRoadmap')}</span>
         </a>
       </div>
     </div>
 
     <div class="card mb-xl fade-in" style="animation-delay: 340ms">
       <div class="card-header">
-        <span class="card-title">📈 Score Trend</span>
+        <span class="card-title">${t('dashboard.trendTitle')}</span>
         <span id="trend-delta" style="font-size: 0.85rem; font-weight: 600;"></span>
       </div>
       <div style="position: relative; height: 200px;">
         <canvas id="trend-chart"></canvas>
       </div>
       <div id="trend-empty" class="empty-state" style="display: none;">
-        <div class="empty-state-text" style="font-size: 0.85rem;">Complete at least 2 assessments to see your trend.</div>
+        <div class="empty-state-text" style="font-size: 0.85rem;">${t('dashboard.emptyTrend')}</div>
       </div>
     </div>
 
     <div class="card fade-in" style="animation-delay: 400ms">
       <div class="card-header">
-        <span class="card-title">🕒 Assessment History & Reports</span>
+        <span class="card-title">${t('dashboard.historyTitle')}</span>
         <div class="flex gap-md">
-          <a href="#report" class="btn btn-primary btn-sm" style="background: var(--gradient-primary); font-weight: 600; border: none; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">📄 Generate Consulting Report (PDF)</a>
-          <a href="#assessment" class="btn btn-secondary btn-sm" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">✅ New Assessment</a>
+          <a href="#report" class="btn btn-primary btn-sm" style="background: var(--gradient-primary); font-weight: 600; border: none; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">${t('dashboard.btnReport')}</a>
+          <a href="#assessment" class="btn btn-secondary btn-sm" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">${t('dashboard.btnNewAssessment')}</a>
         </div>
       </div>
       <div id="history-list">
         <div class="empty-state">
           <div class="empty-state-icon">📄</div>
-          <div class="empty-state-text">No assessments yet. Start with the assessment or upload a document.</div>
+          <div class="empty-state-text">${t('dashboard.emptyHistory')}</div>
         </div>
       </div>
     </div>
@@ -327,13 +329,13 @@ function renderScoreBreakdown(dimensionAverages) {
   if (!el) return;
 
   const dims = [
-    { id: 'strategy', name: 'Strategy & Leadership', icon: '🎯' },
-    { id: 'data', name: 'Data & Infrastructure', icon: '🗄️' },
-    { id: 'governance', name: 'Governance & Compliance', icon: '⚖️' },
-    { id: 'technology', name: 'Technology & MLOps', icon: '⚙️' },
-    { id: 'talent', name: 'Talent & Culture', icon: '👥' },
-    { id: 'ethics', name: 'Ethics & Responsible AI', icon: '🛡️' },
-    { id: 'processes', name: 'Processes & Scaling', icon: '🔄' },
+    { id: 'strategy', name: t('dimensions.strategy'), icon: '🎯' },
+    { id: 'data', name: t('dimensions.data'), icon: '🗄️' },
+    { id: 'governance', name: t('dimensions.governance'), icon: '⚖️' },
+    { id: 'technology', name: t('dimensions.technology'), icon: '⚙️' },
+    { id: 'talent', name: t('dimensions.talent'), icon: '👥' },
+    { id: 'ethics', name: t('dimensions.ethics'), icon: '🛡️' },
+    { id: 'processes', name: t('dimensions.processes'), icon: '🔄' },
   ];
 
   el.innerHTML = dims.map(d => {
@@ -403,15 +405,15 @@ function renderTrendChart(history) {
   const delta = Math.round(latest - previous);
   if (deltaEl) {
     if (delta > 0) {
-      deltaEl.innerHTML = `<span style="color: var(--accent-emerald);">📈 +${delta} points since last</span>`;
+      deltaEl.innerHTML = `<span style="color: var(--accent-emerald);">${t('dashboard.deltaPlus').replace('{delta}', delta)}</span>`;
     } else if (delta < 0) {
-      deltaEl.innerHTML = `<span style="color: var(--accent-red);">📉 ${delta} points since last</span>`;
+      deltaEl.innerHTML = `<span style="color: var(--accent-red);">${t('dashboard.deltaMinus').replace('{delta}', delta)}</span>`;
     } else {
-      deltaEl.innerHTML = `<span style="color: var(--text-muted);">→ No change</span>`;
+      deltaEl.innerHTML = `<span style="color: var(--text-muted);">${t('dashboard.deltaSame')}</span>`;
     }
   }
 
-  const labels = scored.map(h => new Date(h.created_at).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' }));
+  const labels = scored.map(h => new Date(h.created_at).toLocaleDateString(getLang() === 'de' ? 'de-DE' : 'en-US', { day: '2-digit', month: '2-digit' }));
   const data = scored.map(h => Math.round(h.overall_score));
 
   if (trendChart) trendChart.destroy();
@@ -421,7 +423,7 @@ function renderTrendChart(history) {
     data: {
       labels,
       datasets: [{
-        label: 'Maturity Score',
+        label: t('dashboard.statScore'),
         data,
         borderColor: '#3b82f6',
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -478,38 +480,39 @@ function showOnboarding() {
       <div style="background: var(--bg-secondary); border: 1px solid var(--glass-border); border-radius: 16px; max-width: 520px; width: 90%; padding: 32px; box-shadow: 0 25px 60px rgba(0,0,0,0.5);">
         <div style="text-align: center; margin-bottom: 24px;">
           <div style="font-size: 3rem; margin-bottom: 8px;">🔷</div>
-          <h2 style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">Welcome to AI Strategy Hub</h2>
-          <p style="color: var(--text-secondary); font-size: 0.85rem;">Your AI Strategy Maturity Platform. Here's how to get started in 3 steps:</p>
+          <h2 style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">${t('dashboard.onboardingTitle')}</h2>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">${t('dashboard.onboardingDesc1')}</p>
+          <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px;">${t('dashboard.onboardingDesc2')}</p>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px;">
           <div style="display: flex; align-items: flex-start; gap: 14px; padding: 14px; background: rgba(59,130,246,0.06); border-radius: 10px; border: 1px solid rgba(59,130,246,0.12);">
             <span style="font-size: 1.5rem; line-height: 1;">✅</span>
             <div>
-              <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 2px;">1. Assess your AI Maturity</div>
-              <div style="font-size: 0.8rem; color: var(--text-secondary);">Go to <strong>Assessment</strong> and check off the practices your organization already follows.</div>
+              <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 2px;">${t('dashboard.onboardingOpt1Title')}</div>
+              <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px;">${t('dashboard.onboardingOpt1Desc')}</div>
+              <a href="#assessment" class="btn btn-primary btn-sm" onclick="document.getElementById('onboarding-overlay').innerHTML=''" style="padding: 4px 12px; font-size: 0.75rem;">${t('dashboard.onboardingOpt1Btn')}</a>
             </div>
           </div>
           <div style="display: flex; align-items: flex-start; gap: 14px; padding: 14px; background: rgba(16,185,129,0.06); border-radius: 10px; border: 1px solid rgba(16,185,129,0.12);">
-            <span style="font-size: 1.5rem; line-height: 1;">🔬</span>
+            <span style="font-size: 1.5rem; line-height: 1;">🔍</span>
             <div>
-              <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 2px;">2. Research Best Practices</div>
-              <div style="font-size: 0.8rem; color: var(--text-secondary);">Use the <strong>Research Agent</strong> to automatically find relevant AI strategy articles and frameworks.</div>
+              <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 2px;">${t('dashboard.onboardingOpt2Title')}</div>
+              <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px;">${t('dashboard.onboardingOpt2Desc')}</div>
+              <a href="#analyzer" class="btn btn-primary btn-sm" onclick="document.getElementById('onboarding-overlay').innerHTML=''" style="padding: 4px 12px; font-size: 0.75rem; background: var(--gradient-green); border: none;">${t('dashboard.onboardingOpt2Btn')}</a>
             </div>
           </div>
           <div style="display: flex; align-items: flex-start; gap: 14px; padding: 14px; background: rgba(139,92,246,0.06); border-radius: 10px; border: 1px solid rgba(139,92,246,0.12);">
-            <span style="font-size: 1.5rem; line-height: 1;">🏗️</span>
+            <span style="font-size: 1.5rem; line-height: 1;">🧠</span>
             <div>
-              <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 2px;">3. Expand your Framework</div>
-              <div style="font-size: 0.8rem; color: var(--text-secondary);">Import research into the <strong>Document Analyzer</strong>, then use the <strong>Framework Builder</strong> to grow your knowledge base.</div>
+              <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 2px;">${t('dashboard.onboardingOpt3Title')}</div>
+              <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px;">${t('dashboard.onboardingOpt3Desc')}</div>
+              <a href="#advisor" class="btn btn-primary btn-sm" onclick="document.getElementById('onboarding-overlay').innerHTML=''" style="padding: 4px 12px; font-size: 0.75rem; background: linear-gradient(135deg, #8b5cf6, #c084fc); border: none;">${t('dashboard.onboardingOpt3Btn')}</a>
             </div>
           </div>
         </div>
 
-        <div style="display: flex; gap: 12px; justify-content: flex-end;">
-          <button id="onboarding-dismiss" style="background: none; border: 1px solid var(--glass-border); color: var(--text-secondary); padding: 8px 18px; border-radius: 8px; cursor: pointer; font-size: 0.85rem;">Skip</button>
-          <a href="#assessment" id="onboarding-start" style="background: var(--gradient-primary); color: #fff; padding: 8px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.85rem; box-shadow: 0 4px 15px rgba(59,130,246,0.4);">Start Assessment →</a>
-        </div>
+        <button id="close-onboarding" class="btn btn-secondary" style="width: 100%; justify-content: center;">${t('dashboard.onboardingClose')}</button>
       </div>
     </div>
   `;
@@ -524,6 +527,5 @@ function showOnboarding() {
     }
   };
 
-  document.getElementById('onboarding-dismiss')?.addEventListener('click', dismissOnboarding);
-  document.getElementById('onboarding-start')?.addEventListener('click', dismissOnboarding);
+  document.getElementById('close-onboarding')?.addEventListener('click', dismissOnboarding);
 }

@@ -7,17 +7,15 @@ to provide personalized strategic guidance via Gemini 3.1 Pro.
 from __future__ import annotations
 
 import json
-import os
 from typing import Optional
 
 import google.generativeai as genai
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
 from database import get_db
 from knowledge_base.checklist_generator import get_maturity_model, calculate_maturity_score
-
-genai.configure(api_key=os.getenv("GEMINI_API_KEY", ""))
+from config import require_gemini_key
 
 router = APIRouter()
 
@@ -89,63 +87,61 @@ async def _get_user_context() -> str:
 
     # Latest manual assessment
     db = await get_db()
-    try:
-        cursor = await db.execute(
-            "SELECT assessments, overall_score, overall_level, dimension_scores, strengths, gaps "
-            "FROM manual_assessments ORDER BY created_at DESC LIMIT 1"
+    cursor = await db.execute(
+        "SELECT assessments, overall_score, overall_level, dimension_scores, strengths, gaps "
+        "FROM manual_assessments ORDER BY created_at DESC LIMIT 1"
+    )
+    row = await cursor.fetchone()
+    if row:
+        score = row["overall_score"]
+        level = row["overall_level"]
+        dim_scores = json.loads(row["dimension_scores"])
+        strengths = json.loads(row["strengths"])
+        gaps = json.loads(row["gaps"])
+
+        dim_text = ", ".join([f'{d["dimension_id"]}: {d["score"]:.0f}%' for d in dim_scores])
+        context_parts.append(
+            f"## Current Assessment State\n"
+            f"- Overall Score: {score:.0f}/100 (Level {level})\n"
+            f"- Dimension Scores: {dim_text}\n"
+            f"- Strengths: {', '.join(strengths[:5]) if strengths else 'None identified'}\n"
+            f"- Gaps: {', '.join(gaps[:5]) if gaps else 'None identified'}"
         )
-        row = await cursor.fetchone()
-        if row:
-            score = row["overall_score"]
-            level = row["overall_level"]
-            dim_scores = json.loads(row["dimension_scores"])
-            strengths = json.loads(row["strengths"])
-            gaps = json.loads(row["gaps"])
 
-            dim_text = ", ".join([f'{d["dimension_id"]}: {d["score"]:.0f}%' for d in dim_scores])
-            context_parts.append(
-                f"## Current Assessment State\n"
-                f"- Overall Score: {score:.0f}/100 (Level {level})\n"
-                f"- Dimension Scores: {dim_text}\n"
-                f"- Strengths: {', '.join(strengths[:5]) if strengths else 'None identified'}\n"
-                f"- Gaps: {', '.join(gaps[:5]) if gaps else 'None identified'}"
-            )
-
-        # Latest document analysis
-        cursor = await db.execute(
-            "SELECT document_name, overall_score, overall_level, strengths, gaps "
-            "FROM analyses WHERE status = 'completed' ORDER BY completed_at DESC LIMIT 1"
+    # Latest document analysis
+    cursor = await db.execute(
+        "SELECT document_name, overall_score, overall_level, strengths, gaps "
+        "FROM analyses WHERE status = 'completed' ORDER BY completed_at DESC LIMIT 1"
+    )
+    analysis = await cursor.fetchone()
+    if analysis:
+        context_parts.append(
+            f"\n## Latest Document Analysis\n"
+            f"- Document: {analysis['document_name']}\n"
+            f"- Score: {analysis['overall_score']:.0f}/100 (Level {analysis['overall_level']})"
         )
-        analysis = await cursor.fetchone()
-        if analysis:
-            context_parts.append(
-                f"\n## Latest Document Analysis\n"
-                f"- Document: {analysis['document_name']}\n"
-                f"- Score: {analysis['overall_score']:.0f}/100 (Level {analysis['overall_level']})"
-            )
 
-        # Research sources
-        cursor = await db.execute(
-            "SELECT title, relevance_score, relevant_dimensions FROM research_sources "
-            "ORDER BY relevance_score DESC LIMIT 5"
-        )
-        sources = await cursor.fetchall()
-        if sources:
-            src_text = "\n".join([
-                f"- {s['title']} (Relevance: {s['relevance_score']:.0%})"
-                for s in sources
-            ])
-            context_parts.append(f"\n## Top Research Sources\n{src_text}")
-
-    finally:
-        await db.close()
+    # Research sources
+    cursor = await db.execute(
+        "SELECT title, relevance_score, relevant_dimensions FROM research_sources "
+        "ORDER BY relevance_score DESC LIMIT 5"
+    )
+    sources = await cursor.fetchall()
+    if sources:
+        src_text = "\n".join([
+            f"- {s['title']} (Relevance: {s['relevance_score']:.0%})"
+            for s in sources
+        ])
+        context_parts.append(f"\n## Top Research Sources\n{src_text}")
 
     return "\n".join(context_parts) if context_parts else "No assessment data available yet."
 
 
 @router.post("/chat")
-async def advisor_chat(request: ChatRequest):
+async def advisor_chat(request: ChatRequest, gemini_key: str = Depends(require_gemini_key)):
     """Chat with the AI Strategy Advisor."""
+    import google.generativeai as genai
+    genai.configure(api_key=gemini_key)
 
     system_prompt = _build_system_context()
     user_context = await _get_user_context()

@@ -23,23 +23,28 @@
                 </div>
             </div>
             <ul class="nav-links" id="nav-links">
-                <li><a href="#dashboard" class="nav-link active" data-page="dashboard"><span class="nav-icon">📊</span>Dashboard</a></li>
-                <li><a href="#explorer" class="nav-link" data-page="explorer"><span class="nav-icon">🗺️</span>Framework Explorer</a></li>
-                <li><a href="#assessment" class="nav-link" data-page="assessment"><span class="nav-icon">✅</span>Assessment</a></li>
-                <li><a href="#analyzer" class="nav-link" data-page="analyzer"><span class="nav-icon">🔍</span>Document Analyzer</a></li>
-                <li><a href="#framework-builder" class="nav-link" data-page="framework-builder"><span class="nav-icon">🏗️</span>Framework Builder</a></li>
-                <li><a href="#research" class="nav-link" data-page="research"><span class="nav-icon">🔬</span>Research Agent</a></li>
-                <li><a href="#meta-strategy" class="nav-link" data-page="meta-strategy"><span class="nav-icon">🧭</span>Meta Strategy</a></li>
-                <li><a href="#eu-ai-act" class="nav-link" data-page="eu-ai-act" style="color: #06b6d4;"><span class="nav-icon">⚖️</span>EU AI Act Engine</a></li>
-                <li><a href="#roadmap" class="nav-link" data-page="roadmap"><span class="nav-icon">🗺️</span>Roadmap</a></li>
-                <li><a href="#advisor" class="nav-link" data-page="advisor" style="color: #a78bfa;"><span class="nav-icon">🧠</span>AI Strategy Advisor</a></li>
-                <li><a href="#simulator" class="nav-link" data-page="simulator" style="color: #2dd4bf;"><span class="nav-icon">🎮</span>Gap Simulator</a></li>
-                <li style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.05);"><a href="#sources" class="nav-link" data-page="sources"><span class="nav-icon">📚</span>Sources & Attribution</a></li>
+                <li><a href="#dashboard" class="nav-link active" data-page="dashboard"><span class="nav-icon">📊</span><span data-i18n="nav.dashboard">Dashboard</span></a></li>
+                <li><a href="#explorer" class="nav-link" data-page="explorer"><span class="nav-icon">🗺️</span><span data-i18n="nav.explorer">Framework Explorer</span></a></li>
+                <li><a href="#assessment" class="nav-link" data-page="assessment"><span class="nav-icon">✅</span><span data-i18n="nav.assessment">Assessment</span></a></li>
+                <li><a href="#analyzer" class="nav-link" data-page="analyzer"><span class="nav-icon">🔍</span><span data-i18n="nav.analyzer">Document Analyzer</span></a></li>
+                <li><a href="#framework-builder" class="nav-link" data-page="framework-builder"><span class="nav-icon">🏗️</span><span data-i18n="nav.frameworkBuilder">Framework Builder</span></a></li>
+                <li><a href="#research" class="nav-link" data-page="research"><span class="nav-icon">🔬</span><span data-i18n="nav.research">Research Agent</span></a></li>
+                <li><a href="#meta-strategy" class="nav-link" data-page="meta-strategy"><span class="nav-icon">🧭</span><span data-i18n="nav.metaStrategy">Meta Strategy</span></a></li>
+                <li><a href="#eu-ai-act" class="nav-link" data-page="eu-ai-act" style="color: #06b6d4;"><span class="nav-icon">⚖️</span><span data-i18n="nav.euAiAct">EU AI Act Engine</span></a></li>
+                <li><a href="#roadmap" class="nav-link" data-page="roadmap"><span class="nav-icon">🗺️</span><span data-i18n="nav.roadmap">Roadmap</span></a></li>
+                <li><a href="#advisor" class="nav-link" data-page="advisor" style="color: #a78bfa;"><span class="nav-icon">🧠</span><span data-i18n="nav.advisor">AI Strategy Advisor</span></a></li>
+                <li><a href="#simulator" class="nav-link" data-page="simulator" style="color: #2dd4bf;"><span class="nav-icon">🎮</span><span data-i18n="nav.simulator">Gap Simulator</span></a></li>
+                <li style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.05);"><a href="#sources" class="nav-link" data-page="sources"><span class="nav-icon">📚</span><span data-i18n="nav.sources">Sources & Attribution</span></a></li>
             </ul>
             <div class="sidebar-footer">
                 <div class="api-status" id="api-status">
                     <span class="status-dot offline"></span>
-                    <span>Backend Offline</span>
+                    <span id="api-status-text" data-i18n="nav.backendOffline">Backend Offline</span>
+                </div>
+                <div class="lang-toggle-container" style="margin-top: 12px; display: flex; justify-content: center;">
+                    <button id="lang-toggle" class="btn btn-secondary btn-sm" style="padding: 4px 10px; font-size: 0.75rem; border-radius: 20px;">
+                        <span id="lang-icon">🇬🇧</span> <span id="lang-label">EN</span>
+                    </button>
                 </div>
             </div>
         </nav>

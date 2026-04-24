@@ -83,7 +83,7 @@ async def submit_manual_assessment(request: ManualAssessmentRequest):
         )
         await db.commit()
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
     return {
         "id": assessment_id,
@@ -113,4 +113,4 @@ async def get_assessment_history():
             for row in rows
         ]
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed

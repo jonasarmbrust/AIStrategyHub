@@ -3,6 +3,9 @@
  */
 import { api, showToast } from '../main.js';
 
+import { t } from '../i18n.js';
+import { sanitizeHTML, escapeHTML } from '../sanitize.js';
+
 let chatHistory = [];
 let isStreaming = false;
 
@@ -11,11 +14,11 @@ export function renderAdvisor(container) {
     <div class="page-header">
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="page-title">🧠 AI Strategy Advisor</h1>
-          <p class="page-description">Your personal AI strategy consultant — grounded in your assessment data, framework knowledge, and research sources.</p>
+          <h1 class="page-title">${t('advisor.title')}</h1>
+          <p class="page-description">${t('advisor.desc')}</p>
         </div>
         <div id="advisor-context-badge" style="font-size: 0.75rem; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--glass-border);">
-          Loading context...
+          ${t('advisor.loadingContext')}
         </div>
       </div>
     </div>
@@ -27,14 +30,13 @@ export function renderAdvisor(container) {
           <div class="advisor-avatar">🧠</div>
           <div class="advisor-bubble">
             <div class="advisor-bubble-content">
-              <strong>Welcome!</strong> I'm your AI Strategy Advisor, powered by Gemini Pro and grounded in the full maturity framework.<br><br>
-              I know your current assessment scores, gaps, strengths, and research sources. Ask me anything about your AI maturity strategy.
+              ${t('advisor.welcomeMsg')}
             </div>
             <div class="advisor-suggestions">
-              <button class="advisor-suggestion-btn" data-q="What should I focus on next to improve my AI maturity?">🎯 What should I focus on next?</button>
-              <button class="advisor-suggestion-btn" data-q="How does our organization compare to EU AI Act requirements?">⚖️ EU AI Act readiness?</button>
-              <button class="advisor-suggestion-btn" data-q="Give me a 90-day action plan to move from our current level to the next maturity level.">📋 90-day action plan</button>
-              <button class="advisor-suggestion-btn" data-q="What are the quick wins we can achieve this week with minimal effort?">⚡ Quick wins this week?</button>
+              <button class="advisor-suggestion-btn" data-q="${t('advisor.sugg1q')}">${t('advisor.sugg1')}</button>
+              <button class="advisor-suggestion-btn" data-q="${t('advisor.sugg2q')}">${t('advisor.sugg2')}</button>
+              <button class="advisor-suggestion-btn" data-q="${t('advisor.sugg3q')}">${t('advisor.sugg3')}</button>
+              <button class="advisor-suggestion-btn" data-q="${t('advisor.sugg4q')}">${t('advisor.sugg4')}</button>
             </div>
           </div>
         </div>
@@ -43,12 +45,12 @@ export function renderAdvisor(container) {
       <div style="border-top: 1px solid var(--glass-border); padding: 16px 24px; background: var(--bg-secondary);">
         <div style="display: flex; gap: 12px; align-items: flex-end;">
           <textarea id="chat-input" 
-            placeholder="Ask about your AI strategy, maturity gaps, compliance, or next steps..." 
+            placeholder="${t('advisor.inputPlaceholder')}" 
             rows="1"
             style="flex: 1; resize: none; background: var(--bg-primary); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px 16px; color: var(--text-primary); font-size: 0.9rem; font-family: inherit; outline: none; transition: border-color 0.2s; max-height: 120px; line-height: 1.5;"
           ></textarea>
           <button id="btn-send" class="btn btn-primary" style="padding: 12px 20px; border-radius: 12px; font-weight: 600; min-width: 80px;">
-            Send ↑
+            ${t('advisor.sendBtn')}
           </button>
         </div>
       </div>
@@ -97,13 +99,13 @@ async function loadContext() {
   try {
     const ctx = await api.get('/advisor/context');
     const parts = [];
-    parts.push(`📊 ${ctx.dimensions} dimensions, ${ctx.checkpoints} checkpoints`);
-    if (ctx.has_assessment) parts.push('✅ Assessment loaded');
-    if (ctx.has_research) parts.push('🔬 Research loaded');
+    parts.push(t('advisor.contextDims').replace('{dims}', ctx.dimensions).replace('{cps}', ctx.checkpoints));
+    if (ctx.has_assessment) parts.push(t('advisor.contextAssLoaded'));
+    if (ctx.has_research) parts.push(t('advisor.contextResLoaded'));
     badge.innerHTML = parts.join(' &nbsp;·&nbsp; ');
     badge.style.color = 'var(--accent-emerald)';
   } catch {
-    badge.textContent = '⚠️ Backend offline';
+    badge.textContent = t('advisor.backendOffline');
     badge.style.color = 'var(--accent-red)';
   }
 }
@@ -125,7 +127,7 @@ async function sendMessage() {
 
   isStreaming = true;
   const sendBtn = document.getElementById('btn-send');
-  if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = '...'; }
+  if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = t('advisor.sending'); }
 
   try {
     const res = await fetch('/api/advisor/chat', {
@@ -138,7 +140,7 @@ async function sendMessage() {
     });
 
     if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: 'Unknown error' }));
+      const err = await res.json().catch(() => ({ detail: t('advisor.unknownError') }));
       throw new Error(err.detail || `HTTP ${res.status}`);
     }
 
@@ -154,11 +156,11 @@ async function sendMessage() {
 
   } catch (e) {
     typingEl.remove();
-    appendMessage('error', `Failed to get response: ${e.message}`);
-    showToast(`Advisor error: ${e.message}`, 'error');
+    appendMessage('error', t('advisor.failedResponse').replace('{msg}', e.message));
+    showToast(t('advisor.advisorError').replace('{msg}', e.message), 'error');
   } finally {
     isStreaming = false;
-    if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'Send ↑'; }
+    if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = t('advisor.sendBtn'); }
   }
 }
 
@@ -174,7 +176,7 @@ function appendMessage(role, content) {
       <div class="advisor-bubble user-bubble">
         <div class="advisor-bubble-content">${escapeHtml(content)}</div>
       </div>
-      <div class="advisor-avatar user-avatar">You</div>
+      <div class="advisor-avatar user-avatar">${t('advisor.youAvatar')}</div>
     `;
   } else if (role === 'error') {
     div.innerHTML = `
@@ -187,7 +189,7 @@ function appendMessage(role, content) {
     div.innerHTML = `
       <div class="advisor-avatar">🧠</div>
       <div class="advisor-bubble">
-        <div class="advisor-bubble-content">${parseMarkdown(content)}</div>
+        <div class="advisor-bubble-content">${sanitizeHTML(parseMarkdown(content))}</div>
       </div>
     `;
   }

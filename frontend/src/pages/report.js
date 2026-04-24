@@ -1,5 +1,7 @@
 import { api, getScoreColor } from '../main.js';
 import jsPDF from 'jspdf';
+import { t } from '../i18n.js';
+import { sanitizeHTML, escapeHTML } from '../sanitize.js';
 
 let reportMarkdown = '';
 let reportScore = 0;
@@ -15,8 +17,8 @@ export async function renderReport(container) {
     container.innerHTML = `
       <div class="empty-state">
         <div class="empty-state-icon">⚠️</div>
-        <div class="empty-state-text">No assessment data available. Please complete the assessment first.</div>
-        <a href="#assessment" class="btn btn-primary">Go to Assessment</a>
+        <div class="empty-state-text">${t('report.noAssessment')}</div>
+        <a href="#assessment" class="btn btn-primary">${t('report.goToAssessment')}</a>
       </div>
     `;
     return;
@@ -25,7 +27,7 @@ export async function renderReport(container) {
   container.innerHTML = `
     <div class="loading-overlay">
       <div class="spinner"></div>
-      <span style="margin-left: 10px;">Generating Executive Summary via AI (Gemini 3.1 Pro)...</span>
+      <span style="margin-left: 10px;">${t('report.generatingAi')}</span>
     </div>
   `;
   
@@ -57,8 +59,8 @@ export async function renderReport(container) {
             const score = total > 0 ? (fulfilled / total * 100) : 0;
             totalScore += score * dim.weight;
             totalWeight += dim.weight;
-            if (score < 40) gaps.push(`${dim.name}: ${total - fulfilled} of ${total} checkpoints unmet`);
-            if (score >= 70) strengths.push(`${dim.name}: ${fulfilled} of ${total} checkpoints met (${Math.round(score)}%)`);
+            if (score < 40) gaps.push(t('report.checkpointsUnmet').replace('{dim}', dim.name).replace('{unmet}', total - fulfilled).replace('{total}', total));
+            if (score >= 70) strengths.push(t('report.checkpointsMet').replace('{dim}', dim.name).replace('{met}', fulfilled).replace('{total}', total).replace('{score}', Math.round(score)));
           });
           overallScore = totalWeight > 0 ? totalScore / totalWeight : 0;
           if (overallScore >= 90) overallLevel = 5;
@@ -89,7 +91,7 @@ export async function renderReport(container) {
       body: JSON.stringify(payload)
     });
     
-    if (!briefingRes.ok) throw new Error('Briefing generation failed');
+    if (!briefingRes.ok) throw new Error(t('report.briefingFailed'));
     
     const briefingData = await briefingRes.json();
     reportMarkdown = briefingData.markdown || '';
@@ -113,13 +115,13 @@ export async function renderReport(container) {
         <div style="background: linear-gradient(135deg, #1e3a5f 0%, #0c1021 100%); padding: 32px 40px; color: white;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <div>
-              <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.6); margin-bottom: 4px;">AI Strategy Hub — Executive Report</div>
-              <div style="font-size: 1.6rem; font-weight: 800;">AI Maturity Executive Briefing</div>
-              <div style="color: rgba(255,255,255,0.5); margin-top: 4px; font-size: 0.85rem;">Generated on ${dateStr}</div>
+              <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.6); margin-bottom: 4px;">${t('report.headerSub')}</div>
+              <div style="font-size: 1.6rem; font-weight: 800;">${t('report.headerTitle')}</div>
+              <div style="color: rgba(255,255,255,0.5); margin-top: 4px; font-size: 0.85rem;">${t('report.generatedOn').replace('{date}', dateStr)}</div>
             </div>
             <div style="text-align: center; background: rgba(255,255,255,0.1); padding: 16px 28px; border-radius: 12px; backdrop-filter: blur(10px);">
               <div style="font-size: 2.2rem; font-weight: 800;">${overallScore.toFixed(0)}</div>
-              <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7);">Score / 100 · Level ${overallLevel}</div>
+              <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7);">${t('report.scoreLabel').replace('{level}', overallLevel)}</div>
             </div>
           </div>
         </div>
@@ -130,28 +132,28 @@ export async function renderReport(container) {
           </div>
           
           <div style="margin-top: 3rem; text-align: center; border-top: 1px solid #e5e7eb; padding-top: 1rem; color: #9ca3af; font-size: 0.8em;">
-            AI Strategy Hub &nbsp;•&nbsp; Built on NIST, EU AI Act & 4 more &nbsp;•&nbsp; Gemini 3.1 Pro
+            ${t('report.footer')}
           </div>
         </div>
       </div>
       
       <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center;">
-        <button class="btn btn-primary" id="btn-download-pdf" style="font-weight: bold; font-size: 1rem; padding: 12px 28px; background: var(--gradient-primary); border: none; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">📥 Download PDF</button>
-        <button class="btn btn-secondary" onclick="window.print()" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px 20px;">🖨️ Print</button>
-        <button class="btn btn-secondary" onclick="window.location.hash='dashboard'" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px 20px;">🔙 Back</button>
+        <button class="btn btn-primary" id="btn-download-pdf" style="font-weight: bold; font-size: 1rem; padding: 12px 28px; background: var(--gradient-primary); border: none; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">${t('report.downloadPdf')}</button>
+        <button class="btn btn-secondary" onclick="window.print()" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px 20px;">${t('report.printBtn')}</button>
+        <button class="btn btn-secondary" onclick="window.location.hash='dashboard'" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px 20px;">${t('report.backBtn')}</button>
       </div>
     `;
 
     document.getElementById('btn-download-pdf')?.addEventListener('click', generatePDF);
 
   } catch (err) {
-    container.innerHTML = `<div class="empty-state">Failed to load report: ${err.message}</div>`;
+    container.innerHTML = `<div class="empty-state">${t('report.failedLoad').replace('{msg}', err.message)}</div>`;
   }
 }
 
 async function generatePDF() {
   const btn = document.getElementById('btn-download-pdf');
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ Generating PDF...'; }
+  if (btn) { btn.disabled = true; btn.textContent = t('report.generatingPdf'); }
 
   try {
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
@@ -166,14 +168,15 @@ async function generatePDF() {
 
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(8);
-    doc.text('AI STRATEGY HUB — EXECUTIVE REPORT', margin, 14);
+    doc.text(t('report.headerSub').toUpperCase(), margin, 14);
     doc.setFontSize(18);
     doc.setFont(undefined, 'bold');
-    doc.text('AI Maturity Executive Briefing', margin, 25);
+    doc.text(t('report.headerTitle'), margin, 25);
     doc.setFontSize(9);
     doc.setFont(undefined, 'normal');
     doc.setTextColor(180, 200, 220);
-    doc.text(`Generated on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, margin, 33);
+    const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    doc.text(t('report.generatedOn').replace('{date}', dateStr), margin, 33);
 
     // Score badge
     doc.setFillColor(255, 255, 255, 0.15);
@@ -185,7 +188,7 @@ async function generatePDF() {
     doc.text(`${reportScore.toFixed(0)}`, badgeX + 17.5, 23, { align: 'center' });
     doc.setFontSize(7);
     doc.setFont(undefined, 'normal');
-    doc.text(`Score / 100 · Level ${reportLevel}`, badgeX + 17.5, 30, { align: 'center' });
+    doc.text(t('report.scoreLabel').replace('{level}', reportLevel), badgeX + 17.5, 30, { align: 'center' });
 
     y = 55;
 
@@ -237,14 +240,14 @@ async function generatePDF() {
     y += 6;
     doc.setFontSize(8);
     doc.setTextColor(150, 150, 150);
-    doc.text('AI Strategy Hub  •  Built on NIST, EU AI Act & 4 more  •  Gemini 3.1 Pro', pageWidth / 2, y, { align: 'center' });
+    doc.text(t('report.footer'), pageWidth / 2, y, { align: 'center' });
 
     // Save
     doc.save(`AI_Strategy_Hub_Executive_Briefing_${new Date().toISOString().split('T')[0]}.pdf`);
 
   } catch (e) {
-    alert('PDF generation failed: ' + e.message);
+    alert(t('report.pdfFailed').replace('{msg}', e.message));
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '📥 Download PDF'; }
+    if (btn) { btn.disabled = false; btn.textContent = t('report.downloadPdf'); }
   }
 }

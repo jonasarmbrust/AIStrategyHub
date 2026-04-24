@@ -5,6 +5,8 @@ ATTRIBUTION & LICENSE NOTICE
 This document is an independent summary created for the AI Strategy Hub project.
 It is NOT a reproduction of the original OWASP publication.
 All content is paraphrased and restructured in the author's own words.
+This summary is independently authored and does not constitute a derivative work
+of the OWASP AI Maturity Assessment under CC BY-SA 4.0.
 OWASP materials are published under Creative Commons Attribution-ShareAlike 4.0 (CC BY-SA 4.0).
 For the authoritative source, refer to the official URL below.
 -->

@@ -17,12 +17,12 @@ import re
 from pathlib import Path
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Depends
 from pydantic import BaseModel
 
-router = APIRouter()
+from config import DIMENSIONS_PATH, require_gemini_key
 
-DIMENSIONS_PATH = Path(__file__).parent.parent / "knowledge_base" / "dimensions.json"
+router = APIRouter()
 
 EXTRACT_PROMPT = """You are an AI Strategy Research Analyst. Analyze the following document/content and extract the key arguments and recommendations that are relevant for an AI Maturity Assessment.
 
@@ -326,13 +326,12 @@ Generate 7-10 recommendations, ordered by priority. Be specific and actionable, 
 """
 
 
-@router.post("/personalize")
-async def personalize_recommendations(request: PersonalizeRequest):
-    """Generate AI-powered personalized recommendations based on assessment scores."""
-    gemini_key = os.getenv("GEMINI_API_KEY", "")
-    if not gemini_key:
-        raise HTTPException(status_code=500, detail="GEMINI_API_KEY not configured")
+from config import require_gemini_key
+from fastapi import Depends
 
+@router.post("/personalize")
+async def personalize_recommendations(request: PersonalizeRequest, gemini_key: str = Depends(require_gemini_key)):
+    """Generate AI-powered personalized recommendations based on assessment scores."""
     try:
         import google.generativeai as genai
         genai.configure(api_key=gemini_key)
@@ -361,9 +360,7 @@ async def personalize_recommendations(request: PersonalizeRequest):
 
 async def _extract_arguments(content: str, title: str, url: str) -> dict:
     """Use Gemini to extract key arguments from content."""
-    gemini_key = os.getenv("GEMINI_API_KEY", "")
-    if not gemini_key:
-        raise HTTPException(status_code=500, detail="GEMINI_API_KEY not configured")
+    gemini_key = require_gemini_key()
 
     try:
         import google.generativeai as genai

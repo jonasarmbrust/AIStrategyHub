@@ -3,6 +3,8 @@
  * Shows all source frameworks, checkpoint counts, and official references.
  */
 import { api, getSourceColor } from '../main.js';
+import { t } from '../i18n.js';
+import { sanitizeHTML, escapeHTML } from '../sanitize.js';
 
 const FRAMEWORKS = [
   {
@@ -125,14 +127,14 @@ export async function renderSources(container) {
 
   container.innerHTML = `
     <div class="page-header">
-      <h1 class="page-title">📚 Sources & Attribution</h1>
-      <p class="page-description">Every checkpoint in this platform is traceable to its original framework. This page provides full transparency on the 6 globally recognized standards that form the foundation of the maturity model.</p>
+      <h1 class="page-title">${t('sources.title')}</h1>
+      <p class="page-description">${t('sources.desc')}</p>
     </div>
 
     <div class="card mb-xl fade-in" style="animation-delay: 0ms">
       <div class="card-header border-none">
-        <span class="card-title">🔬 Framework Coverage</span>
-        <span style="font-size: 0.78rem; color: var(--text-muted);">${totalCheckpoints} checkpoints total</span>
+        <span class="card-title">${t('sources.coverageTitle')}</span>
+        <span style="font-size: 0.78rem; color: var(--text-muted);">${t('sources.checkpointsTotal').replace('{count}', totalCheckpoints)}</span>
       </div>
       <div class="grid-3" style="gap: 12px;">
         ${FRAMEWORKS.map(fw => {
@@ -144,7 +146,7 @@ export async function renderSources(container) {
               <span style="font-size: 1.4rem;">${fw.icon}</span>
               <div style="flex: 1; min-width: 0;">
                 <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${fw.short}</div>
-                <div style="font-size: 0.72rem; color: var(--text-muted);">${count} checkpoints (${pct}%)</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted);">${t('sources.checkpointsPct').replace('{count}', count).replace('{pct}', pct)}</div>
               </div>
               <div style="width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: ${color}15; border: 2px solid ${color}40;">
                 <span style="font-size: 0.85rem; font-weight: 700; color: ${color};">${count}</span>
@@ -171,7 +173,7 @@ export async function renderSources(container) {
                   </div>
                   <div style="display: flex; gap: 6px; flex-shrink: 0;">
                     <span style="font-size: 0.68rem; padding: 3px 10px; border-radius: 999px; background: ${color}12; color: ${color}; font-weight: 600;">${fw.typeBadge}</span>
-                    <span style="font-size: 0.68rem; padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,0.04); color: var(--text-muted);">${count} checkpoints</span>
+                    <span style="font-size: 0.68rem; padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,0.04); color: var(--text-muted);">${t('builder.checkpointsLabel').replace('{count}', count)}</span>
                   </div>
                 </div>
 
@@ -182,9 +184,9 @@ export async function renderSources(container) {
                 </div>
 
                 <div style="display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.75rem; color: var(--text-muted);">
-                  <span>📄 <strong>Version:</strong> ${fw.version}</span>
-                  <span>📅 <strong>Published:</strong> ${fw.published}</span>
-                  <a href="${fw.url}" target="_blank" rel="noopener noreferrer" style="color: var(--accent-blue); text-decoration: none; transition: opacity 0.2s;">🔗 Official Source ↗</a>
+                  <span>${t('sources.version').replace('{version}', fw.version)}</span>
+                  <span>${t('sources.published').replace('{date}', fw.published)}</span>
+                  <a href="${fw.url}" target="_blank" rel="noopener noreferrer" style="color: var(--accent-blue); text-decoration: none; transition: opacity 0.2s;">${t('sources.officialSource')}</a>
                 </div>
               </div>
             </div>
@@ -195,21 +197,17 @@ export async function renderSources(container) {
 
     <div class="card fade-in" style="animation-delay: 450ms;">
       <div class="card-header">
-        <span class="card-title">⚖️ Disclaimer & Fair Use</span>
+        <span class="card-title">${t('sources.disclaimerTitle')}</span>
       </div>
       <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.8;">
         <p style="margin-bottom: 12px;">
-          AI Strategy Hub synthesizes publicly available frameworks and guidelines into a unified assessment model.
-          All referenced frameworks remain the intellectual property of their respective organizations.
-          This tool does <strong>not</strong> replace professional legal, compliance, or audit advice.
+          ${t('sources.disclaimer1')}
         </p>
         <p style="margin-bottom: 12px;">
-          <strong>For EU AI Act compliance:</strong> Consult qualified legal counsel for binding regulatory assessments.
-          The compliance readiness scores in this tool are indicative and based on self-assessment — they are not legally binding conformity assessments.
+          ${t('sources.disclaimer2')}
         </p>
         <p>
-          Framework data was last verified in <strong>April 2026</strong>. Source frameworks may have been updated since. 
-          Always refer to the official sources linked above for the latest versions.
+          ${t('sources.disclaimer3')}
         </p>
       </div>
     </div>

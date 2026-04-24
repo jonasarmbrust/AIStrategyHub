@@ -1,29 +1,33 @@
 """
 Embedder — Manages document embeddings using Gemini Embedding API
-and a lightweight JSON-backed local store to avoid C++ build tool requirements.
+and a lightweight JSON-backed local store.
+
+Abstraction layer: store_chunks(), search_chunks(), delete_collection()
+can be reimplemented with Chroma/Qdrant for production scale.
 """
 
 from __future__ import annotations
 
+import asyncio
+import functools
 import json
+import logging
 import math
-import os
 from pathlib import Path
-from typing import Optional
 
 import google.generativeai as genai
+
+from config import EMBEDDINGS_DIR, require_gemini_key
+
+log = logging.getLogger("embedder")
 
 # NOTE: genai.configure() is called lazily in each function to ensure
 # the .env file has been loaded before we read the API key.
 
-EMBED_DIR = Path(__file__).parent.parent.parent / "data" / "embeddings"
-
 
 def _ensure_configured():
     """Lazily configure Gemini API key (only once)."""
-    key = os.getenv("GEMINI_API_KEY", "")
-    if not key:
-        raise RuntimeError("GEMINI_API_KEY not set. Cannot generate embeddings.")
+    key = require_gemini_key()
     genai.configure(api_key=key)
 
 
@@ -37,40 +41,42 @@ def _cosine_distance(v1: list[float], v2: list[float]) -> float:
     return 1.0 - sim
 
 
+async def _embed_with_retry(text: str, task_type: str, max_retries: int = 4) -> list[float]:
+    """Generate embedding with exponential backoff for 429 rate limits."""
+    _ensure_configured()
+
+    loop = asyncio.get_event_loop()
+    for attempt in range(max_retries + 1):
+        try:
+            result = await loop.run_in_executor(
+                None,
+                functools.partial(
+                    genai.embed_content,
+                    model="models/gemini-embedding-2-preview",
+                    content=text,
+                    task_type=task_type,
+                )
+            )
+            return result["embedding"]
+        except Exception as e:
+            err_str = str(e)
+            if "429" in err_str or "Resource exhausted" in err_str:
+                if attempt < max_retries:
+                    wait = 2 ** (attempt + 1)  # 2, 4, 8, 16 seconds
+                    log.warning(f"Rate limited, retry {attempt+1}/{max_retries} in {wait}s...")
+                    await asyncio.sleep(wait)
+                    continue
+            raise
+
+
 async def embed_text(text: str) -> list[float]:
     """Generate embedding for a text using Gemini."""
-    _ensure_configured()
-    import asyncio
-    import functools
-    loop = asyncio.get_event_loop()
-    result = await loop.run_in_executor(
-        None,
-        functools.partial(
-            genai.embed_content,
-            model="models/gemini-embedding-2-preview",
-            content=text,
-            task_type="retrieval_document",
-        )
-    )
-    return result["embedding"]
+    return await _embed_with_retry(text, "retrieval_document")
 
 
 async def embed_query(text: str) -> list[float]:
     """Generate embedding for a query using Gemini."""
-    _ensure_configured()
-    import asyncio
-    import functools
-    loop = asyncio.get_event_loop()
-    result = await loop.run_in_executor(
-        None,
-        functools.partial(
-            genai.embed_content,
-            model="models/gemini-embedding-2-preview",
-            content=text,
-            task_type="retrieval_query",
-        )
-    )
-    return result["embedding"]
+    return await _embed_with_retry(text, "retrieval_query")
 
 
 async def store_chunks(
@@ -78,12 +84,15 @@ async def store_chunks(
     chunks: list[dict],
 ) -> int:
     """Store document chunks in a JSON file with embeddings."""
-    EMBED_DIR.mkdir(parents=True, exist_ok=True)
-    file_path = EMBED_DIR / f"{collection_name}.json"
+    EMBEDDINGS_DIR.mkdir(parents=True, exist_ok=True)
+    file_path = EMBEDDINGS_DIR / f"{collection_name}.json"
 
     data = []
-    for chunk in chunks:
+    for i, chunk in enumerate(chunks):
         embedding = await embed_text(chunk["text"])
+        # Small delay between embeddings to avoid rate-limit bursts
+        if i < len(chunks) - 1:
+            await asyncio.sleep(0.3)
         data.append({
             "id": f"chunk_{chunk['index']}",
             "text": chunk["text"],
@@ -92,7 +101,9 @@ async def store_chunks(
             "embedding": embedding
         })
 
-    file_path.write_text(json.dumps(data))
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
     return len(data)
 
 
@@ -101,36 +112,43 @@ async def search_chunks(
     query: str,
     n_results: int = 3,
 ) -> list[dict]:
-    """Search for relevant chunks using semantic similarity."""
-    file_path = EMBED_DIR / f"{collection_name}.json"
+    """Search stored chunks for a query using cosine similarity."""
+    file_path = EMBEDDINGS_DIR / f"{collection_name}.json"
     if not file_path.exists():
         return []
 
-    try:
-        data = json.loads(file_path.read_text())
-        query_embedding = await embed_query(query)
+    with open(file_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
 
-        results = []
-        for item in data:
-            dist = _cosine_distance(query_embedding, item["embedding"])
-            results.append({
-                "text": item["text"],
-                "section": item["section"],
-                "distance": dist
-            })
-
-        # Sort by distance (lower is better, since it's 1 - cosine_similarity)
-        results.sort(key=lambda x: x["distance"])
-
-        return results[:n_results]
-    except Exception as e:
-        print(f"Search failed: {e}")
+    if not data:
         return []
+
+    query_embedding = await embed_query(query)
+
+    # Calculate distances
+    for item in data:
+        item["distance"] = _cosine_distance(query_embedding, item["embedding"])
+
+    # Sort by distance (lower is better)
+    data.sort(key=lambda x: x["distance"])
+
+    # Return top N (without embeddings)
+    results = []
+    for item in data[:n_results]:
+        results.append({
+            "id": item["id"],
+            "text": item["text"],
+            "section": item["section"],
+            "index": item["index"],
+            "distance": item["distance"]
+        })
+
+    return results
 
 
 def delete_collection(collection_name: str):
-    """Delete the collection file."""
-    file_path = EMBED_DIR / f"{collection_name}.json"
+    """Delete a document's embedding collection."""
+    file_path = EMBEDDINGS_DIR / f"{collection_name}.json"
     try:
         if file_path.exists():
             file_path.unlink()

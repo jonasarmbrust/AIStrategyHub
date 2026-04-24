@@ -226,7 +226,7 @@ async def search_and_store(
         cursor = await db.execute("SELECT url FROM research_sources")
         existing_urls = {row["url"] for row in await cursor.fetchall()}
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
     new_results = [r for r in unique_results if r.get("url", "") not in existing_urls]
     status["new"] = len(new_results)
@@ -299,7 +299,7 @@ async def search_and_store(
                 status["stored"] += 1
                 print(f"[Research] Stored: '{title[:50]}' (relevance: {evaluation.get('relevance_score', 0):.2f})")
             finally:
-                await db.close()
+                pass  # singleton connection, no close needed
 
         except Exception as e:
             print(f"[Research] Failed to process '{result.get('title', '')}': {e}")

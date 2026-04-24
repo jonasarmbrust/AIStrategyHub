@@ -9,10 +9,11 @@ import json
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, BackgroundTasks, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, BackgroundTasks, File, Form, HTTPException, UploadFile, Depends
 
 from database import get_db
 from models.schemas import AnalysisResult, AnalysisStatus
+from config import UPLOAD_DIR, require_gemini_key
 
 router = APIRouter()
 
@@ -49,7 +50,7 @@ async def upload_document(file: UploadFile = File(...)):
         )
         await db.commit()
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
     return {
         "id": doc_id,
@@ -97,7 +98,7 @@ async def import_url(url: str = Form(...), title: str = Form("Imported Source"))
         )
         await db.commit()
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
     return {
         "id": doc_id,
@@ -130,7 +131,7 @@ async def start_evaluation(analysis_id: str, background_tasks: BackgroundTasks):
         )
         await db.commit()
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
     # Run analysis in background
     background_tasks.add_task(_run_analysis, analysis_id)
@@ -153,7 +154,7 @@ async def _run_analysis(analysis_id: str):
             )
             await db.commit()
         finally:
-            await db.close()
+            pass  # singleton connection, no close needed
         print(f"Analysis {analysis_id} failed: {e}")
 
 
@@ -172,7 +173,7 @@ async def get_analysis_status(analysis_id: str):
 
         return dict(row)
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
 
 @router.get("/{analysis_id}/report")
@@ -207,7 +208,7 @@ async def get_analysis_report(analysis_id: str):
             "completed_at": row["completed_at"],
         }
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
 
 @router.get("")
@@ -222,7 +223,7 @@ async def list_analyses():
         rows = await cursor.fetchall()
         return [dict(row) for row in rows]
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
 from pydantic import BaseModel
 import os
@@ -300,7 +301,7 @@ async def get_assessment_suggestions():
             "count": len(suggestions),
         }
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
 
 @router.get("/evidence")
@@ -336,4 +337,4 @@ async def get_evidence():
             "analyzed_at": row["completed_at"],
         }
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed

@@ -3,6 +3,8 @@
  * auto-enriched proposals with evidence tags, and Activity Log.
  */
 import { api, showToast } from '../main.js';
+import { t } from '../i18n.js';
+import { sanitizeHTML, escapeHTML } from '../sanitize.js';
 
 const DIM_LABELS = {
   strategy: { name: 'Strategy', icon: '🎯' },
@@ -19,18 +21,18 @@ let proposedCheckpoints = [];
 export function renderFrameworkBuilder(container) {
   container.innerHTML = `
     <div class="page-header">
-      <h1 class="page-title">🏗️ Framework Builder</h1>
-      <p class="page-description">Enrich the AI Strategy Hub Meta-Model by extracting novel strategic guidelines from research documents. Auto-enriched with linked research evidence.</p>
+      <h1 class="page-title">${t('builder.title')}</h1>
+      <p class="page-description">${t('builder.desc')}</p>
     </div>
 
     <div class="card mb-xl" id="coverage-card">
       <div class="card-header" style="cursor: pointer;" id="coverage-toggle">
-        <span class="card-title">📊 Research Coverage Analysis</span>
+        <span class="card-title">${t('builder.coverageTitle')}</span>
         <span class="expand-icon" id="coverage-arrow">▼</span>
       </div>
       <div id="coverage-content" style="display: none;">
         <div style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6;">
-          Shows which maturity dimensions have the most/least research backing. Focus your research on under-covered areas.
+          ${t('builder.coverageDesc')}
         </div>
         <div id="coverage-data">
           <div class="loading-overlay" style="padding: 24px;"><div class="spinner"></div></div>
@@ -40,33 +42,33 @@ export function renderFrameworkBuilder(container) {
 
     <div class="card mb-xl">
       <div class="card-header">
-        <span class="card-title">1. Select Research Source</span>
+        <span class="card-title">${t('builder.step1Title')}</span>
       </div>
       <div>
-        <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Choose a document that was previously imported via the Research Agent (.txt)</label>
+        <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 6px;">${t('builder.step1Desc')}</label>
         <div class="flex gap-sm">
           <select id="builder-source-select" class="input" style="flex: 1;">
-            <option value="">Loading sources...</option>
+            <option value="">${t('builder.loadingSources')}</option>
           </select>
-          <button class="btn btn-primary btn-sm" id="btn-extract" disabled style="white-space: nowrap;">Extract Novel Insights</button>
+          <button class="btn btn-primary btn-sm" id="btn-extract" disabled style="white-space: nowrap;">${t('builder.extractBtn')}</button>
         </div>
       </div>
       
       <div id="extract-progress" style="display: none;" class="mt-md">
         <div class="flex items-center gap-md" style="margin-bottom: 8px;">
           <div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div>
-          <span style="font-size: 0.85rem; color: var(--text-secondary);">Analyzing framework and distilling strategic rules... (This may take up to 20 seconds)</span>
+          <span style="font-size: 0.85rem; color: var(--text-secondary);">${t('builder.extractingMsg')}</span>
         </div>
       </div>
     </div>
 
     <div class="card" id="proposals-card" style="display: none;">
       <div class="card-header" style="justify-content: space-between;">
-        <span class="card-title">2. Review & Integrate</span>
-        <button class="btn btn-primary btn-sm" id="btn-integrate" disabled>➕ Integrate Selected (0)</button>
+        <span class="card-title">${t('builder.step2Title')}</span>
+        <button class="btn btn-primary btn-sm" id="btn-integrate" disabled>${t('builder.integrateBtn').replace('{count}', 0)}</button>
       </div>
       <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">
-        The AI has identified the following strategic checkpoints that are currently missing from your Meta-Model. Select the ones you want to officially append to your framework.
+        ${t('builder.step2Desc')}
       </div>
       <div id="proposals-list" class="grid-2">
       </div>
@@ -74,7 +76,7 @@ export function renderFrameworkBuilder(container) {
 
     <div class="card mt-xl" id="activity-card">
       <div class="card-header" style="cursor: pointer;" id="activity-toggle">
-        <span class="card-title">📜 Integration Activity Log</span>
+        <span class="card-title">${t('builder.activityTitle')}</span>
         <span class="expand-icon" id="activity-arrow">▼</span>
       </div>
       <div id="activity-content" style="display: none;">
@@ -130,7 +132,7 @@ async function loadCoverage() {
     var coverage = data.coverage || [];
 
     if (coverage.length === 0) {
-      container.innerHTML = '<div class="empty-state"><div class="empty-state-text">No coverage data available</div></div>';
+      container.innerHTML = `<div class="empty-state"><div class="empty-state-text">${t('builder.noCoverageData')}</div></div>`;
       return;
     }
 
@@ -141,9 +143,9 @@ async function loadCoverage() {
     };
 
     var html = '<div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">';
-    html += '<div style="text-align:center;padding:8px 16px;background:rgba(59,130,246,0.06);border-radius:8px;"><div style="font-size:1.2rem;font-weight:700;color:var(--accent-blue);">' + data.total_checkpoints + '</div><div style="font-size:0.7rem;color:var(--text-muted);">Checkpoints</div></div>';
-    html += '<div style="text-align:center;padding:8px 16px;background:rgba(16,185,129,0.06);border-radius:8px;"><div style="font-size:1.2rem;font-weight:700;color:var(--accent-emerald);">' + data.total_sources + '</div><div style="font-size:0.7rem;color:var(--text-muted);">Research Sources</div></div>';
-    html += '<div style="text-align:center;padding:8px 16px;background:rgba(139,92,246,0.06);border-radius:8px;"><div style="font-size:1.2rem;font-weight:700;color:#8b5cf6;">' + data.total_fb_additions + '</div><div style="font-size:0.7rem;color:var(--text-muted);">Builder Additions</div></div>';
+    html += '<div style="text-align:center;padding:8px 16px;background:rgba(59,130,246,0.06);border-radius:8px;"><div style="font-size:1.2rem;font-weight:700;color:var(--accent-blue);">' + data.total_checkpoints + '</div><div style="font-size:0.7rem;color:var(--text-muted);">' + t('builder.checkpointsStat') + '</div></div>';
+    html += '<div style="text-align:center;padding:8px 16px;background:rgba(16,185,129,0.06);border-radius:8px;"><div style="font-size:1.2rem;font-weight:700;color:var(--accent-emerald);">' + data.total_sources + '</div><div style="font-size:0.7rem;color:var(--text-muted);">' + t('builder.sourcesStat') + '</div></div>';
+    html += '<div style="text-align:center;padding:8px 16px;background:rgba(139,92,246,0.06);border-radius:8px;"><div style="font-size:1.2rem;font-weight:700;color:#8b5cf6;">' + data.total_fb_additions + '</div><div style="font-size:0.7rem;color:var(--text-muted);">' + t('builder.builderAdditionsStat') + '</div></div>';
     html += '</div>';
 
     html += '<div style="display: grid; gap: 8px;">';
@@ -155,14 +157,14 @@ async function loadCoverage() {
       html += '<span style="font-size:1.2rem;">' + c.icon + '</span>';
       html += '<div style="flex:1;">';
       html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">';
-      html += '<span style="font-size:0.82rem;font-weight:500;color:var(--text-primary);">' + c.dimension_name + '</span>';
+      html += '<span style="font-size:0.82rem;font-weight:500;color:var(--text-primary);">' + t('dimensions.' + c.dimension_id) + '</span>';
       html += '<span style="font-size:0.65rem;padding:2px 8px;border-radius:999px;background:' + sc + '20;color:' + sc + ';font-weight:600;">' + c.status + '</span>';
       html += '</div>';
       html += '<div style="display:flex;gap:16px;font-size:0.7rem;color:var(--text-muted);margin-bottom:6px;">';
-      html += '<span>' + c.checkpoints + ' checkpoints</span>';
-      html += '<span>' + c.research_sources + ' sources</span>';
+      html += '<span>' + t('builder.checkpointsLabel').replace('{count}', c.checkpoints) + '</span>';
+      html += '<span>' + t('builder.sourcesLabel').replace('{count}', c.research_sources) + '</span>';
       if (c.framework_builder_additions > 0) {
-        html += '<span style="color:#8b5cf6;">+' + c.framework_builder_additions + ' built</span>';
+        html += '<span style="color:#8b5cf6;">' + t('builder.builtLabel').replace('{count}', c.framework_builder_additions) + '</span>';
       }
       html += '</div>';
       html += '<div style="height:4px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden;">';
@@ -170,7 +172,7 @@ async function loadCoverage() {
       html += '</div>';
       html += '</div>';
       if (c.status === 'under-researched') {
-        html += '<a href="#research" style="font-size:0.7rem;color:var(--accent-blue);text-decoration:none;white-space:nowrap;" title="Research this dimension">🔬 Research</a>';
+        html += '<a href="#research" style="font-size:0.7rem;color:var(--accent-blue);text-decoration:none;white-space:nowrap;" title="Research this dimension">' + t('builder.researchBtn') + '</a>';
       }
       html += '</div>';
     });
@@ -178,7 +180,7 @@ async function loadCoverage() {
 
     container.innerHTML = html;
   } catch (e) {
-    container.innerHTML = '<div style="font-size:0.82rem;color:var(--text-muted);">Could not load coverage data. Start the backend first.</div>';
+    container.innerHTML = `<div style="font-size:0.82rem;color:var(--text-muted);">${t('builder.failedLoadCoverage')}</div>`;
   }
 }
 
@@ -193,7 +195,7 @@ async function loadActivity() {
     var activities = data.activities || [];
 
     if (activities.length === 0) {
-      container.innerHTML = '<div class="empty-state"><div class="empty-state-text">No activity yet. Run research or integrate checkpoints to see the lifecycle here.</div></div>';
+      container.innerHTML = `<div class="empty-state"><div class="empty-state-text">${t('builder.noActivity')}</div></div>`;
       return;
     }
 
@@ -204,9 +206,9 @@ async function loadActivity() {
     };
 
     var actionLabels = {
-      'research_completed': 'Research Completed',
-      'extracted_for_framework': 'Extracted for Framework',
-      'checkpoint_integrated': 'Checkpoint Integrated',
+      'research_completed': t('builder.actionResearch'),
+      'extracted_for_framework': t('builder.actionExtracted'),
+      'checkpoint_integrated': t('builder.actionIntegrated'),
     };
 
     var html = '<div style="display: grid; gap: 6px;">';
@@ -218,8 +220,8 @@ async function loadActivity() {
       var detailText = '';
       if (details.title) detailText = details.title;
       if (details.text) detailText = details.text;
-      if (details.stored) detailText = details.stored + ' sources stored';
-      if (details.proposals_count) detailText += ' (' + details.proposals_count + ' proposals)';
+      if (details.stored) detailText = t('builder.sourcesStored').replace('{count}', details.stored);
+      if (details.proposals_count) detailText += ' ' + t('builder.proposalsCount').replace('{count}', details.proposals_count);
 
       html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:6px;font-size:0.78rem;">';
       html += '<span style="font-size:1rem;">' + icon + '</span>';
@@ -236,7 +238,7 @@ async function loadActivity() {
 
     container.innerHTML = html;
   } catch (e) {
-    container.innerHTML = '<div style="font-size:0.82rem;color:var(--text-muted);">Could not load activity data.</div>';
+    container.innerHTML = `<div style="font-size:0.82rem;color:var(--text-muted);">${t('builder.failedLoadActivity')}</div>`;
   }
 }
 
@@ -253,11 +255,11 @@ async function loadSources() {
     var txtSources = analyses.filter(function(a) { return a.file_type === '.txt'; });
 
     if (txtSources.length === 0) {
-      select.innerHTML = '<option value="">No imported research found. Go to Document Analyzer and import one first.</option>';
+      select.innerHTML = `<option value="">${t('builder.noSourcesMsg')}</option>`;
       return;
     }
 
-    select.innerHTML = '<option value="">-- Choose a research document --</option>' + txtSources.map(function(s) {
+    select.innerHTML = `<option value="">${t('builder.chooseSource')}</option>` + txtSources.map(function(s) {
       return '<option value="' + s.id + '">' + s.document_name + ' (' + new Date(s.created_at).toLocaleDateString() + ')</option>';
     }).join('');
 
@@ -267,7 +269,7 @@ async function loadSources() {
 
     btn.addEventListener('click', extractInsights);
   } catch (e) {
-    select.innerHTML = '<option value="">Could not load sources</option>';
+    select.innerHTML = `<option value="">${t('builder.failedLoadSources')}</option>`;
   }
 }
 
@@ -287,7 +289,7 @@ async function extractInsights() {
     proposedCheckpoints = res.proposals || [];
     renderProposals();
   } catch (e) {
-    showToast('Extraction failed: ' + e.message, 'error');
+    showToast(t('builder.extractionFailed').replace('{msg}', e.message), 'error');
   } finally {
     btn.disabled = false;
     document.getElementById('builder-source-select').disabled = false;
@@ -303,9 +305,9 @@ function renderProposals() {
   var btn = document.getElementById('btn-integrate');
   
   if (proposedCheckpoints.length === 0) {
-    list.innerHTML = '<div style="grid-column: 1 / -1;" class="empty-state"><div class="empty-state-icon">✅</div><div class="empty-state-text">No novel insights found. The Meta-Model already covers this document comprehensively.</div></div>';
+    list.innerHTML = `<div style="grid-column: 1 / -1;" class="empty-state"><div class="empty-state-icon">✅</div><div class="empty-state-text">${t('builder.noNovelInsights')}</div></div>`;
     btn.disabled = true;
-    btn.textContent = '➕ Integrate Selected (0)';
+    btn.textContent = t('builder.integrateBtn').replace('{count}', 0);
     card.style.display = 'block';
     return;
   }
@@ -316,7 +318,7 @@ function renderProposals() {
     var tagsHtml = '';
     if (p.evidence_tags && p.evidence_tags.length > 0) {
       tagsHtml = '<div style="margin-top: 8px; padding: 6px 8px; background: rgba(59,130,246,0.04); border-radius: 6px;">';
-      tagsHtml += '<div style="font-size: 0.65rem; color: var(--accent-blue); font-weight: 600; margin-bottom: 4px;">📚 Linked Research Evidence</div>';
+      tagsHtml += `<div style="font-size: 0.65rem; color: var(--accent-blue); font-weight: 600; margin-bottom: 4px;">${t('builder.linkedEvidence')}</div>`;
       p.evidence_tags.forEach(function(t) {
         var shortSrc = (t.source || '').split(' ').slice(0, 4).join(' ');
         tagsHtml += '<div style="font-size: 0.65rem; color: var(--text-muted); padding: 1px 0;">• ' + shortSrc;
@@ -335,12 +337,12 @@ function renderProposals() {
     html += '<div style="font-size: 0.8rem; color: var(--text-muted); font-style: italic;">' + p.text_de + '</div>';
     html += '</div></label></div>';
     html += '<div style="background: rgba(0,0,0,0.15); padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; margin-bottom: 8px;">';
-    html += '<div style="color: var(--accent-emerald); font-weight: 600; margin-bottom: 2px;">Target Dimension: ' + p.dimension_id + '</div>';
-    html += '<div style="color: var(--text-secondary);"><strong>Rationale:</strong> ' + p.rationale + '</div>';
+    html += '<div style="color: var(--accent-emerald); font-weight: 600; margin-bottom: 2px;">' + t('builder.targetDimension') + ' ' + t('dimensions.' + p.dimension_id) + '</div>';
+    html += '<div style="color: var(--text-secondary);"><strong>' + t('builder.rationale') + '</strong> ' + p.rationale + '</div>';
     html += '</div>';
     html += tagsHtml;
     html += '<div style="display: flex; gap: 8px; margin-top: 8px;">';
-    html += '<span style="font-size: 0.7rem; background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 4px;">Min Level: ' + p.min_level + '</span>';
+    html += '<span style="font-size: 0.7rem; background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 4px;">' + t('builder.minLevel') + ' ' + p.min_level + '</span>';
     html += '<span style="font-size: 0.7rem; background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 4px;">' + p.category + '</span>';
     html += '</div></div>';
   });
@@ -353,7 +355,7 @@ function renderProposals() {
   var updateBtnState = function() {
     var checkedCount = Array.from(checkboxes).filter(function(cb) { return cb.checked; }).length;
     btn.disabled = checkedCount === 0;
-    btn.textContent = '➕ Integrate Selected (' + checkedCount + ')';
+    btn.textContent = t('builder.integrateBtn').replace('{count}', checkedCount);
     
     // Highlight selected cards
     checkboxes.forEach(function(cb) {
@@ -380,11 +382,11 @@ function renderProposals() {
     if (selectedCheckpoints.length === 0) return;
     
     btn.disabled = true;
-    btn.textContent = 'Integrating...';
+    btn.textContent = t('builder.integrating');
     
     try {
       var res = await api.post('/framework/integrate', { checkpoints: selectedCheckpoints });
-      showToast('Successfully added ' + (res.added || 0) + ' checkpoints to the Meta-Model!', 'success');
+      showToast(t('builder.integrationSuccess').replace('{count}', res.added || 0), 'success');
       // Remove integrated proposals from UI
       proposedCheckpoints = proposedCheckpoints.filter(function(p) { return !selectedIds.includes(p.id); });
       renderProposals();
@@ -394,9 +396,9 @@ function renderProposals() {
         loadCoverage();
       }
     } catch (e) {
-      showToast('Integration failed: ' + e.message, 'error');
+      showToast(t('builder.integrationFailed').replace('{msg}', e.message), 'error');
       btn.disabled = false;
-      btn.textContent = '➕ Integrate Selected (' + selectedIds.length + ')';
+      btn.textContent = t('builder.integrateBtn').replace('{count}', selectedIds.length);
     }
   };
 }

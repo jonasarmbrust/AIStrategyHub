@@ -207,7 +207,7 @@ async def export_markdown(
             )
         row = await cursor.fetchone()
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
     if not row:
         # Generate empty report with no assessments
@@ -252,7 +252,7 @@ async def export_pdf(
             )
         row = await cursor.fetchone()
     finally:
-        await db.close()
+        pass  # singleton connection, no close needed
 
     if not row:
         from knowledge_base.checklist_generator import calculate_maturity_score
