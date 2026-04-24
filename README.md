@@ -278,7 +278,7 @@ Every checkpoint is fully traceable to its origin:
 ```
 AIStrategyHub/
 ├── backend/
-│   ├── main.py                    # FastAPI entry point (v2.1)
+│   ├── main.py                    # FastAPI entry point
 │   ├── config.py                  # Centralized config & dependencies
 │   ├── database.py                # SQLite singleton pool (WAL mode)
 │   ├── api/routes/                # 9 API routers (30+ endpoints)

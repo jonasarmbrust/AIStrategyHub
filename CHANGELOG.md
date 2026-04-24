@@ -6,65 +6,41 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
-## [2.1.0] — 2026-04-24
+## [1.0.0] — 2026-04-24
 
-### 🔒 Security — Production Hardening
-- **XSS Protection**: DOMPurify integration across all 13 frontend pages with sanitized LLM content rendering
-- **API Authentication**: Optional `X-API-Key` header middleware with configurable key and localhost bypass
-- **Rate Limiting**: slowapi integration with configurable per-endpoint limits (default: 60/min, LLM: 5/min)
-- **Error Standardization**: Unified JSON error responses (`{"error": str, "code": str}`) across all endpoints
+### 🎉 Initial Public Release
 
-### ⚡ Performance
-- **Checkpoint Batching**: Evaluator now processes 5 checkpoints per LLM call instead of 1 (~80% API cost reduction, ~21 calls vs. 101)
-- **DB Connection Pool**: Singleton connection pattern with asyncio.Lock, WAL mode, and auto-reconnect
-- **Concurrent Evaluation**: Semaphore-bounded parallel batch processing (max 3 concurrent API calls)
+The first open-source release of AI Strategy Hub — a full-stack AI maturity assessment platform synthesizing 6 global standards into one actionable framework.
 
-### 🧪 Testing & Quality
-- **Test Suite**: 21 pytest tests covering health, scoring engine, checklist API, and document analysis
-- **CI/CD**: GitHub Actions pipeline with backend tests, frontend build, and Docker image build
-- **Alembic Migrations**: Database migration framework with initial schema
-
-### 🏗️ Architecture
-- **Centralized Config**: New `config.py` module replacing scattered env variable access
-- **Middleware Stack**: Modular `middleware/` package (auth, errors, rate_limit)
-- **Embedder Abstraction**: Prepared for Chroma/Qdrant migration via clean interface
-- **Logging**: Centralized logging configuration with configurable levels
-
----
-
-## [2.0.0] — 2026-04-15
-
-### ✨ Major Features
+### ✨ Core Features
 - **AI Strategy Advisor**: Interactive chat with context-aware Gemini 3.1 Pro consultant
-- **Document Analyzer (RAG)**: Full pipeline — upload, chunk, embed, evaluate against all 101 checkpoints
+- **Maturity Assessment**: Interactive checklist across 7 weighted dimensions (101 checkpoints)
+- **Document Analyzer (RAG)**: Upload strategy docs — AI evaluates all checkpoints with confidence scoring
 - **EU AI Act Compliance Engine**: Gap-to-regulation mapping with fine amounts and risk levels
 - **Gap Simulator**: Real-time "What-If" analysis for maturity score impact
 - **Strategic Roadmap**: AI-generated prioritized action plans with effort estimates
 - **Executive PDF Report**: Gemini-powered branded maturity briefing
 - **Meta Strategy**: Do's & Don'ts per dimension from all 6 source frameworks
-- **Research Agent**: Tavily-powered automated research with relevance scoring
+- **Research Agent**: Tavily-powered automated web research with relevance scoring
 - **Framework Builder**: Extract and integrate novel checkpoints from research documents
+- **Full Bilingual Support**: English / German — all UI, reports, and AI responses
 
-### 🌍 Internationalization
-- Full bilingual support (English / German) — all UI, reports, and AI responses
+### 🔒 Security
+- XSS protection via DOMPurify across all 13 frontend pages
+- Optional API key authentication middleware
+- Rate limiting with slowapi (configurable per-endpoint)
+- Standardized error responses
 
-### 📊 Framework
-- 7 unified dimensions with configurable weights
-- 101 checkpoints synthesized from 6 global standards
-- 5-level maturity classification with evidence-based scoring
+### ⚡ Performance
+- Checkpoint batching: 5 per LLM call (~80% API cost reduction)
+- SQLite singleton connection pool with WAL mode
+- Semaphore-bounded concurrent evaluation
 
-### 🏗️ Infrastructure
+### 🏗️ Architecture
 - Full-stack: Vite + Vanilla JS frontend, FastAPI + Python backend
-- SQLite with async access (aiosqlite)
-- Docker multi-stage build
-- Custom CSS design system (2300+ LOC, glassmorphism, dark mode)
-
----
-
-## [1.0.0] — 2026-04-14
-
-### 🎉 Initial Release
-- Core maturity model with 7 dimensions
-- Manual checklist assessment with automated scoring
-- Basic document analysis pipeline
-- Source framework attribution (NIST, EU AI Act, Google, Microsoft, OWASP, UNESCO)
+- Centralized config module with dependency injection
+- Modular middleware stack (auth, errors, rate limiting)
+- Docker multi-stage build for one-command deployment
+- 21 pytest tests covering health, scoring, checklist, and analysis
+- GitHub Actions CI/CD pipeline
+- Alembic database migrations

@@ -45,7 +45,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="AI Strategy Hub",
     description="Open AI Maturity Meta-Model — Assess your organization's AI readiness based on synthesized global best practices.",
-    version="2.1.0",
+    version="1.0.0",
     lifespan=lifespan,
 )
 
@@ -99,7 +99,7 @@ async def health_check():
     return {
         "status": "ok",
         "service": "AI Strategy Hub",
-        "version": "2.1.0",
+        "version": "1.0.0",
         "auth_enabled": AUTH_ENABLED,
     }
 

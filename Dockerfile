@@ -29,6 +29,6 @@ RUN mkdir -p /app/data/uploads /app/data/embeddings
 # Expose port
 EXPOSE 8000
 
-# Start server
+# Start server — Cloud Run sets PORT env var, default to 8000 for local
 WORKDIR /app/backend
-CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD python -m uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
