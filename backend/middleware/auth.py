@@ -18,7 +18,6 @@ log = logging.getLogger("auth")
 
 # Paths that never require authentication
 EXEMPT_PATHS = {
-    "/api/health",
     "/openapi.json",
     "/docs",
     "/redoc",

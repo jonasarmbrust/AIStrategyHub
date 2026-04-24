@@ -11,7 +11,26 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔷</text></svg>">
 </head>
 <body>
-    <div id="app">
+    <!-- Auth Gate -->
+    <div id="auth-gate" class="auth-gate">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <span class="logo-icon">🔷</span>
+                <h1>AI Strategy Hub</h1>
+                <p class="auth-subtitle">AI Maturity Assessment Platform</p>
+            </div>
+            <form id="auth-form" autocomplete="off">
+                <label for="auth-key">Access Key</label>
+                <div class="auth-input-wrapper">
+                    <input type="password" id="auth-key" placeholder="Enter your access key" autocomplete="off" required />
+                    <button type="submit" class="btn btn-primary">Unlock →</button>
+                </div>
+                <p id="auth-error" class="auth-error" hidden>Invalid access key. Please try again.</p>
+            </form>
+            <p class="auth-footer">Protected demo instance. Contact the repo owner for access.</p>
+        </div>
+    </div>
+    <div id="app" style="display:none;">
         <nav id="sidebar" class="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
@@ -53,5 +72,47 @@
         </main>
     </div>
     <script type="module" src="/src/main.js"></script>
+    <script>
+        // Auth gate logic — runs before SPA loads
+        (function() {
+            const STORAGE_KEY = 'ash_api_key';
+            const gate = document.getElementById('auth-gate');
+            const app = document.getElementById('app');
+            const form = document.getElementById('auth-form');
+            const errorEl = document.getElementById('auth-error');
+
+            // Check if already authenticated
+            const saved = sessionStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                gate.style.display = 'none';
+                app.style.display = '';
+            }
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const key = document.getElementById('auth-key').value.trim();
+                if (!key) return;
+
+                // Validate against backend health endpoint
+                try {
+                    const res = await fetch('/api/health', {
+                        headers: { 'X-API-Key': key }
+                    });
+                    if (res.ok) {
+                        sessionStorage.setItem(STORAGE_KEY, key);
+                        gate.style.display = 'none';
+                        app.style.display = '';
+                        errorEl.hidden = true;
+                    } else {
+                        errorEl.hidden = false;
+                        document.getElementById('auth-key').value = '';
+                    }
+                } catch {
+                    errorEl.textContent = 'Cannot reach server. Please try again later.';
+                    errorEl.hidden = false;
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

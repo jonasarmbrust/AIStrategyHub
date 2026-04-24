@@ -23,10 +23,20 @@ export { sanitizeHTML, escapeHTML };
 // ── Config ─────────────────────────────────────────────────
 const API_BASE = '/api';
 
+// ── Auth Helper ────────────────────────────────────────────
+function authHeaders(extra = {}) {
+  const key = sessionStorage.getItem('ash_api_key');
+  const headers = { ...extra };
+  if (key) headers['X-API-Key'] = key;
+  return headers;
+}
+
 // ── API Client ─────────────────────────────────────────────
 export const api = {
   async get(path) {
-    const res = await fetch(`${API_BASE}${path}`);
+    const res = await fetch(`${API_BASE}${path}`, {
+      headers: authHeaders(),
+    });
     if (!res.ok) throw new Error(`API Error: ${res.status}`);
     return res.json();
   },
@@ -34,7 +44,7 @@ export const api = {
   async post(path, body) {
     const res = await fetch(`${API_BASE}${path}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify(body),
     });
     if (!res.ok) {
@@ -53,6 +63,7 @@ export const api = {
     formData.append('file', file);
     const res = await fetch(`${API_BASE}${path}`, {
       method: 'POST',
+      headers: authHeaders(),
       body: formData,
     });
     if (!res.ok) throw new Error(`API Error: ${res.status}`);
@@ -62,7 +73,7 @@ export const api = {
   async postDownload(path, body) {
     const res = await fetch(`${API_BASE}${path}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authHeaders(body ? { 'Content-Type': 'application/json' } : {}),
       body: body ? JSON.stringify(body) : undefined,
     });
     if (!res.ok) throw new Error(`API Error: ${res.status}`);
@@ -79,13 +90,19 @@ export const api = {
   },
 
   async patch(path) {
-    const res = await fetch(`${API_BASE}${path}`, { method: 'PATCH' });
+    const res = await fetch(`${API_BASE}${path}`, {
+      method: 'PATCH',
+      headers: authHeaders(),
+    });
     if (!res.ok) throw new Error(`API Error: ${res.status}`);
     return res.json();
   },
 
   async delete(path) {
-    const res = await fetch(`${API_BASE}${path}`, { method: 'DELETE' });
+    const res = await fetch(`${API_BASE}${path}`, {
+      method: 'DELETE',
+      headers: authHeaders(),
+    });
     if (!res.ok) throw new Error(`API Error: ${res.status}`);
     return res.json();
   },
