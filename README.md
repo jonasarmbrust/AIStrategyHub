@@ -43,19 +43,23 @@
 
 Every company knows they *should* be using AI. But most don't know **where to start**, **what they're missing**, or **how mature their current approach actually is**. Meanwhile, dozens of excellent guides exist — from the EU AI Act to Google's AI Adoption Framework — but they each have different formats, focus areas, and languages. Reading them all would take weeks.
 
-Hiring a consultancy to run a professional AI readiness assessment? That starts at **€50,000+** and gives you a one-time snapshot that's outdated within months.
+And hiring a consultancy? That's **costly, slow, and gives you a one-time snapshot** that's outdated within months — especially in a field where new regulations, tools, and best practices emerge almost weekly.
 
 ### The Solution
 
 AI Strategy Hub **merges 6 internationally recognized standards** (NIST, EU AI Act, Google, Microsoft, OWASP, UNESCO) into **101 concrete checkpoints** across 7 key areas like Strategy, Data, Governance, Talent, and Ethics. You can:
 
+- 🏗️ **Build a living framework** — Start with 101 curated checkpoints and extend them anytime with new research, emerging standards, or your own criteria. Your framework **evolves as fast as the AI landscape does**.
 - ✅ **Self-assess** — Walk through an interactive checklist and get your maturity score instantly
 - 📄 **Upload existing strategy documents** — The AI reads them and evaluates your readiness automatically
 - 🧠 **Ask the AI Advisor** — "What should we focus on first?" — and get answers based on *your specific gaps*
 - 📈 **Track progress over time** — Every assessment becomes a snapshot, so you can see how you improve
-- 🏗️ **Build your own framework** — Add new checkpoints from the latest research with one click
+- 🔬 **Stay current** — The Research Agent scans the web for new frameworks and regulations, so you never fall behind
 
-> **Think of it as a fitness tracker for your AI strategy** — instead of steps and heart rate, it measures governance, data readiness, talent, and ethics.
+> **Think of it as a fitness tracker for your AI strategy** — instead of steps and heart rate, it measures governance, data readiness, talent, and ethics. And unlike a static report, it **grows with you**.
+
+> [!TIP]
+> **The AI world moves fast. Your assessment tool should too.** Traditional maturity models are frozen the moment they're published. AI Strategy Hub lets you integrate new checkpoints from any source in seconds — keeping your framework as current as the field itself.
 
 ### Who Is This For?
 
