@@ -3,8 +3,8 @@
 </p>
 
 <p align="center">
-  <strong>Open-Source AI Maturity Assessment Platform</strong><br>
-  <em>Synthesizing 6 global standards into one actionable framework — powered by Gemini AI.</em>
+  <strong>Is your organization truly ready for AI? Find out — for free.</strong><br>
+  <em>An open-source platform that helps you assess, plan, and track your AI strategy<br>using best practices from 6 global standards — powered by Google Gemini AI.</em>
 </p>
 
 <p align="center">
@@ -35,13 +35,37 @@
 
 ---
 
-## 💡 Why This Exists
+## 💡 What Is This?
 
-The AI landscape is evolving at breakneck speed. New frameworks, regulations, and best practices emerge almost weekly — from the **EU AI Act** to **NIST AI RMF**, from **Google's AI Adoption Framework** to **OWASP's AI Security Guide**. There is an incredible wealth of knowledge out there on how to build a sustainable and effective AI strategy — but it's scattered across dozens of sources, each with its own structure, language, and focus.
+**In one sentence:** AI Strategy Hub is a free tool that tells you how ready your organization is for AI — and what to do next.
 
-**AI Strategy Hub** brings it all together. It lets you **build your own meta-framework**, continuously extend it with new research, and **test your AI strategy** against it — checkpoint by checkpoint, maturity level by maturity level. Instead of paying a consulting firm $50K+ for a one-time assessment, you get a living, evolving tool that grows with your organization.
+### The Problem
 
-> **101 checkpoints. 7 dimensions. 6 global standards. Full traceability. Zero vendor lock-in.**
+Every company knows they *should* be using AI. But most don't know **where to start**, **what they're missing**, or **how mature their current approach actually is**. Meanwhile, dozens of excellent guides exist — from the EU AI Act to Google's AI Adoption Framework — but they each have different formats, focus areas, and languages. Reading them all would take weeks.
+
+Hiring a consultancy to run a professional AI readiness assessment? That starts at **€50,000+** and gives you a one-time snapshot that's outdated within months.
+
+### The Solution
+
+AI Strategy Hub **merges 6 internationally recognized standards** (NIST, EU AI Act, Google, Microsoft, OWASP, UNESCO) into **101 concrete checkpoints** across 7 key areas like Strategy, Data, Governance, Talent, and Ethics. You can:
+
+- ✅ **Self-assess** — Walk through an interactive checklist and get your maturity score instantly
+- 📄 **Upload existing strategy documents** — The AI reads them and evaluates your readiness automatically
+- 🧠 **Ask the AI Advisor** — "What should we focus on first?" — and get answers based on *your specific gaps*
+- 📈 **Track progress over time** — Every assessment becomes a snapshot, so you can see how you improve
+- 🏗️ **Build your own framework** — Add new checkpoints from the latest research with one click
+
+> **Think of it as a fitness tracker for your AI strategy** — instead of steps and heart rate, it measures governance, data readiness, talent, and ethics.
+
+### Who Is This For?
+
+| Role | What you get |
+|------|-------------|
+| **CTO / Head of AI** | A clear picture of organizational AI readiness with concrete action items |
+| **IT Project Manager** | A structured framework to plan and prioritize AI initiatives |
+| **Compliance / Legal** | EU AI Act gap analysis with article-level mapping and risk scores |
+| **Consultant / Advisor** | A reusable assessment tool for client engagements — free and white-label-ready |
+| **Student / Researcher** | A hands-on way to learn about AI governance frameworks |
 
 ---
 
