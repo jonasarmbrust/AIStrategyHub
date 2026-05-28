@@ -488,7 +488,7 @@ class EvolutionAgent:
             run_log.append("ERROR: tavily-python not installed")
             return []
 
-        gemini_model = genai.GenerativeModel("gemini-2.5-flash")
+        gemini_model = genai.GenerativeModel("gemini-3.5-flash")
         all_new_sources = []
 
         for dim_id, queries in _EVOLUTION_QUERIES.items():
@@ -640,7 +640,7 @@ class EvolutionAgent:
         """
         try:
             async with _gemini_semaphore:
-                model = genai.GenerativeModel("gemini-2.5-flash")
+                model = genai.GenerativeModel("gemini-3.5-flash")
                 prompt = _QUALITY_ASSESSMENT_PROMPT.format(
                     title=title,
                     url=url,
@@ -710,7 +710,7 @@ class EvolutionAgent:
             dim_ids = ", ".join([d.id for d in model_data.dimensions])
 
             async with _gemini_semaphore:
-                gemini_model = genai.GenerativeModel("gemini-2.5-flash")
+                gemini_model = genai.GenerativeModel("gemini-3.5-flash")
                 prompt = _CHECKPOINT_EXTRACTION_PROMPT.format(
                     meta_model_context=meta_model_context[:8000],
                     title=title,
@@ -765,7 +765,7 @@ class EvolutionAgent:
                 None,
                 functools.partial(
                     genai.embed_content,
-                    model="models/gemini-embedding-2-preview",
+                    model="models/gemini-embedding-2",
                     content=proposal_text,
                     task_type="retrieval_document",
                 ),
@@ -792,7 +792,7 @@ class EvolutionAgent:
                         None,
                         functools.partial(
                             genai.embed_content,
-                            model="models/gemini-embedding-2-preview",
+                            model="models/gemini-embedding-2",
                             content=uncached_texts,
                             task_type="retrieval_document",
                         )
@@ -820,7 +820,7 @@ class EvolutionAgent:
                                 None,
                                 functools.partial(
                                     genai.embed_content,
-                                    model="models/gemini-embedding-2-preview",
+                                    model="models/gemini-embedding-2",
                                     content=t,
                                     task_type="retrieval_document",
                                 )

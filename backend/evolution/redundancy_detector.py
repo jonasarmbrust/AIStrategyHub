@@ -117,7 +117,7 @@ class RedundancyDetector:
 
         try:
             genai.configure(api_key=GEMINI_API_KEY)
-            model = genai.GenerativeModel("gemini-2.5-flash")
+            model = genai.GenerativeModel("gemini-3.5-flash")
 
             prompt = f"""You are an AI Strategy Framework expert. Analyze these two checkpoints for semantic redundancy.
 
@@ -273,7 +273,7 @@ Respond in valid JSON:
                         None,
                         functools.partial(
                             genai.embed_content,
-                            model="models/gemini-embedding-2-preview",
+                            model="models/gemini-embedding-2",
                             content=text,
                             task_type="retrieval_document",
                         ),

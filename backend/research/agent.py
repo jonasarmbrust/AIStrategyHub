@@ -148,7 +148,7 @@ async def search_and_store(
         try:
             import google.generativeai as genai
             genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-            gemini_model = genai.GenerativeModel("gemini-2.5-flash")
+            gemini_model = genai.GenerativeModel("gemini-3.5-flash")
         except Exception as e:
             status["errors"].append(f"Gemini init failed: {e}. Sources will be stored without AI evaluation.")
     else:

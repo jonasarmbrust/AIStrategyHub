@@ -119,7 +119,7 @@ Respond EXACTLY in this JSON format:
 """
 
     try:
-        gemini_model = genai.GenerativeModel("gemini-2.5-flash")
+        gemini_model = genai.GenerativeModel("gemini-3.5-flash")
         response = gemini_model.generate_content(
             prompt,
             generation_config=genai.GenerationConfig(

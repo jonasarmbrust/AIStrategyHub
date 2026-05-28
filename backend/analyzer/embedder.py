@@ -52,7 +52,7 @@ async def _embed_with_retry(text: str, task_type: str, max_retries: int = 4) -> 
                 None,
                 functools.partial(
                     genai.embed_content,
-                    model="models/gemini-embedding-2-preview",
+                    model="models/gemini-embedding-2",
                     content=text,
                     task_type=task_type,
                 )

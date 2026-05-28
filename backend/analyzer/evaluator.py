@@ -130,7 +130,7 @@ async def evaluate_document(analysis_id: str):
             all_checkpoints.append((dim, cp))
 
     genai.configure(api_key=api_key)
-    gemini_model = genai.GenerativeModel("gemini-2.5-flash")
+    gemini_model = genai.GenerativeModel("gemini-3.5-flash")
     semaphore = asyncio.Semaphore(3)
 
     assessment_dict = {}
