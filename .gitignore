@@ -29,7 +29,10 @@ yarn-error.log*
 frontend/dist/
 
 # ── Data (user-specific) ──────────────────────────────────
-data/strategy_hub.db
+data/*.db
+data/*.db-shm
+data/*.db-wal
+data/*.log
 data/uploads/
 data/embeddings/
 
@@ -50,4 +53,5 @@ desktop.ini
 # ── Misc ───────────────────────────────────────────────────
 *.log
 *.tmp
+*.lock
 .gemini/

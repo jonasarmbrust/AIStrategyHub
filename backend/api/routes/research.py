@@ -92,86 +92,77 @@ async def list_sources(
 ):
     """List all research sources with optional filtering."""
     db = await get_db()
-    try:
-        query = "SELECT * FROM research_sources WHERE 1=1"
-        params = []
+    query = "SELECT * FROM research_sources WHERE 1=1"
+    params = []
 
-        if category:
-            query += " AND category = ?"
-            params.append(category)
+    if category:
+        query += " AND category = ?"
+        params.append(category)
 
-        if unread_only:
-            query += " AND is_read = 0"
+    if unread_only:
+        query += " AND is_read = 0"
 
-        if dimension:
-            query += " AND relevant_dimensions LIKE ?"
-            params.append(f"%{dimension}%")
+    if dimension:
+        query += " AND relevant_dimensions LIKE ?"
+        params.append(f"%{dimension}%")
 
-        query += " ORDER BY discovered_at DESC LIMIT ? OFFSET ?"
-        params.extend([limit, offset])
+    query += " ORDER BY discovered_at DESC LIMIT ? OFFSET ?"
+    params.extend([limit, offset])
 
-        cursor = await db.execute(query, params)
-        rows = await cursor.fetchall()
+    cursor = await db.execute(query, params)
+    rows = await cursor.fetchall()
 
-        sources = []
-        for row in rows:
-            source = dict(row)
-            source["relevant_dimensions"] = json.loads(
-                source.get("relevant_dimensions", "[]")
-            )
-            source["is_read"] = bool(source.get("is_read", 0))
-            sources.append(source)
-
-        # Counts
-        count_cursor = await db.execute(
-            "SELECT COUNT(*) as total FROM research_sources"
+    sources = []
+    for row in rows:
+        source = dict(row)
+        source["relevant_dimensions"] = json.loads(
+            source.get("relevant_dimensions", "[]")
         )
-        total = (await count_cursor.fetchone())["total"]
+        source["is_read"] = bool(source.get("is_read", 0))
+        sources.append(source)
 
-        new_cursor = await db.execute(
-            "SELECT COUNT(*) as new_count FROM research_sources WHERE is_read = 0"
-        )
-        new_count = (await new_cursor.fetchone())["new_count"]
+    # Counts
+    count_cursor = await db.execute(
+        "SELECT COUNT(*) as total FROM research_sources"
+    )
+    total = (await count_cursor.fetchone())["total"]
 
-        return {
-            "sources": sources,
-            "total_count": total,
-            "new_count": new_count,
-        }
-    finally:
-        pass  # singleton connection, no close needed
+    new_cursor = await db.execute(
+        "SELECT COUNT(*) as new_count FROM research_sources WHERE is_read = 0"
+    )
+    new_count = (await new_cursor.fetchone())["new_count"]
+
+    return {
+        "sources": sources,
+        "total_count": total,
+        "new_count": new_count,
+    }
 
 
 @router.patch("/sources/{source_id}/read")
 async def mark_source_read(source_id: str):
     """Mark a research source as read."""
     db = await get_db()
-    try:
-        cursor = await db.execute(
-            "UPDATE research_sources SET is_read = 1 WHERE id = ?", (source_id,)
-        )
-        if cursor.rowcount == 0:
-            raise HTTPException(status_code=404, detail="Source not found")
-        await db.commit()
-        return {"id": source_id, "is_read": True}
-    finally:
-        pass  # singleton connection, no close needed
+    cursor = await db.execute(
+        "UPDATE research_sources SET is_read = 1 WHERE id = ?", (source_id,)
+    )
+    if cursor.rowcount == 0:
+        raise HTTPException(status_code=404, detail="Source not found")
+    await db.commit()
+    return {"id": source_id, "is_read": True}
 
 
 @router.delete("/sources/{source_id}")
 async def delete_source(source_id: str):
     """Delete a research source."""
     db = await get_db()
-    try:
-        cursor = await db.execute(
-            "DELETE FROM research_sources WHERE id = ?", (source_id,)
-        )
-        if cursor.rowcount == 0:
-            raise HTTPException(status_code=404, detail="Source not found")
-        await db.commit()
-        return {"deleted": True, "id": source_id}
-    finally:
-        pass  # singleton connection, no close needed
+    cursor = await db.execute(
+        "DELETE FROM research_sources WHERE id = ?", (source_id,)
+    )
+    if cursor.rowcount == 0:
+        raise HTTPException(status_code=404, detail="Source not found")
+    await db.commit()
+    return {"deleted": True, "id": source_id}
 
 
 # ── One-Click Pipeline: Research Source → Framework Extraction ─────────────
@@ -185,16 +176,13 @@ async def extract_source_for_framework(source_id: str):
     """
     # 1. Load the research source from DB
     db = await get_db()
-    try:
-        cursor = await db.execute(
-            "SELECT * FROM research_sources WHERE id = ?", (source_id,)
-        )
-        row = await cursor.fetchone()
-        if not row:
-            raise HTTPException(status_code=404, detail="Research source not found")
-        source = dict(row)
-    finally:
-        pass  # singleton connection, no close needed
+    cursor = await db.execute(
+        "SELECT * FROM research_sources WHERE id = ?", (source_id,)
+    )
+    row = await cursor.fetchone()
+    if not row:
+        raise HTTPException(status_code=404, detail="Research source not found")
+    source = dict(row)
 
     title = source.get("title", "Unknown")
     url = source.get("url", "")
@@ -302,26 +290,23 @@ Respond EXACTLY in this JSON format:
 
         # Auto-enrich proposals with related research sources as evidence_tags
         db = await get_db()
-        try:
-            for p in proposals:
-                dim_id = p.get("dimension_id", "")
-                cursor = await db.execute(
-                    "SELECT title, url FROM research_sources "
-                    "WHERE relevant_dimensions LIKE ? AND relevance_score >= 0.5 AND id != ?",
-                    (f"%{dim_id}%", source_id),
-                )
-                matches = await cursor.fetchall()
-                p["evidence_tags"] = [
-                    {"source": title, "reference": "Research Agent — One-Click Extraction", "url": url}
-                ]
-                for m in list(matches)[:2]:
-                    p["evidence_tags"].append({
-                        "source": m["title"],
-                        "reference": "Related Research Source",
-                        "url": m["url"],
-                    })
-        finally:
-            pass  # singleton connection, no close needed
+        for p in proposals:
+            dim_id = p.get("dimension_id", "")
+            cursor = await db.execute(
+                "SELECT title, url FROM research_sources "
+                "WHERE relevant_dimensions LIKE ? AND relevance_score >= 0.5 AND id != ?",
+                (f"%{dim_id}%", source_id),
+            )
+            matches = await cursor.fetchall()
+            p["evidence_tags"] = [
+                {"source": title, "reference": "Research Agent — One-Click Extraction", "url": url}
+            ]
+            for m in list(matches)[:2]:
+                p["evidence_tags"].append({
+                    "source": m["title"],
+                    "reference": "Related Research Source",
+                    "url": m["url"],
+                })
 
         # Log the extraction activity
         await _log_activity(
@@ -350,23 +335,20 @@ Respond EXACTLY in this JSON format:
 async def get_activity_feed(limit: int = Query(30, ge=1, le=100)):
     """Get the unified activity feed for Research ↔ Framework lifecycle."""
     db = await get_db()
-    try:
-        cursor = await db.execute(
-            "SELECT * FROM framework_activity ORDER BY created_at DESC LIMIT ?",
-            (limit,),
-        )
-        rows = await cursor.fetchall()
-        activities = []
-        for row in rows:
-            activity = dict(row)
-            try:
-                activity["details"] = json.loads(activity.get("details", "{}"))
-            except (json.JSONDecodeError, TypeError):
-                activity["details"] = {}
-            activities.append(activity)
-        return {"activities": activities}
-    finally:
-        pass  # singleton connection, no close needed
+    cursor = await db.execute(
+        "SELECT * FROM framework_activity ORDER BY created_at DESC LIMIT ?",
+        (limit,),
+    )
+    rows = await cursor.fetchall()
+    activities = []
+    for row in rows:
+        activity = dict(row)
+        try:
+            activity["details"] = json.loads(activity.get("details", "{}"))
+        except (json.JSONDecodeError, TypeError):
+            activity["details"] = {}
+        activities.append(activity)
+    return {"activities": activities}
 
 
 # ── Helper ─────────────────────────────────────────────────────────────────
@@ -390,5 +372,3 @@ async def _log_activity(
         await db.commit()
     except Exception as e:
         print(f"[Activity] Failed to log: {e}")
-    finally:
-        pass  # singleton connection, no close needed

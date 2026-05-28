@@ -6,21 +6,123 @@ filtered checklists from the structured dimensions.json.
 from __future__ import annotations
 
 import json
+import os
+import asyncio
 from pathlib import Path
 from typing import Optional
 
 from models.schemas import Checkpoint, ChecklistResponse, Dimension, MaturityModel
 from config import DIMENSIONS_PATH
 
+try:
+    import msvcrt
+    has_msvcrt = True
+except ImportError:
+    has_msvcrt = False
+
+try:
+    import fcntl
+    has_fcntl = True
+except ImportError:
+    has_fcntl = False
+
+
+class CrossProcessFileLock:
+    """A cross-platform file locking class using standard libraries."""
+    def __init__(self, path: str):
+        self.lock_path = path + ".lock"
+        self.fd = None
+
+    def acquire(self):
+        try:
+            self.fd = os.open(self.lock_path, os.O_CREAT | os.O_RDWR)
+            if has_msvcrt:
+                # Seek to 0 and lock 1 byte
+                msvcrt.locking(self.fd, msvcrt.LK_LOCK, 1)
+            elif has_fcntl:
+                fcntl.flock(self.fd, fcntl.LOCK_EX)
+        except Exception as e:
+            # Fallback if locking fails
+            print(f"[CrossProcessFileLock] Warning: Failed to acquire lock: {e}")
+
+    def release(self):
+        if self.fd is not None:
+            try:
+                if has_msvcrt:
+                    os.lseek(self.fd, 0, os.SEEK_SET)
+                    msvcrt.locking(self.fd, msvcrt.LK_UNLCK, 1)
+                elif has_fcntl:
+                    fcntl.flock(self.fd, fcntl.LOCK_UN)
+            except Exception:
+                pass
+            try:
+                os.close(self.fd)
+            except Exception:
+                pass
+            self.fd = None
+
+
+_dimensions_lock = asyncio.Lock()
 _model_cache: Optional[MaturityModel] = None
+
+
+async def safe_read_json() -> dict:
+    """Safely read dimensions.json using both event-loop lock and file lock."""
+    async with _dimensions_lock:
+        lock = CrossProcessFileLock(str(DIMENSIONS_PATH))
+        lock.acquire()
+        try:
+            with open(DIMENSIONS_PATH, "r", encoding="utf-8") as f:
+                return json.load(f)
+        finally:
+            lock.release()
+
+
+async def safe_write_json(data: dict) -> None:
+    """Safely write dimensions.json using both event-loop lock and file lock."""
+    async with _dimensions_lock:
+        lock = CrossProcessFileLock(str(DIMENSIONS_PATH))
+        lock.acquire()
+        try:
+            with open(DIMENSIONS_PATH, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+        finally:
+            lock.release()
+        
+        global _model_cache
+        _model_cache = None
+
+
+def safe_read_json_sync() -> dict:
+    """Synchronously read dimensions.json with file lock."""
+    lock = CrossProcessFileLock(str(DIMENSIONS_PATH))
+    lock.acquire()
+    try:
+        with open(DIMENSIONS_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    finally:
+        lock.release()
+
+
+def safe_write_json_sync(data: dict) -> None:
+    """Synchronously write dimensions.json with file lock."""
+    lock = CrossProcessFileLock(str(DIMENSIONS_PATH))
+    lock.acquire()
+    try:
+        with open(DIMENSIONS_PATH, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+    finally:
+        lock.release()
+    
+    global _model_cache
+    _model_cache = None
 
 
 def _load_model() -> MaturityModel:
     """Load and cache the maturity model from dimensions.json."""
     global _model_cache
     if _model_cache is None:
-        with open(DIMENSIONS_PATH, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        data = safe_read_json_sync()
         _model_cache = MaturityModel(**data)
     return _model_cache
 
@@ -29,6 +131,11 @@ def clear_cache():
     """Invalidate the model cache so it reloads from disk."""
     global _model_cache
     _model_cache = None
+    try:
+        from evolution.agent import clear_embeddings_cache
+        clear_embeddings_cache()
+    except Exception:
+        pass
 
 
 def get_maturity_model() -> MaturityModel:

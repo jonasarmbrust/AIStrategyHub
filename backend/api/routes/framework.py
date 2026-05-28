@@ -29,7 +29,7 @@ router = APIRouter()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY", ""))
 
 UPLOAD_DIR = Path(__file__).parent.parent.parent.parent / "data" / "uploads"
-DIMENSIONS_PATH = Path(__file__).parent.parent.parent / "knowledge_base" / "dimensions.json"
+from config import DIMENSIONS_PATH
 
 
 class ExtractRequest(BaseModel):
@@ -61,25 +61,22 @@ async def extract_novel_checkpoints(request: ExtractRequest):
     """Analyze an uploaded document against the meta-model to find new checkpoints."""
     # Find document
     db = await get_db()
-    try:
-        cursor = await db.execute("SELECT * FROM analyses WHERE id = ?", (request.document_id,))
-        doc_row = await cursor.fetchone()
-        if not doc_row:
-            raise HTTPException(status_code=404, detail="Document not found")
-            
-        file_path = UPLOAD_DIR / f"{request.document_id}{doc_row['file_type']}"
-        if not file_path.exists():
-            raise HTTPException(status_code=404, detail="Physical document not found")
-            
-        if doc_row['file_type'] != '.txt':
-            # For simplicity, we assume text imports. If PDF, we'd extract text here.
-            # But the Research Agent import guarantees .txt!
-            raise HTTPException(status_code=400, detail="Only .txt imports are supported for framework extraction currently.")
-            
-        doc_text = file_path.read_text(encoding="utf-8")
-        doc_name = doc_row["document_name"]
-    finally:
-        pass  # singleton connection, no close needed
+    cursor = await db.execute("SELECT * FROM analyses WHERE id = ?", (request.document_id,))
+    doc_row = await cursor.fetchone()
+    if not doc_row:
+        raise HTTPException(status_code=404, detail="Document not found")
+        
+    file_path = UPLOAD_DIR / f"{request.document_id}{doc_row['file_type']}"
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Physical document not found")
+        
+    if doc_row['file_type'] != '.txt':
+        # For simplicity, we assume text imports. If PDF, we'd extract text here.
+        # But the Research Agent import guarantees .txt!
+        raise HTTPException(status_code=400, detail="Only .txt imports are supported for framework extraction currently.")
+        
+    doc_text = file_path.read_text(encoding="utf-8")
+    doc_name = doc_row["document_name"]
 
     # Load master model outline (names and categories) to save context
     model = _load_model()
@@ -152,8 +149,8 @@ async def integrate_checkpoints(request: IntegrateRequest):
     if not request.checkpoints:
         return {"status": "success", "added": 0}
 
-    with open(DIMENSIONS_PATH, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    from knowledge_base.checklist_generator import safe_read_json
+    data = await safe_read_json()
 
     added_count = 0
     added_details = []
@@ -197,12 +194,8 @@ async def integrate_checkpoints(request: IntegrateRequest):
             })
 
     if added_count > 0:
-        with open(DIMENSIONS_PATH, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
-            
-        # Invalidate internal cache
-        from knowledge_base.checklist_generator import clear_cache
-        clear_cache()
+        from knowledge_base.checklist_generator import safe_write_json
+        await safe_write_json(data)
 
         # ── Log activity for each integrated checkpoint ──
         for detail in added_details:
@@ -233,13 +226,10 @@ async def coverage_analysis():
     
     # Count research sources per dimension from DB
     db = await get_db()
-    try:
-        cursor = await db.execute(
-            "SELECT relevant_dimensions, relevance_score FROM research_sources"
-        )
-        rows = await cursor.fetchall()
-    finally:
-        pass  # singleton connection, no close needed
+    cursor = await db.execute(
+        "SELECT relevant_dimensions, relevance_score FROM research_sources"
+    )
+    rows = await cursor.fetchall()
 
     # Parse and aggregate
     dim_source_counts = {}
@@ -274,8 +264,8 @@ async def coverage_analysis():
 
         # Count framework_builder additions
         fb_count = 0
-        with open(DIMENSIONS_PATH, "r", encoding="utf-8") as f:
-            raw = json.load(f)
+        from knowledge_base.checklist_generator import safe_read_json
+        raw = await safe_read_json()
         for raw_dim in raw.get("dimensions", []):
             if raw_dim["id"] == dim.id:
                 fb_count = sum(1 for cp in raw_dim.get("checkpoints", []) if cp.get("added_by") == "framework_builder")
@@ -314,31 +304,28 @@ async def _enrich_proposals_with_research(proposals: list) -> list:
         return proposals
 
     db = await get_db()
-    try:
-        for p in proposals:
-            dim_id = p.get("dimension_id", "")
-            if not dim_id:
-                continue
-            
-            cursor = await db.execute(
-                "SELECT title, url, relevance_score FROM research_sources "
-                "WHERE relevant_dimensions LIKE ? AND relevance_score >= 0.5 "
-                "ORDER BY relevance_score DESC LIMIT 3",
-                (f"%{dim_id}%",),
-            )
-            matches = await cursor.fetchall()
-            
-            if matches:
-                evidence_tags = p.get("evidence_tags", [])
-                for m in matches:
-                    evidence_tags.append({
-                        "source": m["title"],
-                        "reference": f"Research Agent (relevance: {m['relevance_score']:.0%})",
-                        "url": m["url"],
-                    })
-                p["evidence_tags"] = evidence_tags
-    finally:
-        pass  # singleton connection, no close needed
+    for p in proposals:
+        dim_id = p.get("dimension_id", "")
+        if not dim_id:
+            continue
+        
+        cursor = await db.execute(
+            "SELECT title, url, relevance_score FROM research_sources "
+            "WHERE relevant_dimensions LIKE ? AND relevance_score >= 0.5 "
+            "ORDER BY relevance_score DESC LIMIT 3",
+            (f"%{dim_id}%",),
+        )
+        matches = await cursor.fetchall()
+        
+        if matches:
+            evidence_tags = p.get("evidence_tags", [])
+            for m in matches:
+                evidence_tags.append({
+                    "source": m["title"],
+                    "reference": f"Research Agent (relevance: {m['relevance_score']:.0%})",
+                    "url": m["url"],
+                })
+            p["evidence_tags"] = evidence_tags
 
     return proposals
 
@@ -364,5 +351,3 @@ async def _log_activity(
         await db.commit()
     except Exception as e:
         print(f"[Activity] Failed to log: {e}")
-    finally:
-        pass  # singleton connection, no close needed

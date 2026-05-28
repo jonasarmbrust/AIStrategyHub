@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 # Load config (also loads .env)
 from config import AUTH_ENABLED, LOG_LEVEL, RATE_LIMIT_DEFAULT
-from api.routes import advisor, analysis, checklist, dashboard, export, framework, ingest, research, roadmap
+from api.routes import advisor, analysis, checklist, dashboard, evolution, export, framework, ingest, research, roadmap
 from database import init_db
 from middleware.auth import APIKeyMiddleware
 from middleware.errors import register_error_handlers
@@ -38,7 +38,15 @@ async def lifespan(app: FastAPI):
     log.info("Starting AI Strategy Hub backend...")
     log.info(f"Auth: {'ENABLED' if AUTH_ENABLED else 'DISABLED (no API_AUTH_KEY set)'}")
     await init_db()
+
+    # Start Evolution Agent scheduler
+    from evolution.scheduler import setup_evolution_scheduler, shutdown_evolution_scheduler
+    setup_evolution_scheduler(app)
+
     yield
+
+    # Shutdown Evolution Agent scheduler
+    shutdown_evolution_scheduler()
     logging.info("Shutting down AI Strategy Hub backend...")
 
 
@@ -92,6 +100,7 @@ app.include_router(export.router, prefix="/api/export", tags=["Export"])
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Dashboard"])
 app.include_router(framework.router, prefix="/api/framework", tags=["Framework Builder"])
 app.include_router(advisor.router, prefix="/api/advisor", tags=["AI Strategy Advisor"])
+app.include_router(evolution.router, prefix="/api/evolution", tags=["Evolution Agent"])
 
 
 @app.get("/api/health")

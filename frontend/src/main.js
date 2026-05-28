@@ -4,6 +4,8 @@
  * SPA Router, API client, and toast notifications.
  */
 import './styles/index.css';
+import './styles/toast.css';
+import './styles/evidence.css';
 import { renderDashboard } from './pages/dashboard.js';
 import { renderExplorer } from './pages/explorer.js';
 import { renderAssessment } from './pages/checklist.js';
@@ -17,6 +19,8 @@ import { renderFrameworkBuilder } from './pages/framework_builder.js';
 import { renderAdvisor } from './pages/advisor.js';
 import { renderSimulator } from './pages/simulator.js';
 import { renderSources } from './pages/sources.js';
+import { renderEvolution } from './pages/evolution.js';
+import { renderPlaybook } from './pages/playbook.js';
 import { renderDependencies } from './pages/dependencies.js';
 import { t, getLang, toggleLang, updateStaticDOM } from './i18n.js';
 import { sanitizeHTML, escapeHTML } from './sanitize.js';
@@ -122,7 +126,8 @@ export function showToast(message, type = 'info') {
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
   const icons = { success: '✓', error: '✕', info: 'ℹ' };
-  toast.innerHTML = `<span>${icons[type] || 'ℹ'}</span><span>${message}</span>`;
+  const sanitizedMessage = sanitizeHTML(message);
+  toast.innerHTML = `<span>${icons[type] || 'ℹ'}</span><span>${sanitizedMessage}</span>`;
   toastContainer.appendChild(toast);
 
   setTimeout(() => {
@@ -151,6 +156,8 @@ const routes = {
   simulator: renderSimulator,
   dependencies: renderDependencies,
   sources: renderSources,
+  evolution: renderEvolution,
+  playbook: renderPlaybook,
 };
 
 function navigateTo(page) {
@@ -291,10 +298,23 @@ export function renderEvidenceTags(tags) {
   if (!tags || tags.length === 0) return '';
   return tags.map(tag => {
     const color = getSourceColor(tag.source);
-    const urlAttr = tag.url ? `onclick="window.open('${tag.url}', '_blank')" style="cursor:pointer;"` : '';
-    return `<span class="evidence-tag" ${urlAttr} style="--tag-color: ${color};" title="${tag.source}: ${tag.reference}">
-      <span class="evidence-tag-source">${tag.source.split(' ').slice(0, 2).join(' ')}</span>
-      <span class="evidence-tag-ref">${tag.reference}</span>
+    const urlEscaped = tag.url ? escapeHTML(tag.url) : '';
+    const sourceText = escapeHTML(tag.source.split(' ').slice(0, 2).join(' '));
+    const refText = escapeHTML(tag.reference);
+    const titleText = escapeHTML(`${tag.source}: ${tag.reference}`);
+    
+    const tagContent = `
+      <span class="evidence-tag-source">${sourceText}</span>
+      <span class="evidence-tag-ref">${refText}</span>
+    `;
+    
+    if (urlEscaped) {
+      return `<a href="${urlEscaped}" target="_blank" rel="noopener" class="evidence-tag" style="--tag-color: ${color}; text-decoration: none; display: inline-flex;" title="${titleText}">
+        ${tagContent}
+      </a>`;
+    }
+    return `<span class="evidence-tag" style="--tag-color: ${color};" title="${titleText}">
+      ${tagContent}
     </span>`;
   }).join('');
 }

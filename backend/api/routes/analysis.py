@@ -42,15 +42,12 @@ async def upload_document(file: UploadFile = File(...)):
 
     # Store metadata
     db = await get_db()
-    try:
-        await db.execute(
-            """INSERT INTO analyses (id, document_name, file_type, status)
-               VALUES (?, ?, ?, ?)""",
-            (doc_id, file.filename, suffix, AnalysisStatus.PENDING.value),
-        )
-        await db.commit()
-    finally:
-        pass  # singleton connection, no close needed
+    await db.execute(
+        """INSERT INTO analyses (id, document_name, file_type, status)
+           VALUES (?, ?, ?, ?)""",
+        (doc_id, file.filename, suffix, AnalysisStatus.PENDING.value),
+    )
+    await db.commit()
 
     return {
         "id": doc_id,
@@ -90,15 +87,12 @@ async def import_url(url: str = Form(...), title: str = Form("Imported Source"))
     file_path.write_text(text_content, encoding='utf-8')
 
     db = await get_db()
-    try:
-        await db.execute(
-            """INSERT INTO analyses (id, document_name, file_type, status)
-               VALUES (?, ?, ?, ?)""",
-            (doc_id, title, suffix, AnalysisStatus.PENDING.value),
-        )
-        await db.commit()
-    finally:
-        pass  # singleton connection, no close needed
+    await db.execute(
+        """INSERT INTO analyses (id, document_name, file_type, status)
+           VALUES (?, ?, ?, ?)""",
+        (doc_id, title, suffix, AnalysisStatus.PENDING.value),
+    )
+    await db.commit()
 
     return {
         "id": doc_id,
@@ -114,24 +108,21 @@ async def import_url(url: str = Form(...), title: str = Form("Imported Source"))
 async def start_evaluation(analysis_id: str, background_tasks: BackgroundTasks):
     """Start AI-based document evaluation against the maturity checklist."""
     db = await get_db()
-    try:
-        cursor = await db.execute(
-            "SELECT * FROM analyses WHERE id = ?", (analysis_id,)
-        )
-        row = await cursor.fetchone()
-        if not row:
-            raise HTTPException(status_code=404, detail="Analysis not found")
+    cursor = await db.execute(
+        "SELECT * FROM analyses WHERE id = ?", (analysis_id,)
+    )
+    row = await cursor.fetchone()
+    if not row:
+        raise HTTPException(status_code=404, detail="Analysis not found")
 
-        if row["status"] == AnalysisStatus.PROCESSING.value:
-            raise HTTPException(status_code=409, detail="Analysis already in progress")
+    if row["status"] == AnalysisStatus.PROCESSING.value:
+        raise HTTPException(status_code=409, detail="Analysis already in progress")
 
-        await db.execute(
-            "UPDATE analyses SET status = ? WHERE id = ?",
-            (AnalysisStatus.PROCESSING.value, analysis_id),
-        )
-        await db.commit()
-    finally:
-        pass  # singleton connection, no close needed
+    await db.execute(
+        "UPDATE analyses SET status = ? WHERE id = ?",
+        (AnalysisStatus.PROCESSING.value, analysis_id),
+    )
+    await db.commit()
 
     # Run analysis in background
     background_tasks.add_task(_run_analysis, analysis_id)
@@ -147,14 +138,11 @@ async def _run_analysis(analysis_id: str):
         await evaluate_document(analysis_id)
     except Exception as e:
         db = await get_db()
-        try:
-            await db.execute(
-                "UPDATE analyses SET status = ? WHERE id = ?",
-                (AnalysisStatus.FAILED.value, analysis_id),
-            )
-            await db.commit()
-        finally:
-            pass  # singleton connection, no close needed
+        await db.execute(
+            "UPDATE analyses SET status = ? WHERE id = ?",
+            (AnalysisStatus.FAILED.value, analysis_id),
+        )
+        await db.commit()
         print(f"Analysis {analysis_id} failed: {e}")
 
 
@@ -162,68 +150,59 @@ async def _run_analysis(analysis_id: str):
 async def get_analysis_status(analysis_id: str):
     """Get the current status of an analysis."""
     db = await get_db()
-    try:
-        cursor = await db.execute(
-            "SELECT id, document_name, status, overall_score, overall_level, created_at, completed_at FROM analyses WHERE id = ?",
-            (analysis_id,),
-        )
-        row = await cursor.fetchone()
-        if not row:
-            raise HTTPException(status_code=404, detail="Analysis not found")
+    cursor = await db.execute(
+        "SELECT id, document_name, status, overall_score, overall_level, created_at, completed_at FROM analyses WHERE id = ?",
+        (analysis_id,),
+    )
+    row = await cursor.fetchone()
+    if not row:
+        raise HTTPException(status_code=404, detail="Analysis not found")
 
-        return dict(row)
-    finally:
-        pass  # singleton connection, no close needed
+    return dict(row)
 
 
 @router.get("/{analysis_id}/report")
 async def get_analysis_report(analysis_id: str):
     """Get the full analysis report with evaluations and recommendations."""
     db = await get_db()
-    try:
-        cursor = await db.execute(
-            "SELECT * FROM analyses WHERE id = ?", (analysis_id,)
+    cursor = await db.execute(
+        "SELECT * FROM analyses WHERE id = ?", (analysis_id,)
+    )
+    row = await cursor.fetchone()
+    if not row:
+        raise HTTPException(status_code=404, detail="Analysis not found")
+
+    if row["status"] != AnalysisStatus.COMPLETED.value:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Analysis is not completed. Current status: {row['status']}",
         )
-        row = await cursor.fetchone()
-        if not row:
-            raise HTTPException(status_code=404, detail="Analysis not found")
 
-        if row["status"] != AnalysisStatus.COMPLETED.value:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Analysis is not completed. Current status: {row['status']}",
-            )
-
-        return {
-            "id": row["id"],
-            "document_name": row["document_name"],
-            "overall_score": row["overall_score"],
-            "overall_level": row["overall_level"],
-            "dimension_scores": json.loads(row["dimension_scores"]),
-            "strengths": json.loads(row["strengths"]),
-            "gaps": json.loads(row["gaps"]),
-            "recommendations": json.loads(row["recommendations"]),
-            "evaluations": json.loads(row["evaluations"]),
-            "created_at": row["created_at"],
-            "completed_at": row["completed_at"],
-        }
-    finally:
-        pass  # singleton connection, no close needed
+    return {
+        "id": row["id"],
+        "document_name": row["document_name"],
+        "overall_score": row["overall_score"],
+        "overall_level": row["overall_level"],
+        "dimension_scores": json.loads(row["dimension_scores"]),
+        "strengths": json.loads(row["strengths"]),
+        "gaps": json.loads(row["gaps"]),
+        "recommendations": json.loads(row["recommendations"]),
+        "evaluations": json.loads(row["evaluations"]),
+        "created_at": row["created_at"],
+        "completed_at": row["completed_at"],
+    }
 
 
 @router.get("")
 async def list_analyses():
     """List all analyses with basic info."""
     db = await get_db()
-    try:
-        cursor = await db.execute(
-            """SELECT id, document_name, file_type, overall_score, overall_level, status, created_at
-               FROM analyses ORDER BY created_at DESC"""
-        )
-        rows = await cursor.fetchall()
-        return [dict(row) for row in rows]
-    finally:
-        pass  # singleton connection, no close needed
+    cursor = await db.execute(
+        """SELECT id, document_name, file_type, overall_score, overall_level, status, created_at
+           FROM analyses ORDER BY created_at DESC"""
+    )
+    rows = await cursor.fetchall()
+    return [dict(row) for row in rows]
 
 from pydantic import BaseModel
 import os
@@ -274,34 +253,31 @@ async def get_assessment_suggestions():
     """Return checkpoints that were found 'covered' by the latest completed document analysis.
     This allows the Manual Assessment to pre-fill checkpoints the AI already confirmed."""
     db = await get_db()
-    try:
-        cursor = await db.execute(
-            """SELECT evaluations, document_name FROM analyses
-               WHERE status = 'completed'
-               ORDER BY completed_at DESC LIMIT 1"""
-        )
-        row = await cursor.fetchone()
-        if not row:
-            return {"suggestions": [], "source": None}
+    cursor = await db.execute(
+        """SELECT evaluations, document_name FROM analyses
+           WHERE status = 'completed'
+           ORDER BY completed_at DESC LIMIT 1"""
+    )
+    row = await cursor.fetchone()
+    if not row:
+        return {"suggestions": [], "source": None}
 
-        evaluations = json.loads(row["evaluations"])
-        suggestions = {}
-        for ev in evaluations:
-            if ev.get("covered", False):
-                suggestions[ev["checkpoint_id"]] = {
-                    "fulfilled": True,
-                    "level": ev.get("level", 3),
-                    "confidence": ev.get("confidence", 0),
-                    "evidence": ev.get("evidence", "")[:120],
-                }
+    evaluations = json.loads(row["evaluations"])
+    suggestions = {}
+    for ev in evaluations:
+        if ev.get("covered", False):
+            suggestions[ev["checkpoint_id"]] = {
+                "fulfilled": True,
+                "level": ev.get("level", 3),
+                "confidence": ev.get("confidence", 0),
+                "evidence": ev.get("evidence", "")[:120],
+            }
 
-        return {
-            "suggestions": suggestions,
-            "source": row["document_name"],
-            "count": len(suggestions),
-        }
-    finally:
-        pass  # singleton connection, no close needed
+    return {
+        "suggestions": suggestions,
+        "source": row["document_name"],
+        "count": len(suggestions),
+    }
 
 
 @router.get("/evidence")
@@ -309,32 +285,29 @@ async def get_evidence():
     """Return full evaluation evidence from the latest completed analysis.
     Used by the Evidence Chain feature for checkpoint traceability."""
     db = await get_db()
-    try:
-        cursor = await db.execute(
-            """SELECT evaluations, document_name, completed_at FROM analyses
-               WHERE status = 'completed'
-               ORDER BY completed_at DESC LIMIT 1"""
-        )
-        row = await cursor.fetchone()
-        if not row:
-            return {"evidence": {}, "source": None}
+    cursor = await db.execute(
+        """SELECT evaluations, document_name, completed_at FROM analyses
+           WHERE status = 'completed'
+           ORDER BY completed_at DESC LIMIT 1"""
+    )
+    row = await cursor.fetchone()
+    if not row:
+        return {"evidence": {}, "source": None}
 
-        evaluations = json.loads(row["evaluations"])
-        evidence = {}
-        for ev in evaluations:
-            evidence[ev["checkpoint_id"]] = {
-                "covered": ev.get("covered", False),
-                "confidence": ev.get("confidence", 0),
-                "evidence": ev.get("evidence", ""),
-                "recommendation": ev.get("recommendation", ""),
-                "relevant_chunks": ev.get("relevant_chunks", []),
-                "level": ev.get("level", 0),
-            }
-
-        return {
-            "evidence": evidence,
-            "source": row["document_name"],
-            "analyzed_at": row["completed_at"],
+    evaluations = json.loads(row["evaluations"])
+    evidence = {}
+    for ev in evaluations:
+        evidence[ev["checkpoint_id"]] = {
+            "covered": ev.get("covered", False),
+            "confidence": ev.get("confidence", 0),
+            "evidence": ev.get("evidence", ""),
+            "recommendation": ev.get("recommendation", ""),
+            "relevant_chunks": ev.get("relevant_chunks", []),
+            "level": ev.get("level", 0),
         }
-    finally:
-        pass  # singleton connection, no close needed
+
+    return {
+        "evidence": evidence,
+        "source": row["document_name"],
+        "analyzed_at": row["completed_at"],
+    }

@@ -12,7 +12,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from config import API_AUTH_KEY, AUTH_ENABLED
+import config
 
 log = logging.getLogger("auth")
 
@@ -38,7 +38,7 @@ class APIKeyMiddleware(BaseHTTPMiddleware):
     """
 
     async def dispatch(self, request: Request, call_next):
-        if not AUTH_ENABLED:
+        if not config.AUTH_ENABLED:
             return await call_next(request)
 
         path = request.url.path
@@ -69,7 +69,8 @@ class APIKeyMiddleware(BaseHTTPMiddleware):
                 },
             )
 
-        if api_key != API_AUTH_KEY:
+        import secrets
+        if not secrets.compare_digest(api_key or "", config.API_AUTH_KEY or ""):
             log.warning(f"Unauthorized request to {path} — invalid API key")
             return JSONResponse(
                 status_code=403,

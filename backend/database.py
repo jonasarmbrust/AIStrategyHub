@@ -37,6 +37,7 @@ async def get_db() -> aiosqlite.Connection:
             _db_connection.row_factory = aiosqlite.Row
             await _db_connection.execute("PRAGMA journal_mode=WAL")
             await _db_connection.execute("PRAGMA busy_timeout=5000")
+            await _db_connection.execute("PRAGMA foreign_keys = ON")
             log.info(f"Database connection opened: {DB_PATH}")
         
         # Test connection is alive
@@ -52,6 +53,7 @@ async def get_db() -> aiosqlite.Connection:
             _db_connection.row_factory = aiosqlite.Row
             await _db_connection.execute("PRAGMA journal_mode=WAL")
             await _db_connection.execute("PRAGMA busy_timeout=5000")
+            await _db_connection.execute("PRAGMA foreign_keys = ON")
 
     return _db_connection
 
@@ -117,6 +119,49 @@ async def init_db():
             checkpoint_id TEXT,
             dimension_id TEXT,
             details TEXT DEFAULT '{}',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS evolution_runs (
+            id TEXT PRIMARY KEY,
+            started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            completed_at TIMESTAMP,
+            status TEXT DEFAULT 'running',
+            sources_scanned INTEGER DEFAULT 0,
+            sources_qualified INTEGER DEFAULT 0,
+            checkpoints_proposed INTEGER DEFAULT 0,
+            checkpoints_integrated INTEGER DEFAULT 0,
+            redundancies_found INTEGER DEFAULT 0,
+            redundancies_resolved INTEGER DEFAULT 0,
+            config TEXT DEFAULT '{}',
+            log TEXT DEFAULT '[]',
+            error TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS evolution_proposals (
+            id TEXT PRIMARY KEY,
+            run_id TEXT,
+            source_id TEXT,
+            source_title TEXT,
+            source_url TEXT,
+            proposal_type TEXT DEFAULT 'new_checkpoint',
+            dimension_id TEXT,
+            checkpoint_data TEXT DEFAULT '{}',
+            quality_score REAL DEFAULT 0,
+            impact_score REAL DEFAULT 0,
+            novelty_score REAL DEFAULT 0,
+            status TEXT DEFAULT 'pending',
+            reviewed_at TIMESTAMP,
+            integrated_checkpoint_id TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS framework_snapshots (
+            id TEXT PRIMARY KEY,
+            run_id TEXT,
+            snapshot_data TEXT,
+            checkpoint_count INTEGER,
+            version_tag TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     """)

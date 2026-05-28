@@ -143,8 +143,8 @@ async def integrate_arguments(request: IntegrateRequest):
         raise HTTPException(status_code=400, detail="No arguments to integrate")
 
     # Load current dimensions.json
-    with open(DIMENSIONS_PATH, 'r', encoding='utf-8') as f:
-        model = json.load(f)
+    from knowledge_base.checklist_generator import safe_read_json
+    model = await safe_read_json()
 
     integrated = 0
     affected_checkpoints = []
@@ -205,8 +205,8 @@ async def integrate_arguments(request: IntegrateRequest):
 
     # Save updated model
     if integrated > 0:
-        with open(DIMENSIONS_PATH, 'w', encoding='utf-8') as f:
-            json.dump(model, f, indent=2, ensure_ascii=False)
+        from knowledge_base.checklist_generator import safe_write_json
+        await safe_write_json(model)
 
     return {
         "integrated": integrated,
@@ -224,8 +224,8 @@ class RemoveEvidenceRequest(BaseModel):
 @router.delete("/evidence")
 async def remove_evidence(request: RemoveEvidenceRequest):
     """Remove a specific evidence tag from the framework model."""
-    with open(DIMENSIONS_PATH, 'r', encoding='utf-8') as f:
-        model = json.load(f)
+    from knowledge_base.checklist_generator import safe_read_json
+    model = await safe_read_json()
 
     target_cp = None
     for dim in model["dimensions"]:
@@ -258,8 +258,8 @@ async def remove_evidence(request: RemoveEvidenceRequest):
             target_cp["sources"].remove(request.source)
 
     # Save
-    with open(DIMENSIONS_PATH, 'w', encoding='utf-8') as f:
-        json.dump(model, f, indent=2, ensure_ascii=False)
+    from knowledge_base.checklist_generator import safe_write_json
+    await safe_write_json(model)
 
     return {"status": "success", "removed_from": request.checkpoint_id}
 
@@ -267,8 +267,8 @@ async def remove_evidence(request: RemoveEvidenceRequest):
 @router.get("/preview-model")
 async def preview_model_stats():
     """Get current model statistics for the integration preview."""
-    with open(DIMENSIONS_PATH, 'r', encoding='utf-8') as f:
-        model = json.load(f)
+    from knowledge_base.checklist_generator import safe_read_json
+    model = await safe_read_json()
 
     dims = {}
     total_tags = 0

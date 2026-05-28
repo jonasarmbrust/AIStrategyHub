@@ -54,6 +54,15 @@ RATE_LIMIT_LLM = _normalize_rate_limit(os.getenv("RATE_LIMIT_LLM", "5/minute"))
 
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
 
+# ── Evolution Agent ───────────────────────────────────────────────────────────
+EVOLUTION_ENABLED = os.getenv("EVOLUTION_ENABLED", "true").lower() == "true"
+EVOLUTION_SCHEDULE = os.getenv("EVOLUTION_SCHEDULE", "weekly")  # weekly, daily, manual
+EVOLUTION_DAY = os.getenv("EVOLUTION_DAY", "mon")
+EVOLUTION_HOUR = int(os.getenv("EVOLUTION_HOUR", "3"))
+EVOLUTION_AUTO_INTEGRATE = os.getenv("EVOLUTION_AUTO_INTEGRATE", "true").lower() == "true"
+EVOLUTION_MIN_QUALITY = float(os.getenv("EVOLUTION_MIN_QUALITY", "0.7"))
+EVOLUTION_REDUNDANCY_THRESHOLD = float(os.getenv("EVOLUTION_REDUNDANCY_THRESHOLD", "0.82"))
+
 # ── Dependencies (FastAPI) ────────────────────────────────────────────────────
 
 def require_gemini_key() -> str:
