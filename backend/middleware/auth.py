@@ -7,6 +7,7 @@ Localhost and health endpoints are exempt in development mode.
 from __future__ import annotations
 
 import logging
+import secrets
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
@@ -69,7 +70,6 @@ class APIKeyMiddleware(BaseHTTPMiddleware):
                 },
             )
 
-        import secrets
         if not secrets.compare_digest(api_key or "", config.API_AUTH_KEY or ""):
             log.warning(f"Unauthorized request to {path} — invalid API key")
             return JSONResponse(

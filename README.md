@@ -374,7 +374,7 @@ AI Strategy Hub implements robust production-grade architecture and security cou
 - **Concurrency Safety & Lock Isolation**: Handles concurrent database and file operations safely. Web routes serialize write operations using an asynchronous database `asyncio.Lock`, while the background Framework builder uses a filesystem-level `CrossProcessFileLock` to prevent database writes from colliding or corrupting the `dimensions.json` configuration file during simultaneous integration processes.
 - **Performance Optimization (Batch Embeddings)**: The RAG analyzer pools text chunks into cohesive batches during document parsing. By issuing batch requests to the Gemini Embedding API rather than sequential calls, it minimizes network latency overhead and increases overall throughput by up to 5x.
 - **Security Hardening & Timing Attack Protections**: 
-  - **Timing Attack Mitigation**: API key verification utilizes constant-time string comparison (`hmac.compare_digest`) to thwart side-channel analysis aiming to deduce keys.
+  - **Timing Attack Mitigation**: API key verification utilizes constant-time string comparison (`secrets.compare_digest`) to thwart side-channel analysis aiming to deduce keys.
   - **DOM XSS Sanitization**: User inputs, LLM markdown recommendations, and chatbot outputs are run through a strict DOMPurify pipeline to filter malicious HTML payloads before rendering.
 - **Database Integrity & Cascades**: Persisted in SQLite with WAL (Write-Ahead Logging) mode. Enforces strict SQLite Foreign Key constraints (`PRAGMA foreign_keys = ON`) with cascade rules on deletions to guarantee relational database integrity across analyses, sources, and activities.
 

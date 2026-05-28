@@ -137,12 +137,15 @@ async def _run_analysis(analysis_id: str):
 
         await evaluate_document(analysis_id)
     except Exception as e:
-        db = await get_db()
-        await db.execute(
-            "UPDATE analyses SET status = ? WHERE id = ?",
-            (AnalysisStatus.FAILED.value, analysis_id),
-        )
-        await db.commit()
+        try:
+            db = await get_db()
+            await db.execute(
+                "UPDATE analyses SET status = ? WHERE id = ?",
+                (AnalysisStatus.FAILED.value, analysis_id),
+            )
+            await db.commit()
+        except Exception as db_err:
+            print(f"Analysis {analysis_id} failed AND could not update status: {db_err}")
         print(f"Analysis {analysis_id} failed: {e}")
 
 

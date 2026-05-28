@@ -140,7 +140,7 @@ async def init_db():
 
         CREATE TABLE IF NOT EXISTS evolution_proposals (
             id TEXT PRIMARY KEY,
-            run_id TEXT,
+            run_id TEXT REFERENCES evolution_runs(id) ON DELETE CASCADE,
             source_id TEXT,
             source_title TEXT,
             source_url TEXT,
@@ -158,7 +158,7 @@ async def init_db():
 
         CREATE TABLE IF NOT EXISTS framework_snapshots (
             id TEXT PRIMARY KEY,
-            run_id TEXT,
+            run_id TEXT REFERENCES evolution_runs(id) ON DELETE CASCADE,
             snapshot_data TEXT,
             checkpoint_count INTEGER,
             version_tag TEXT,
