@@ -5,7 +5,7 @@ Defines request/response schemas for all endpoints.
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Optional
 
@@ -118,7 +118,7 @@ class MaturityReport(BaseModel):
     strengths: list[str] = []
     gaps: list[str] = []
     recommendations: list[str] = []
-    assessed_at: datetime = Field(default_factory=datetime.now)
+    assessed_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 # ── Manual Assessment ──────────────────────────────────────────────────────────
@@ -135,7 +135,7 @@ class DocumentInfo(BaseModel):
     filename: str
     file_type: str
     file_size: int
-    uploaded_at: datetime = Field(default_factory=datetime.now)
+    uploaded_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     chunk_count: int = 0
 
 
@@ -173,7 +173,7 @@ class ResearchSource(BaseModel):
     category: SourceCategory
     relevant_dimensions: list[str] = []
     published_date: Optional[str] = None
-    discovered_at: datetime = Field(default_factory=datetime.now)
+    discovered_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     is_read: bool = False
     relevance_score: float = Field(default=0.0, ge=0.0, le=1.0)
 

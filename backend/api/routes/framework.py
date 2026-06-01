@@ -60,23 +60,21 @@ class IntegrateRequest(BaseModel):
 async def extract_novel_checkpoints(request: ExtractRequest):
     """Analyze an uploaded document against the meta-model to find new checkpoints."""
     # Find document
-    db = await get_db()
-    cursor = await db.execute("SELECT * FROM analyses WHERE id = ?", (request.document_id,))
-    doc_row = await cursor.fetchone()
-    if not doc_row:
-        raise HTTPException(status_code=404, detail="Document not found")
+    async with get_db() as db:
+        cursor = await db.execute("SELECT * FROM analyses WHERE id = ?", (request.document_id,))
+        doc_row = await cursor.fetchone()
+        if not doc_row:
+            raise HTTPException(status_code=404, detail="Document not found")
         
-    file_path = UPLOAD_DIR / f"{request.document_id}{doc_row['file_type']}"
-    if not file_path.exists():
-        raise HTTPException(status_code=404, detail="Physical document not found")
+        file_path = UPLOAD_DIR / f"{request.document_id}{doc_row['file_type']}"
+        if not file_path.exists():
+            raise HTTPException(status_code=404, detail="Physical document not found")
         
-    if doc_row['file_type'] != '.txt':
-        # For simplicity, we assume text imports. If PDF, we'd extract text here.
-        # But the Research Agent import guarantees .txt!
-        raise HTTPException(status_code=400, detail="Only .txt imports are supported for framework extraction currently.")
+        if doc_row['file_type'] != '.txt':
+            raise HTTPException(status_code=400, detail="Only .txt imports are supported for framework extraction currently.")
         
-    doc_text = file_path.read_text(encoding="utf-8")
-    doc_name = doc_row["document_name"]
+        doc_text = file_path.read_text(encoding="utf-8")
+        doc_name = doc_row["document_name"]
 
     # Load master model outline (names and categories) to save context
     model = _load_model()
@@ -225,11 +223,11 @@ async def coverage_analysis():
     model = _load_model()
     
     # Count research sources per dimension from DB
-    db = await get_db()
-    cursor = await db.execute(
-        "SELECT relevant_dimensions, relevance_score FROM research_sources"
-    )
-    rows = await cursor.fetchall()
+    async with get_db() as db:
+        cursor = await db.execute(
+            "SELECT relevant_dimensions, relevance_score FROM research_sources"
+        )
+        rows = await cursor.fetchall()
 
     # Parse and aggregate
     dim_source_counts = {}
@@ -303,29 +301,29 @@ async def _enrich_proposals_with_research(proposals: list) -> list:
     if not proposals:
         return proposals
 
-    db = await get_db()
-    for p in proposals:
-        dim_id = p.get("dimension_id", "")
-        if not dim_id:
-            continue
-        
-        cursor = await db.execute(
-            "SELECT title, url, relevance_score FROM research_sources "
-            "WHERE relevant_dimensions LIKE ? AND relevance_score >= 0.5 "
-            "ORDER BY relevance_score DESC LIMIT 3",
-            (f"%{dim_id}%",),
-        )
-        matches = await cursor.fetchall()
-        
-        if matches:
-            evidence_tags = p.get("evidence_tags", [])
-            for m in matches:
-                evidence_tags.append({
-                    "source": m["title"],
-                    "reference": f"Research Agent (relevance: {m['relevance_score']:.0%})",
-                    "url": m["url"],
-                })
-            p["evidence_tags"] = evidence_tags
+    async with get_db() as db:
+        for p in proposals:
+            dim_id = p.get("dimension_id", "")
+            if not dim_id:
+                continue
+            
+            cursor = await db.execute(
+                "SELECT title, url, relevance_score FROM research_sources "
+                "WHERE relevant_dimensions LIKE ? AND relevance_score >= 0.5 "
+                "ORDER BY relevance_score DESC LIMIT 3",
+                (f"%{dim_id}%",),
+            )
+            matches = await cursor.fetchall()
+            
+            if matches:
+                evidence_tags = p.get("evidence_tags", [])
+                for m in matches:
+                    evidence_tags.append({
+                        "source": m["title"],
+                        "reference": f"Research Agent (relevance: {m['relevance_score']:.0%})",
+                        "url": m["url"],
+                    })
+                p["evidence_tags"] = evidence_tags
 
     return proposals
 
@@ -341,13 +339,12 @@ async def _log_activity(
 ):
     """Log an activity to the framework_activity table."""
     activity_id = str(uuid.uuid4())[:8]
-    db = await get_db()
     try:
-        await db.execute(
-            """INSERT INTO framework_activity (id, action, source_id, checkpoint_id, dimension_id, details)
-               VALUES (?, ?, ?, ?, ?, ?)""",
-            (activity_id, action, source_id, checkpoint_id, dimension_id, details),
-        )
-        await db.commit()
+        async with get_db() as db:
+            await db.execute(
+                """INSERT INTO framework_activity (id, action, source_id, checkpoint_id, dimension_id, details)
+                   VALUES (?, ?, ?, ?, ?, ?)""",
+                (activity_id, action, source_id, checkpoint_id, dimension_id, details),
+            )
     except Exception as e:
         print(f"[Activity] Failed to log: {e}")

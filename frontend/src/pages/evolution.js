@@ -201,6 +201,19 @@ async function loadEvolutionData() {
     loadProposals(),
     loadSnapshots(),
   ]);
+
+  // Auto-detect if an evolution run is currently active and start polling
+  try {
+    const activeRun = await api.get('/evolution/active-run');
+    if (activeRun.active) {
+      const btn = document.getElementById('evo-btn-run');
+      if (btn) {
+        _startEvolutionPolling(btn);
+      }
+    }
+  } catch {
+    // Silently ignore — non-critical
+  }
 }
 
 async function loadStatus() {
@@ -211,22 +224,24 @@ async function loadStatus() {
     const nextRun = document.getElementById('evo-next-run');
     const lastRun = document.getElementById('evo-last-run');
 
-    if (status.active) {
-      dot?.classList.add('active');
-      label.textContent = t('evolution.status_active');
-      label.style.color = '#22c55e';
-    } else if (status.running) {
+    if (status.cycle_running) {
       dot?.classList.add('running');
       label.textContent = t('evolution.status_running');
       label.style.color = '#eab308';
+    } else if (status.scheduler_running && status.evolution_enabled) {
+      dot?.classList.add('active');
+      label.textContent = t('evolution.status_active');
+      label.style.color = '#22c55e';
     } else {
       dot?.classList.add('paused');
       label.textContent = t('evolution.status_paused');
       label.style.color = 'var(--text-muted)';
     }
 
-    if (status.next_run) {
-      nextRun.textContent = formatCountdown(status.next_run);
+    // Extract next_run_time from the jobs array
+    const nextRunTime = status.jobs?.[0]?.next_run_time;
+    if (nextRunTime) {
+      nextRun.textContent = formatCountdown(nextRunTime);
     } else {
       nextRun.textContent = '—';
     }
@@ -248,8 +263,8 @@ async function loadStats() {
     const stats = await api.get('/evolution/stats');
 
     animateCounter('evo-stat-runs', stats.total_runs || 0);
-    animateCounter('evo-stat-checkpoints', stats.checkpoints_integrated || 0);
-    animateCounter('evo-stat-redundancies', stats.redundancies_resolved || 0);
+    animateCounter('evo-stat-checkpoints', stats.total_integrated || 0);
+    animateCounter('evo-stat-redundancies', stats.total_redundancies_resolved || 0);
 
     const qualEl = document.getElementById('evo-stat-quality');
     if (qualEl) qualEl.textContent = stats.avg_quality_score != null ? stats.avg_quality_score.toFixed(1) : '—';
@@ -264,9 +279,16 @@ async function loadStats() {
       drawSparkline('evo-sparkline', stats.quality_history);
     }
 
-    // Growth chart data
+    // Growth chart: build from dimension_distribution if no growth_data
     if (stats.growth_data) {
       renderGrowthChart(stats.growth_data);
+    } else if (stats.dimension_distribution && Object.keys(stats.dimension_distribution).length > 0) {
+      // Build a simple growth snapshot from the current distribution
+      const growthData = { labels: ['Current'], total: [stats.total_integrated || 0] };
+      for (const [dimId, count] of Object.entries(stats.dimension_distribution)) {
+        growthData[dimId] = [count];
+      }
+      renderGrowthChart(growthData);
     }
   } catch {
     ['evo-stat-runs', 'evo-stat-checkpoints', 'evo-stat-redundancies', 'evo-stat-quality'].forEach(id => {
@@ -279,7 +301,9 @@ async function loadStats() {
 async function loadTimeline() {
   const el = document.getElementById('evo-timeline');
   try {
-    const runs = await api.get('/evolution/runs');
+    const response = await api.get('/evolution/runs');
+    // Backend wraps runs in { data: [...], meta: {...} }
+    const runs = response.data || response;
 
     if (!runs || runs.length === 0) {
       el.innerHTML = `
@@ -292,20 +316,21 @@ async function loadTimeline() {
     }
 
     el.innerHTML = runs.map((run, idx) => {
-      const date = new Date(run.created_at || run.date).toLocaleDateString('en-US', {
+      const date = new Date(run.started_at || run.created_at || run.date).toLocaleDateString('en-US', {
         month: 'short', day: 'numeric', year: 'numeric',
       });
-      const time = new Date(run.created_at || run.date).toLocaleTimeString('en-US', {
+      const time = new Date(run.started_at || run.created_at || run.date).toLocaleTimeString('en-US', {
         hour: '2-digit', minute: '2-digit',
       });
 
-      const statusClass = run.status === 'success' ? 'success' :
-                          run.status === 'failed' ? 'failed' : 'running';
-      const statusIcon = run.status === 'success' ? '✓' :
-                         run.status === 'failed' ? '✕' : '⟳';
+      const statusClass = (run.status === 'completed' || run.status === 'success') ? 'success' :
+                          (run.status === 'failed' || run.status === 'cancelled') ? 'failed' : 'running';
+      const statusIcon = (run.status === 'completed' || run.status === 'success') ? '✓' :
+                         (run.status === 'failed' || run.status === 'cancelled') ? '✕' : '⟳';
 
       const statsLine = [];
-      if (run.checkpoints_added > 0) statsLine.push(`+${run.checkpoints_added} checkpoints`);
+      if (run.checkpoints_integrated > 0) statsLine.push(`+${run.checkpoints_integrated} checkpoints`);
+      if (run.sources_scanned > 0) statsLine.push(`${run.sources_scanned} sources`);
       if (run.redundancies_resolved > 0) statsLine.push(`-${run.redundancies_resolved} redundancies`);
 
       return `
@@ -369,7 +394,9 @@ async function loadProposals() {
   const approveAllBtn = document.getElementById('evo-btn-approve-all');
 
   try {
-    const proposals = await api.get('/evolution/proposals');
+    const response = await api.get('/evolution/proposals?status=pending');
+    // Backend wraps proposals in { data: [...], meta: {...} }
+    const proposals = response.data || response;
 
     if (!proposals || proposals.length === 0) {
       el.innerHTML = `
@@ -432,11 +459,15 @@ async function loadProposals() {
 }
 
 function renderProposalCard(p) {
-  const dimColor = DIM_COLORS[p.dimension] || '#8890b5';
-  const dimLabel = DIM_LABELS[p.dimension] || p.dimension;
+  const dimId = p.dimension_id || p.dimension || '';
+  const dimColor = DIM_COLORS[dimId] || '#8890b5';
+  const dimLabel = DIM_LABELS[dimId] || dimId;
   const quality = Math.round((p.quality_score || 0) * 100);
   const impact = Math.round((p.impact_score || 0) * 100);
   const novelty = Math.round((p.novelty_score || 0) * 100);
+  // Extract checkpoint text from checkpoint_data if needed
+  const cpData = p.checkpoint_data || {};
+  const cpText = p.text || p.checkpoint_text || cpData.text || '';
 
   return `
     <div class="evolution-proposal-card">
@@ -445,7 +476,7 @@ function renderProposalCard(p) {
         ${p.source_url ? `<a href="${escapeHTML(p.source_url)}" target="_blank" rel="noopener" class="evo-source-link" title="${escapeHTML(p.source_title || '')}">🔗</a>` : ''}
       </div>
       ${p.source_title ? `<div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">📄 ${escapeHTML(p.source_title)}</div>` : ''}
-      <div style="font-size: 0.84rem; color: var(--text-primary); line-height: 1.5; margin-bottom: 12px;">${escapeHTML(p.text || p.checkpoint_text || '')}</div>
+      <div style="font-size: 0.84rem; color: var(--text-primary); line-height: 1.5; margin-bottom: 12px;">${escapeHTML(cpText)}</div>
       <div class="evo-score-bars">
         <div class="score-bar-row">
           <span class="score-bar-label">${t('evolution.quality')}</span>
@@ -551,7 +582,7 @@ async function loadSnapshots() {
   }
 }
 
-// ── Actions ──────────────────────────────────────────────────
+let _evolutionPollId = null;
 
 async function triggerEvolution() {
   const btn = document.getElementById('evo-btn-run');
@@ -559,16 +590,49 @@ async function triggerEvolution() {
   btn.textContent = '⏳ ' + t('evolution.running');
 
   try {
-    await api.post('/evolution/trigger');
-    showToast(t('evolution.trigger_success'), 'success');
-    // Reload all data
-    await loadEvolutionData();
+    const res = await api.post('/evolution/trigger');
+
+    if (res.status === 'already_running') {
+      showToast(t('evolution.already_running'), 'info');
+    } else {
+      showToast(t('evolution.trigger_success'), 'success');
+    }
+
+    // Start polling for live progress
+    _startEvolutionPolling(btn);
   } catch (err) {
     showToast(t('evolution.trigger_error') + ': ' + err.message, 'error');
-  } finally {
     btn.disabled = false;
     btn.textContent = '⚡ ' + t('evolution.run_now');
   }
+}
+
+function _startEvolutionPolling(btn) {
+  // Clear any existing poll
+  if (_evolutionPollId) clearInterval(_evolutionPollId);
+
+  btn.disabled = true;
+
+  _evolutionPollId = setInterval(async () => {
+    try {
+      const data = await api.get('/evolution/active-run');
+
+      if (data.active && data.run) {
+        const r = data.run;
+        btn.textContent = `⏳ ${r.sources_scanned || 0} scanned · ${r.checkpoints_integrated || 0} integrated`;
+      } else {
+        // Run finished — stop polling and refresh
+        clearInterval(_evolutionPollId);
+        _evolutionPollId = null;
+        btn.disabled = false;
+        btn.textContent = '⚡ ' + t('evolution.run_now');
+        showToast(t('evolution.run_complete'), 'success');
+        await loadEvolutionData();
+      }
+    } catch {
+      // Backend might be temporarily busy, keep polling
+    }
+  }, 15000);
 }
 
 async function scanRedundancies() {

@@ -497,6 +497,291 @@
           ],
           "added_at": "2026-04-22T15:36:42.356723+00:00",
           "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_st_22",
+          "text": "Establish a formal pre-deployment staging framework that evaluates system-specific institutional readiness to make explicit 'go', 'no-go', or 'pilot-only' decisions based on the receiving unit's operational capacity.",
+          "text_de": "Einrichtung eines formalen Pre-Deployment-Staging-Frameworks, das die systemspezifische institutionelle Bereitschaft bewertet, um explizite „Go“-, „No-Go“- oder „Pilot-only“-Entscheidungen auf der Grundlage der operativen Kapazität der empfangenden Einheit zu treffen.",
+          "min_level": 3,
+          "category": "Strategic Alignment",
+          "sources": [
+            "Institutional Readiness for AI Deployment in Public Systems - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Institutional Readiness for AI Deployment in Public Systems - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2605.17203v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:14:42.010345+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_st_23",
+          "text": "Define a dedicated fiscal sustainability and maintenance pathway for each deployed AI system, ensuring long-term funding for post-deployment model retraining, updates, and operational support within the receiving unit's budget.",
+          "text_de": "Definition eines dedizierten Pfads für finanzielle Nachhaltigkeit und Wartung für jedes bereitgestellte KI-System, um eine langfristige Finanzierung für das Nachtraining von Modellen nach der Bereitstellung, Updates und den operativen Support im Budget der empfangenden Einheit sicherzustellen.",
+          "min_level": 3,
+          "category": "Investment & ROI",
+          "sources": [
+            "Institutional Readiness for AI Deployment in Public Systems - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Institutional Readiness for AI Deployment in Public Systems - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2605.17203v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:14:44.202961+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_st_24",
+          "text": "Define and operationalize AI adoption as an ongoing strategic learning process rather than a static project delivery, incorporating iterative feedback loops that continuously recalibrate organizational readiness based on evolving AI capabilities and limitations.",
+          "text_de": "Definition und Operationalisierung der KI-Einführung als fortlaufender strategischer Lernprozess statt als statische Projektabwicklung, unter Einbindung iterativer Feedbackschleifen, die die organisatorische Bereitschaft basierend auf sich entwickelnden KI-Fähigkeiten und -Einschränkungen kontinuierlich neu kalibrieren.",
+          "min_level": 4,
+          "category": "Strategic Alignment",
+          "sources": [
+            "Making Sense of AI Limitations: How Individual Perceptions Shape Organizational Readiness for AI Adoption"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Making Sense of AI Limitations: How Individual Perceptions Shape Organizational Readiness for AI Adoption",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2502.15870v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:15:20.713250+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_st_25",
+          "text": "Define and track 'complementarity metrics' that specifically measure the synergistic performance of Human-AI hybrid teams, ensuring that joint outcomes demonstrably exceed the capabilities of either humans or AI systems operating in isolation.",
+          "text_de": "Spezifische 'Komplementaritätsmetriken' definieren und nachverfolgen, die die synergistische Leistung von hybriden Mensch-KI-Teams messen, um sicherzustellen, dass die gemeinsamen Ergebnisse die Fähigkeiten von Menschen oder KI-Systemen im Alleingang nachweislich übertreffen.",
+          "min_level": 3,
+          "category": "Performance Measurement",
+          "sources": [
+            "[PDF] We introduce the Human–AI Task Tensor, a framework that ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] We introduce the Human–AI Task Tensor, a framework that ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/pdf/2503.15490"
+            }
+          ],
+          "added_at": "2026-05-29T14:15:47.016033+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_st_26",
+          "text": "Implement a cross-functional dependency mapping protocol to diagnose and mitigate 'structural entanglement' before scaling AI initiatives across departmental boundaries.",
+          "text_de": "Implementieren Sie ein abteilungsübergreifendes Abhängigkeits-Mapping-Protokoll, um eine 'strukturelle Verstrickung' zu diagnostizieren und zu entschärfen, bevor KI-Initiativen über Abteilungsgrenzen hinweg skaliert werden.",
+          "min_level": 4,
+          "category": "Portfolio & Scaling",
+          "sources": [
+            "Why AI Readiness Is an Organizational Learning Problem, Not a ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "Why AI Readiness Is an Organizational Learning Problem, Not a ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2604.16369v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:16:16.259928+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_st_27",
+          "text": "Evaluate overall AI maturity based on the 'binding constraints' principle, ensuring the organization's maturity level is defined by its lowest-scoring dimension (e.g., governance or data) rather than an average of all dimensions.",
+          "text_de": "Bewerten Sie den gesamten KI-Reifegrad basierend auf dem Prinzip der 'engpassorientierten Einschränkungen' (Binding Constraints), sodass die Reifegradstufe der Organisation durch die am schwächsten ausgeprägte Dimension (z. B. Governance oder Daten) bestimmt wird und nicht durch einen Durchschnitt aller Dimensionen.",
+          "min_level": 3,
+          "category": "Maturity Assessment",
+          "sources": [
+            "AI Maturity Model: 5 Stages of AI Transformation | The Thinking Company"
+          ],
+          "evidence_tags": [
+            {
+              "source": "AI Maturity Model: 5 Stages of AI Transformation | The Thinking Company",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://thinking.inc/en/pillar-pages/ai-maturity-model"
+            }
+          ],
+          "added_at": "2026-05-29T14:16:38.923007+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_st_28",
+          "text": "Calibrate AI transformation budgets against stage-specific investment benchmarks, transitioning from ad-hoc project funding to dedicated annual operational budgets (e.g., $500K-$2M for implementation stages) and ultimately targeting 3-5% of revenue for AI-native operations.",
+          "text_de": "Kalibrieren Sie die Budgets für die KI-Transformation anhand von phasen-spezifischen Investitions-Benchmarks, indem Sie von einer Ad-hoc-Projektfinanzierung zu dedizierten jährlichen Betriebsbudgets (z. B. 500.000 bis 2 Mio. USD für Implementierungsphasen) übergehen und letztendlich 3-5 % des Umsatzes für KI-native Abläufe anstreben.",
+          "min_level": 4,
+          "category": "Investment & Roadmap",
+          "sources": [
+            "AI Maturity Model: 5 Stages of AI Transformation | The Thinking Company"
+          ],
+          "evidence_tags": [
+            {
+              "source": "AI Maturity Model: 5 Stages of AI Transformation | The Thinking Company",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://thinking.inc/en/pillar-pages/ai-maturity-model"
+            }
+          ],
+          "added_at": "2026-05-29T14:16:40.421407+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_st_29",
+          "text": "Transition from bespoke AI project delivery to a repeatable 'use case factory' model by establishing standardized templates, reusable model architectures, and shared feature stores to accelerate time-to-market.",
+          "text_de": "Übergang von der maßgeschneiderten KI-Projektbereitstellung zu einem wiederholbaren 'Use-Case-Factory'-Modell durch die Etablierung standardisierter Vorlagen, wiederverwendbarer Modellarchitekturen und gemeinsam genutzter Feature-Stores zur Beschleunigung der Markteinführung.",
+          "min_level": 4,
+          "category": "Portfolio Management",
+          "sources": [
+            "Data & AI Strategy Assessment"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Data & AI Strategy Assessment",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://data-ai-strategy.withgoogle.com"
+            }
+          ],
+          "added_at": "2026-05-29T14:20:56.487834+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_st_30",
+          "text": "Define and execute a change management program that fosters a data-driven decision culture, training leadership and operational teams to systematically validate strategic decisions with data and AI insights rather than relying on hierarchy or intuition.",
+          "text_de": "Definition und Durchführung eines Change-Management-Programms zur Förderung einer datengesteuerten Entscheidungskultur, das Führungskräfte und operative Teams darin schult, strategische Entscheidungen systematisch mit Daten- und KI-Erkenntnissen zu validieren, anstatt sich auf Hierarchie oder Intuition zu verlassen.",
+          "min_level": 3,
+          "category": "Culture & Change Management",
+          "sources": [
+            "Data & AI Strategy Assessment"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Data & AI Strategy Assessment",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://data-ai-strategy.withgoogle.com"
+            }
+          ],
+          "added_at": "2026-05-29T14:20:57.209899+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_st_31",
+          "text": "Establish a formal decision framework for LLM adoption that systematically evaluates the trade-offs between training proprietary models, fine-tuning open-source models, or consuming commercial APIs, specifically assessing the impact on the MLOps lifecycle, IP ownership, and long-term operational costs.",
+          "text_de": "Etablierung eines formalen Entscheidungsrahmens für die Einführung von LLMs, der systematisch die Abwägungen zwischen dem Training proprietärer Modelle, dem Feintuning von Open-Source-Modellen oder der Nutzung kommerzieller APIs bewertet und dabei insbesondere die Auswirkungen auf den MLOps-Lebenszyklus, das geistige Eigentum und die langfristigen Betriebskosten berücksichtigt.",
+          "min_level": 3,
+          "category": "Technology Strategy",
+          "sources": [
+            "Navigating MLOps: Insights into Maturity, Lifecycle, Tools, and Careers"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Navigating MLOps: Insights into Maturity, Lifecycle, Tools, and Careers",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2503.15577v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:23:29.937452+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_st_32",
+          "text": "Benchmark the organization's MLOps maturity against established multi-vendor frameworks (e.g., Google, Microsoft, Amazon, IBM) to transition systematically from manual processes (Level 0) to fully automated CI/CD/CT pipelines.",
+          "text_de": "Benchmarking des MLOps-Reifegrads der Organisation im Vergleich zu etablierten Multi-Vendor-Frameworks (z. B. Google, Microsoft, Amazon, IBM), um systematisch von manuellen Prozessen (Level 0) zu vollautomatischen CI/CD/CT-Pipelines überzugehen.",
+          "min_level": 4,
+          "category": "Maturity Assessment",
+          "sources": [
+            "Navigating MLOps: Insights into Maturity, Lifecycle, Tools, and Careers"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Navigating MLOps: Insights into Maturity, Lifecycle, Tools, and Careers",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2503.15577v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:23:32.398491+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_st_33",
+          "text": "Establish a formal strategy and technical architecture for ecosystem-integrated AI, enabling secure, bidirectional sharing of AI models, insights, and data with external partners, suppliers, and customers to co-create value.",
+          "text_de": "Etablierung einer formalen Strategie und technischen Architektur für ökosystemintegrierte KI, die einen sicheren, bidirektionalen Austausch von KI-Modellen, Erkenntnissen und Daten mit externen Partnern, Lieferanten und Kunden zur gemeinsamen Wertschöpfung ermöglicht.",
+          "min_level": 4,
+          "category": "Ecosystem Integration",
+          "sources": [
+            "What's your company's AI maturity level? - MIT Sloan"
+          ],
+          "evidence_tags": [
+            {
+              "source": "What's your company's AI maturity level? - MIT Sloan",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://mitsloan.mit.edu/ideas-made-to-matter/whats-your-companys-ai-maturity-level"
+            }
+          ],
+          "added_at": "2026-05-29T14:25:26.435108+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_st_34",
+          "text": "Define and track aggregate business performance metrics that directly correlate the organization's AI maturity progression with overall customer experience (CX) improvements and operational margin expansion.",
+          "text_de": "Definition und Verfolgung aggregierter Geschäftskennzahlen, die den Fortschritt des KI-Reifegrades direkt mit Verbesserungen der Customer Experience (CX) und der Steigerung der operativen Marge korrelieren.",
+          "min_level": 3,
+          "category": "Performance Measurement",
+          "sources": [
+            "What's your company's AI maturity level? - MIT Sloan"
+          ],
+          "evidence_tags": [
+            {
+              "source": "What's your company's AI maturity level? - MIT Sloan",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://mitsloan.mit.edu/ideas-made-to-matter/whats-your-companys-ai-maturity-level"
+            }
+          ],
+          "added_at": "2026-05-29T14:25:27.927511+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_st_35",
+          "text": "Establish a structured process for periodic, independent third-party or academic-industry collaborative assessments of Responsible AI (RAI) practices to uncover operational friction points and validate internal compliance mechanisms.",
+          "text_de": "Etablierung eines strukturierten Prozesses für regelmäßige, unabhängige Bewertungen der verantwortungsvollen KI-Praktiken (RAI) durch Dritte oder im Rahmen von akademisch-industriellen Kooperationen, um operative Reibungspunkte aufzudecken und interne Compliance-Mechanismen zu validieren.",
+          "min_level": 4,
+          "category": "Strategic Assessment",
+          "sources": [
+            "An Adaptive Responsible AI Governance Framework for ... - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "An Adaptive Responsible AI Governance Framework for ... - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2510.03368v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:29:51.198627+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_st_36",
+          "text": "Mandate timeboxed exploratory 'AI Spikes' to evaluate data availability, quality, and model feasibility before committing AI use cases to the main product roadmap or sprint backlog.",
+          "text_de": "Vorschreiben von zeitlich begrenzten, explorativen 'KI-Spikes' zur Bewertung der Datenverfügbarkeit, -qualität und der Modell-Machbarkeit, bevor KI-Anwendungsfälle in die Haupt-Produkt-Roadmap oder das Sprint-Backlog aufgenommen werden.",
+          "min_level": 3,
+          "category": "Roadmap & Prioritization",
+          "sources": [
+            "[PDF] Agile System Development Lifecycle for AI Systems - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] Agile System Development Lifecycle for AI Systems - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/pdf/2501.09434"
+            }
+          ],
+          "added_at": "2026-05-29T14:52:18.297277+00:00",
+          "added_by": "evolution_agent"
         }
       ]
     },
@@ -840,6 +1125,196 @@
           ],
           "added_at": "2026-04-22T15:35:04.503791+00:00",
           "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_da_15",
+          "text": "Secure formal, localized data-sharing and access agreements specific to the receiving institution's operational environment before transitioning an AI system from prototype to pilot or production.",
+          "text_de": "Sicherung formaler, lokalisierter Datennutzungs- und Zugriffsvereinbarungen speziell für die operative Umgebung der empfangenden Institution, bevor ein KI-System vom Prototyp in den Pilot- oder Produktivbetrieb überführt wird.",
+          "min_level": 3,
+          "category": "Data Governance",
+          "sources": [
+            "Institutional Readiness for AI Deployment in Public Systems - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Institutional Readiness for AI Deployment in Public Systems - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2605.17203v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:14:46.906140+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_da_16",
+          "text": "Deploy automated ontologies and semantic metadata management frameworks to resolve the 'Semantic Bottleneck' and minimize manual data preparation efforts for AI training and inference.",
+          "text_de": "Implementieren Sie automatisierte Ontologien und semantische Metadaten-Management-Frameworks, um den 'semantischen Engpass' zu beheben und den manuellen Datenvorbereitungsaufwand für das KI-Training und die KI-Inferenz zu minimieren.",
+          "min_level": 3,
+          "category": "Data Architecture",
+          "sources": [
+            "Why AI Readiness Is an Organizational Learning Problem, Not a ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "Why AI Readiness Is an Organizational Learning Problem, Not a ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2604.16369v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:16:14.037202+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_da_17",
+          "text": "Establish an automated multi-stage data cleaning pipeline that performs translation normalization, spelling correction, and entity deduplication during database synchronization to ensure high-quality inputs for downstream AI and RAG systems in decentralized, multilingual enterprise environments.",
+          "text_de": "Etablierung einer automatisierten, mehrstufigen Datenbereinigungs-Pipeline, die Übersetzungsnormalisierung, Rechtschreibkorrektur und Entitäts-Deduplizierung während der Datenbanksynchronisation durchführt, um qualitativ hochwertige Eingangsdaten für nachgelagerte KI- und RAG-Systeme in dezentralen, mehrsprachigen Unternehmensumgebungen sicherzustellen.",
+          "min_level": 3,
+          "category": "Data Quality & Integration",
+          "sources": [
+            "RAG-Driven Data Quality Governance for Enterprise ERP Systems"
+          ],
+          "evidence_tags": [
+            {
+              "source": "RAG-Driven Data Quality Governance for Enterprise ERP Systems",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/abs/2511.16700"
+            }
+          ],
+          "added_at": "2026-05-29T14:18:50.965373+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_da_18",
+          "text": "Implement a structured repository and validation workflow for few-shot learning examples (e.g., validated natural-language-to-SQL pairs) to continuously maintain and improve the semantic accuracy and schema compliance of LLM-driven query engines.",
+          "text_de": "Implementierung eines strukturierten Repositories und Validierungs-Workflows für Few-Shot-Lernbeispiele (z. B. validierte Paare aus natürlicher Sprache und SQL), um die semantische Genauigkeit und Schema-Konformität von LLM-gesteuerten Abfrage-Engines kontinuierlich aufrechtzuerhalten und zu verbessern.",
+          "min_level": 4,
+          "category": "Data Assets & Pipelines",
+          "sources": [
+            "RAG-Driven Data Quality Governance for Enterprise ERP Systems"
+          ],
+          "evidence_tags": [
+            {
+              "source": "RAG-Driven Data Quality Governance for Enterprise ERP Systems",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/abs/2511.16700"
+            }
+          ],
+          "added_at": "2026-05-29T14:18:51.707852+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_da_19",
+          "text": "Implement a RAG-driven data quality auditing framework that automatically cross-references structured ERP transactional data against unstructured business rules, contracts, and standard operating procedures (SOPs) to detect compliance and quality anomalies.",
+          "text_de": "Implementierung eines RAG-gestützten Datenqualitäts-Audit-Frameworks, das strukturierte ERP-Transaktionsdaten automatisch mit unstrukturierten Geschäftsregeln, Verträgen und Standardarbeitsanweisungen (SOPs) abgleicht, um Compliance- und Qualitätsanomalien zu erkennen.",
+          "min_level": 4,
+          "category": "Data Quality & Governance",
+          "sources": [
+            "[PDF] RAG-Driven Data Quality Governance for Enterprise ERP Systems"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] RAG-Driven Data Quality Governance for Enterprise ERP Systems",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/pdf/2511.16700"
+            }
+          ],
+          "added_at": "2026-05-29T14:19:16.672822+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_da_20",
+          "text": "Define explicit schema exclusion and data masking policies at the metadata layer to prevent sensitive tables (e.g., financial ledgers, payroll, or executive records) from being exposed to LLM context windows, vector databases, or few-shot retrieval frameworks.",
+          "text_de": "Definieren Sie explizite Richtlinien zum Ausschluss von Schemata und zur Datenmaskierung auf der Metadatenebene, um zu verhindern, dass sensible Tabellen (z. B. Finanzbücher, Gehaltsabrechnungen oder Vorstandsdaten) in LLM-Kontextfenstern, Vektordatenbanken oder Few-Shot-Retrieval-Frameworks offengelegt werden.",
+          "min_level": 3,
+          "category": "Data Privacy & Security",
+          "sources": [
+            "RAG-Driven Data Quality Governance for Enterprise ERP Systems"
+          ],
+          "evidence_tags": [
+            {
+              "source": "RAG-Driven Data Quality Governance for Enterprise ERP Systems",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2511.16700v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:20:10.876755+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_da_21",
+          "text": "Implement a self-service data and AI platform that enables non-technical business users to safely discover, access, and analyze data assets through intuitive interfaces, minimizing centralized IT bottlenecks.",
+          "text_de": "Implementierung einer Self-Service-Daten- und KI-Plattform, die es nicht-technischen Geschäftsanwendern ermöglicht, Datenbestände über intuitive Benutzeroberflächen sicher zu finden, darauf zuzugreifen und zu analysieren, wodurch Engpässe in der zentralen IT minimiert werden.",
+          "min_level": 4,
+          "category": "Data Democratization",
+          "sources": [
+            "Data & AI Strategy Assessment"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Data & AI Strategy Assessment",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://data-ai-strategy.withgoogle.com"
+            }
+          ],
+          "added_at": "2026-05-29T14:20:55.700867+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_da_22",
+          "text": "Integrate Privacy-Enhancing Technologies (PETs)—such as differential privacy, federated learning, or secure multi-party computation—into the AI data pipeline to protect sensitive personal data during model training and inference.",
+          "text_de": "Integration von datenschutzfördernden Technologien (PETs) – wie Differential Privacy, föderiertes Lernen oder sichere Mehrparteienberechnung – in die KI-Datenpipeline, um sensible personenbezogene Daten während des Modelltrainings und der Inferenz zu schützen.",
+          "min_level": 4,
+          "category": "Privacy & Data Protection",
+          "sources": [
+            "AI Ethics: Integrating Transparency, Fairness, and Privacy in AI ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "AI Ethics: Integrating Transparency, Fairness, and Privacy in AI ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://www.tandfonline.com/doi/full/10.1080/08839514.2025.2463722"
+            }
+          ],
+          "added_at": "2026-05-29T14:29:00.872338+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_da_23",
+          "text": "Establish a unified, hybrid multi-cloud data infrastructure that ensures seamless data mobility and consistent management across on-premises, edge, and public cloud environments to eliminate data silos and optimize AI workload placement.",
+          "text_de": "Etablierung einer einheitlichen, hybriden Multi-Cloud-Dateninfrastruktur, die eine nahtlose Datenmobilität und ein konsistentes Management über On-Premises-, Edge- und Public-Cloud-Umgebungen hinweg gewährleistet, um Datensilos zu eliminieren und die Platzierung von KI-Workloads zu optimieren.",
+          "min_level": 4,
+          "category": "Infrastructure & Architecture",
+          "sources": [
+            "Scaling Enterprise AI Responsibly: The Critical Role of Data Readiness and an Intelligent Data Infrastructure"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Scaling Enterprise AI Responsibly: The Critical Role of Data Readiness and an Intelligent Data Infrastructure",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://www.netapp.com/media/142474-idc-2025-ai-maturity-findings.pdf"
+            }
+          ],
+          "added_at": "2026-05-29T14:51:03.274221+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_da_24",
+          "text": "Implement dedicated pipelines for the continuous ingestion, chunking, and vectorization of unstructured enterprise data to feed vector databases and enable secure Retrieval-Augmented Generation (RAG) architectures.",
+          "text_de": "Implementierung dedizierter Pipelines für die kontinuierliche Erfassung, Segmentierung (Chunking) und Vektorisierung unstrukturierter Unternehmensdaten zur Speisung von Vektordatenbanken und zur Ermöglichung sicherer RAG-Architekturen (Retrieval-Augmented Generation).",
+          "min_level": 3,
+          "category": "Data Engineering",
+          "sources": [
+            "Scaling Enterprise AI Responsibly: The Critical Role of Data Readiness and an Intelligent Data Infrastructure"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Scaling Enterprise AI Responsibly: The Critical Role of Data Readiness and an Intelligent Data Infrastructure",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://www.netapp.com/media/142474-idc-2025-ai-maturity-findings.pdf"
+            }
+          ],
+          "added_at": "2026-05-29T14:51:04.124485+00:00",
+          "added_by": "evolution_agent"
         }
       ]
     },
@@ -858,10 +1333,11 @@
       "checkpoints": [
         {
           "id": "GOV-01",
-          "text": "AI governance framework or board is established with decision-making authority",
-          "text_de": "Ein AI-Governance-Framework oder -Gremium mit Entscheidungsbefugnis ist etabliert",
+          "text": "An AI governance framework or board is established with clear decision-making authority, roles, and responsibilities for AI oversight.",
+          "text_de": "Ein KI-Governance-Rahmenwerk oder -Gremium ist mit klarer Entscheidungsbefugnis sowie definierten Rollen und Verantwortlichkeiten für die KI-Aufsicht eingerichtet.",
           "min_level": 3,
           "sources": [
+            "EU AI Act",
             "NIST AI RMF (GOV-2)",
             "Microsoft RAI MM"
           ],
@@ -876,8 +1352,20 @@
               "source": "Microsoft RAI Maturity Model",
               "reference": "Organizational — Governance Bodies",
               "url": "https://www.microsoft.com/en-us/research/publication/responsible-ai-maturity-model/"
+            },
+            {
+              "source": "NIST AI RMF 1.0",
+              "reference": "GOVERN 2.1 — Roles & Responsibilities",
+              "url": "https://airc.nist.gov/AI_RMF"
+            },
+            {
+              "source": "EU AI Act",
+              "reference": "Article 4(1) — AI Literacy Requirement",
+              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
             }
-          ]
+          ],
+          "merged_from": "GOV-05",
+          "merged_at": "2026-05-29T14:55:48.294500+00:00"
         },
         {
           "id": "GOV-02",
@@ -945,29 +1433,6 @@
               "source": "OWASP AI Security Matrix",
               "reference": "Compliance Monitoring",
               "url": "https://owasp.org/www-project-ai-security-and-privacy-guide/"
-            }
-          ]
-        },
-        {
-          "id": "GOV-05",
-          "text": "Roles and responsibilities for AI oversight are clearly defined",
-          "text_de": "Rollen und Verantwortlichkeiten für die AI-Aufsicht sind klar definiert",
-          "min_level": 2,
-          "sources": [
-            "NIST AI RMF (GOV-2)",
-            "EU AI Act"
-          ],
-          "category": "Structure",
-          "evidence_tags": [
-            {
-              "source": "NIST AI RMF 1.0",
-              "reference": "GOVERN 2.1 — Roles & Responsibilities",
-              "url": "https://airc.nist.gov/AI_RMF"
-            },
-            {
-              "source": "EU AI Act",
-              "reference": "Article 4(1) — AI Literacy Requirement",
-              "url": "https://eur-lex.europa.eu/eli/reg/2024/1689"
             }
           ]
         },
@@ -1223,6 +1688,470 @@
           ],
           "added_at": "2026-04-22T15:36:42.356723+00:00",
           "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_go_17",
+          "text": "Assess and verify the 'referral capacity' and operational bandwidth of frontline staff to ensure they have the training, time, and resources to act on AI system outputs.",
+          "text_de": "Bewertung und Überprüfung der „Überweisungskapazität“ (Referral Capacity) und der operativen Bandbreite des Personals an vorderster Front, um sicherzustellen, dass dieses über die Schulung, Zeit und Ressourcen verfügt, um auf die Ergebnisse des KI-Systems zu reagieren.",
+          "min_level": 4,
+          "category": "Human Oversight",
+          "sources": [
+            "Institutional Readiness for AI Deployment in Public Systems - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Institutional Readiness for AI Deployment in Public Systems - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2605.17203v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:14:43.361426+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_18",
+          "text": "Align AI system deployment timelines with the receiving institution's operational cycles, calendars (e.g., service, seasonal, or academic calendars), and frontline shift patterns to minimize operational friction.",
+          "text_de": "Abstimmung der Zeitpläne für die Bereitstellung von KI-Systemen mit den operativen Zyklen, Kalendern (z. B. Service-, Saison- oder akademischen Kalendern) und Schichtplänen der empfangenden Institution, um operative Reibungsverluste zu minimieren.",
+          "min_level": 3,
+          "category": "Operational Risk",
+          "sources": [
+            "Institutional Readiness for AI Deployment in Public Systems - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Institutional Readiness for AI Deployment in Public Systems - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2605.17203v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:14:45.279063+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_19",
+          "text": "Ensure AI system integration designs explicitly accommodate and preserve the professional autonomy of frontline operators, preventing over-reliance or deskilling while maintaining human-in-the-loop authority.",
+          "text_de": "Sicherstellen, dass das Design der KI-Systemintegration die professionelle Autonomie der Mitarbeiter an vorderster Front explizit berücksichtigt und bewahrt, um eine Überabhängigkeit oder Dequalifizierung zu verhindern und gleichzeitig die menschliche Kontrollinstanz zu wahren.",
+          "min_level": 4,
+          "category": "Human-AI Interaction",
+          "sources": [
+            "Making Sense of AI Limitations: How Individual Perceptions Shape Organizational Readiness for AI Adoption"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Making Sense of AI Limitations: How Individual Perceptions Shape Organizational Readiness for AI Adoption",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2502.15870v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:15:18.820187+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_20",
+          "text": "Establish a systematic feedback loop that captures frontline employees' experiential insights and sensemaking regarding AI limitations (e.g., biases, edge cases, inscrutability) and formally integrates them into the refinement of AI governance policies and risk frameworks.",
+          "text_de": "Einrichtung eines systematischen Feedback-Prozesses, der die praktischen Erkenntnisse und das Verständnis der Mitarbeiter an vorderster Front bezüglich KI-Einschränkungen (z. B. Vorurteile, Grenzfälle, Undurchsichtigkeit) erfasst und formell in die Weiterentwicklung von KI-Governance-Richtlinien und Risikorahmenwerken integriert.",
+          "min_level": 3,
+          "category": "Policy & Risk Integration",
+          "sources": [
+            "Making Sense of AI Limitations: How Individual Perceptions Shape Organizational Readiness for AI Adoption"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Making Sense of AI Limitations: How Individual Perceptions Shape Organizational Readiness for AI Adoption",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2502.15870v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:15:19.627132+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_21",
+          "text": "Define specific safety-critical governance protocols and fail-safe mechanisms for AI systems authorized to perform closed-loop control and direct physical actuation of industrial machinery.",
+          "text_de": "Definition spezifischer sicherheitskritischer Governance-Protokolle und Fail-Safe-Mechanismen für KI-Systeme, die zur autonomen Regelung (Closed-Loop) und direkten physischen Steuerung von Industriemaschinen berechtigt sind.",
+          "min_level": 4,
+          "category": "Physical Safety & Control",
+          "sources": [
+            "Establishment of a maturity model to assess the development of ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "Establishment of a maturity model to assess the development of ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://www.emerald.com/jeim/article/35/3/701/195975/Establishment-of-a-maturity-model-to-assess-the"
+            }
+          ],
+          "added_at": "2026-05-29T14:17:12.600987+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_22",
+          "text": "Establish a formal Test and Evaluation (T&E) protocol specifically designed for non-deterministic AI systems, incorporating adversarial robustness testing, edge-case simulation, and continuous validation before deployment.",
+          "text_de": "Etablierung eines formalen Test- und Evaluierungsprotokolls (T&E), das speziell für nicht-deterministische KI-Systeme entwickelt wurde und Tests zur Robustheit gegen Angriffe, Randfall-Simulationen und kontinuierliche Validierung vor der Bereitstellung umfasst.",
+          "min_level": 4,
+          "category": "Quality Assurance",
+          "sources": [
+            "[PDF] A Preliminary Report on a Model for Maturing AI Adoption"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] A Preliminary Report on a Model for Maturing AI Adoption",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://www.sei.cmu.edu/documents/6413/AI-Maturity-Model-Overview.pdf"
+            }
+          ],
+          "added_at": "2026-05-29T14:17:48.677536+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_23",
+          "text": "Integrate AI-specific security controls into the enterprise vulnerability management framework, specifically addressing risks such as prompt injection, data poisoning, model extraction, and adversarial manipulation.",
+          "text_de": "Integration KI-spezifischer Sicherheitskontrollen in das Schwachstellenmanagement des Unternehmens, die gezielt Risiken wie Prompt-Injection, Data Poisoning, Modellextraktion und adversarielle Manipulation adressieren.",
+          "min_level": 3,
+          "category": "Security & Risk",
+          "sources": [
+            "[PDF] A Preliminary Report on a Model for Maturing AI Adoption"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] A Preliminary Report on a Model for Maturing AI Adoption",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://www.sei.cmu.edu/documents/6413/AI-Maturity-Model-Overview.pdf"
+            }
+          ],
+          "added_at": "2026-05-29T14:17:51.727516+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_24",
+          "text": "Define and monitor specific technical governance metrics for natural-language-to-database (Text-to-SQL) interfaces, including query validity, schema compliance, and semantic accuracy, to prevent execution of erroneous or unsafe database queries.",
+          "text_de": "Definition und Überwachung spezifischer technischer Governance-Metriken für Schnittstellen von natürlicher Sprache zu Datenbanken (Text-to-SQL), einschließlich Abfragegültigkeit, Schemakonformität und semantischer Genauigkeit, um die Ausführung fehlerhafter oder unsicherer Datenbankabfragen zu verhindern.",
+          "min_level": 4,
+          "category": "Risk Management",
+          "sources": [
+            "RAG-Driven Data Quality Governance for Enterprise ERP Systems"
+          ],
+          "evidence_tags": [
+            {
+              "source": "RAG-Driven Data Quality Governance for Enterprise ERP Systems",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/abs/2511.16700"
+            }
+          ],
+          "added_at": "2026-05-29T14:18:52.541229+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_25",
+          "text": "Establish strict row-level and role-based access control (RBAC) mapping within RAG-driven data quality systems to ensure that LLM-generated insights and retrieved ERP data fragments do not bypass legacy ERP security boundaries.",
+          "text_de": "Etablierung einer strikten Zugriffskontrolle auf Zeilenebene und rollenbasierter Zugriffskontrolle (RBAC) innerhalb von RAG-gestützten Datenqualitätssystemen, um sicherzustellen, dass von LLMs generierte Erkenntnisse und abgerufene ERP-Datenfragmente die Sicherheitsgrenzen von Legacy-ERP-Systemen nicht umgehen.",
+          "min_level": 4,
+          "category": "Security & Compliance",
+          "sources": [
+            "[PDF] RAG-Driven Data Quality Governance for Enterprise ERP Systems"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] RAG-Driven Data Quality Governance for Enterprise ERP Systems",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/pdf/2511.16700"
+            }
+          ],
+          "added_at": "2026-05-29T14:19:21.510409+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_26",
+          "text": "Implement a 'user-in-the-loop' verification mechanism for natural language database interfaces (NL2SQL) that displays the generated SQL query, schema mappings, and execution logic for user validation before executing database reads or reports.",
+          "text_de": "Implementieren Sie einen „User-in-the-Loop“-Verifizierungsmechanismus für natürliche Datenbankschnittstellen (NL2SQL), der die generierte SQL-Abfrage, Schema-Zuordnungen und die Ausführungslogik zur Benutzervalidierung anzeigt, bevor Datenbankabfragen oder Berichte ausgeführt werden.",
+          "min_level": 3,
+          "category": "Human Oversight",
+          "sources": [
+            "RAG-Driven Data Quality Governance for Enterprise ERP Systems"
+          ],
+          "evidence_tags": [
+            {
+              "source": "RAG-Driven Data Quality Governance for Enterprise ERP Systems",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2511.16700v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:20:09.294848+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_27",
+          "text": "Establish strict security guardrails for LLM-driven database engines, including parameterized query execution, read-only database routing for general users, and automated syntax validation to prevent SQL injection and unauthorized schema modifications.",
+          "text_de": "Etablieren Sie strenge Sicherheitsvorkehrungen für LLM-gesteuerte Datenbank-Engines, einschließlich parametrisierter Abfrageausführung, schreibgeschütztem Datenbank-Routing für allgemeine Benutzer und automatischer Syntaxvalidierung, um SQL-Injection und unbefugte Schemaänderungen zu verhindern.",
+          "min_level": 4,
+          "category": "Security & Risk Mitigation",
+          "sources": [
+            "RAG-Driven Data Quality Governance for Enterprise ERP Systems"
+          ],
+          "evidence_tags": [
+            {
+              "source": "RAG-Driven Data Quality Governance for Enterprise ERP Systems",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2511.16700v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:20:10.076946+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_28",
+          "text": "Deploy automated, multilingual PII (Personally Identifiable Information) detection and masking pipelines that identify and redact sensitive personal data across all supported languages before data is processed by external LLM APIs or stored in vector indexes.",
+          "text_de": "Implementieren Sie automatisierte, mehrsprachige Pipelines zur Erkennung und Maskierung von PII (personenbezogenen Daten), die sensible persönliche Daten in allen unterstützten Sprachen identifizieren und schwärzen, bevor die Daten von externen LLM-APIs verarbeitet oder in Vektorindizes gespeichert werden.",
+          "min_level": 4,
+          "category": "Regulatory Compliance",
+          "sources": [
+            "RAG-Driven Data Quality Governance for Enterprise ERP Systems"
+          ],
+          "evidence_tags": [
+            {
+              "source": "RAG-Driven Data Quality Governance for Enterprise ERP Systems",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2511.16700v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:20:11.900186+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_29",
+          "text": "Integrate automated ethical reviews, bias detection, and explainability assessments directly into the continuous integration and continuous deployment (CI/CD) pipeline of AI models, rather than treating them as post-hoc compliance gates.",
+          "text_de": "Integration automatisierter ethischer Prüfungen, Bias-Erkennung und Erklärbarkeitsbewertungen direkt in die Continuous Integration und Continuous Deployment (CI/CD)-Pipeline von KI-Modellen, anstatt diese als nachträgliche Compliance-Prüfungen zu behandeln.",
+          "min_level": 4,
+          "category": "Responsible AI",
+          "sources": [
+            "Data & AI Strategy Assessment"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Data & AI Strategy Assessment",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://data-ai-strategy.withgoogle.com"
+            }
+          ],
+          "added_at": "2026-05-29T14:20:58.310568+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_30",
+          "text": "Implement a continuous quality assurance framework that monitors production models for data drift, concept drift, upstream data drift, and performance degradation using baseline validation datasets and comprehensive logging of confidence calibration.",
+          "text_de": "Implementierung eines kontinuierlichen Qualitätssicherungs-Frameworks, das Produktionsmodelle auf Daten-Drift, Konzept-Drift, vorgelagerte Daten-Drift und Leistungsabfall überwacht, unter Verwendung von Baseline-Validierungsdatensätzen und einer umfassenden Protokollierung der Konfidenzkalibrierung.",
+          "min_level": 4,
+          "category": "Quality Assurance & Monitoring",
+          "sources": [
+            "Risk Management Magazine - 4 Trends in AI Governance for 2026"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Risk Management Magazine - 4 Trends in AI Governance for 2026",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://www.rmmagazine.com/articles/article/2026/03/31/4-trends-in-ai-governance-for-2026"
+            }
+          ],
+          "added_at": "2026-05-29T14:21:41.503948+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_31",
+          "text": "Establish real-time model observability dashboards that continuously monitor operational metrics (latency, throughput, resource utilization) alongside statistical metrics (prediction drift, input data drift) to trigger immediate alerts.",
+          "text_de": "Einrichtung von Echtzeit-Dashboards zur Modellbeobachtbarkeit (Model Observability), die kontinuierlich betriebliche Metriken (Latenz, Durchsatz, Ressourcenauslastung) zusammen mit statistischen Metriken (Vorhersagedrift, Eingangsdatendrift) überwachen, um sofortige Warnmeldungen auszulösen.",
+          "min_level": 4,
+          "category": "Risk Management",
+          "sources": [
+            "MLOps best practices, challenges and maturity models"
+          ],
+          "evidence_tags": [
+            {
+              "source": "MLOps best practices, challenges and maturity models",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://dl.acm.org/doi/10.1016/j.infsof.2025.107733"
+            }
+          ],
+          "added_at": "2026-05-29T14:23:07.981136+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_32",
+          "text": "Establish a formal capability and protocol for detecting, labeling, and auditing AI-generated content within the enterprise to mitigate risks related to misinformation, intellectual property infringement, and shadow AI usage.",
+          "text_de": "Etablierung einer formalen Fähigkeit und eines Protokolls zur Erkennung, Kennzeichnung und Prüfung von KI-generierten Inhalten im Unternehmen, um Risiken im Zusammenhang mit Fehlinformationen, Verletzungen des geistigen Eigentums und Schatten-KI zu minimieren.",
+          "min_level": 3,
+          "category": "Risk Management",
+          "sources": [
+            "Generative AI Literacy: Twelve Defining Competencies - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Generative AI Literacy: Twelve Defining Competencies - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2412.12107v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:26:44.237005+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_33",
+          "text": "Define, operationalize, and maintain formal grievance, feedback, and redress channels that enable both internal employees and external stakeholders to report suspected AI-induced harms, biases, unfair automated decisions, or ethical violations, backed by a structured incident response protocol.",
+          "text_de": "Formelle Beschwerde-, Feedback- und Abhilfekanäle definieren und operationalisieren, die es sowohl internen Mitarbeitenden als auch externen Stakeholdern ermöglichen, vermutete KI-bedingte Schäden, Verzerrungen (Bias), ungerechte automatisierte Entscheidungen oder ethische Verstöße zu melden, unterstützt durch ein strukturiertes Protokoll zur Reaktion auf Vorfälle.",
+          "min_level": 4,
+          "category": "Accountability & Redress",
+          "sources": [
+            "Responsible AI in the Global Context: Maturity Model and Survey",
+            "Towards a Responsible AI Organizational Maturity Model"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Towards a Responsible AI Organizational Maturity Model",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://dl.acm.org/doi/10.1145/3757514"
+            },
+            {
+              "source": "Responsible AI in the Global Context: Maturity Model and Survey",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://dl.acm.org/doi/10.1145/3715275.3732165"
+            }
+          ],
+          "added_at": "2026-05-29T14:28:07.479465+00:00",
+          "added_by": "evolution_agent",
+          "merged_from": "CP_pr_33",
+          "merged_at": "2026-05-29T14:55:39.209715+00:00"
+        },
+        {
+          "id": "CP_go_34",
+          "text": "Implement a three-tiered adaptive governance framework (comprising shared foundational standards, central advisory resources, and contextual local implementation) to balance centralized coordination with operational autonomy across decentralized business units.",
+          "text_de": "Implementierung eines dreistufigen, adaptiven Governance-Frameworks (bestehend aus gemeinsamen Grundstandards, zentralen Beratungsressourcen und kontextueller lokaler Implementierung), um die zentrale Koordination mit der operativen Autonomie dezentraler Geschäftsbereiche in Einklang zu bringen.",
+          "min_level": 4,
+          "category": "Organizational Structure",
+          "sources": [
+            "An Adaptive Responsible AI Governance Framework for ... - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "An Adaptive Responsible AI Governance Framework for ... - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2510.03368v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:29:48.920019+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_35",
+          "text": "Define a clear accountability mapping protocol to resolve the 'Many Hands' problem in distributed AI lifecycles, explicitly assigning ultimate risk ownership and decision-making authority between local product teams and central oversight bodies.",
+          "text_de": "Definition eines klaren Protokolls zur Zuweisung von Verantwortlichkeiten, um das Problem der 'vielen Hände' (Many Hands) in verteilten KI-Lebenszyklen zu lösen, indem die endgültige Risikoverantwortung und Entscheidungskompetenz zwischen lokalen Produktteams und zentralen Aufsichtsorganen explizit aufgeteilt wird.",
+          "min_level": 3,
+          "category": "Accountability & Oversight",
+          "sources": [
+            "An Adaptive Responsible AI Governance Framework for ... - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "An Adaptive Responsible AI Governance Framework for ... - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2510.03368v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:29:50.088478+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_36",
+          "text": "Implement a dynamic risk-tiering mechanism that continuously adapts AI governance requirements (such as audit frequency, validation rigor, and documentation depth) based on real-time changes in the AI system's operational context, deployment scale, or performance drift.",
+          "text_de": "Implementierung eines dynamischen Risikoklassifizierungsmechanismus, der die Anforderungen an die KI-Governance (wie Audit-Häufigkeit, Validierungsstrenge und Dokumentationstiefe) kontinuierlich an Echtzeit-Änderungen des betrieblichen Kontexts, der Bereitstellungsskalierung oder der Leistungsabweichung des KI-Systems anpasst.",
+          "min_level": 4,
+          "category": "Risk Management",
+          "sources": [
+            "[PDF] An Adaptive Responsible AI Governance Framework for ... - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] An Adaptive Responsible AI Governance Framework for ... - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/pdf/2510.03368"
+            }
+          ],
+          "added_at": "2026-05-29T14:30:16.429132+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_37",
+          "text": "Implement policy-driven, automated data governance at the storage layer to dynamically enforce data sovereignty, residency, and access controls across distributed AI training pipelines.",
+          "text_de": "Implementierung einer richtliniengesteuerten, automatisierten Daten-Governance auf Speicherebene, um Datensouveränität, Datenresidenz und Zugriffskontrollen in verteilten KI-Trainingspipelines dynamisch durchzusetzen.",
+          "min_level": 4,
+          "category": "Compliance & Security",
+          "sources": [
+            "Scaling Enterprise AI Responsibly: The Critical Role of Data Readiness and an Intelligent Data Infrastructure"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Scaling Enterprise AI Responsibly: The Critical Role of Data Readiness and an Intelligent Data Infrastructure",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://www.netapp.com/media/142474-idc-2025-ai-maturity-findings.pdf"
+            }
+          ],
+          "added_at": "2026-05-29T14:51:05.503967+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_38",
+          "text": "Establish a centralized Non-Human Identity (NHI) and Persona Registry for all autonomous and agentic AI systems, ensuring each agent has unique credentials, defined tool permissions, and a clear owner to prevent agent sprawl and orphaned identities.",
+          "text_de": "Einrichtung eines zentralen Registers für nicht-menschliche Identitäten (NHI) und Personas für alle autonomen und agentenbasierten KI-Systeme, um sicherzustellen, dass jeder Agent über eindeutige Anmeldedaten, definierte Tool-Berechtigungen und einen klaren Eigentümer verfügt, um 'Agent Sprawl' (Agenten-Wildwuchs) und verwaiste Identitäten zu verhindern.",
+          "min_level": 4,
+          "category": "Identity & Access Management",
+          "sources": [
+            "Agentic AI Governance and Lifecycle Management in Healthcare"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Agentic AI Governance and Lifecycle Management in Healthcare",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2601.15630v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:52:44.058995+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_39",
+          "text": "Implement a runtime policy enforcement layer equipped with automated 'kill-switch' triggers that can immediately suspend or revoke an autonomous agent's operational credentials and tool access if anomalous, deceptive, or out-of-bounds behavior is detected.",
+          "text_de": "Implementierung einer Laufzeit-Richtliniendurchsetzungsschicht, die mit automatisierten 'Kill-Switch'-Auslösern ausgestattet ist, um die betrieblichen Anmeldedaten und den Tool-Zugriff eines autonomen Agenten sofort zu sperren oder zu entziehen, wenn anomales, täuschendes oder außerhalb der Grenzwerte liegendes Verhalten erkannt wird.",
+          "min_level": 5,
+          "category": "Risk Mitigation",
+          "sources": [
+            "Agentic AI Governance and Lifecycle Management in Healthcare"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Agentic AI Governance and Lifecycle Management in Healthcare",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2601.15630v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:52:46.271459+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_go_40",
+          "text": "Establish a formal risk classification framework for LLM applications that categorizes use cases by mapping their level of operational autonomy (ranging from supportive assistance to fully automated decision-making) against the potential impact severity of incorrect or misleading model outputs.",
+          "text_de": "Etablierung eines formalen Risikoklassifizierungs-Frameworks für LLM-Anwendungen, das Anwendungsfälle kategorisiert, indem deren Grad an operativer Autonomie (von unterstützender Assistenz bis hin zu vollautomatischer Entscheidungsfindung) der potenziellen Schadensschwere fehlerhafter oder irreführender Modellausgaben gegenübergestellt wird.",
+          "min_level": 3,
+          "category": "Risk Management",
+          "sources": [
+            "A Framework for Risk Assessment of Large Language Models - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "A Framework for Risk Assessment of Large Language Models - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2602.04358v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:53:09.905782+00:00",
+          "added_by": "evolution_agent"
         }
       ]
     },
@@ -1468,6 +2397,196 @@
           "evidence_tags": [],
           "added_at": "2026-04-17T20:45:38.790408+00:00",
           "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_te_13",
+          "text": "Implement explicit technical protocols and state-synchronization mechanisms for dynamic task handovers between human operators and AI systems, ensuring seamless transition of control during high-interdependence workflows.",
+          "text_de": "Explizite technische Protokolle und Zustandssynchronisationsmechanismen für dynamische Aufgabenübergaben zwischen menschlichen Bedienern und KI-Systemen implementieren, um einen nahtlosen Kontrollwechsel bei Workflows mit hoher Interdependenz zu gewährleisten.",
+          "min_level": 4,
+          "category": "Integration & Architecture",
+          "sources": [
+            "[PDF] We introduce the Human–AI Task Tensor, a framework that ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] We introduce the Human–AI Task Tensor, a framework that ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/pdf/2503.15490"
+            }
+          ],
+          "added_at": "2026-05-29T14:15:45.571970+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_te_14",
+          "text": "Integrate physical laws, engineering principles, and industrial domain constraints directly into AI model architectures (hybrid or physics-informed AI) to ensure safety and reliability in physical operations.",
+          "text_de": "Integration von physikalischen Gesetzen, technischen Prinzipien und industriellen Domänenbeschränkungen direkt in KI-Modellarchitekturen (hybride oder physikbasierte KI), um Sicherheit und Zuverlässigkeit im physischen Betrieb zu gewährleisten.",
+          "min_level": 4,
+          "category": "Model Architecture",
+          "sources": [
+            "Establishment of a maturity model to assess the development of ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "Establishment of a maturity model to assess the development of ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://www.emerald.com/jeim/article/35/3/701/195975/Establishment-of-a-maturity-model-to-assess-the"
+            }
+          ],
+          "added_at": "2026-05-29T14:17:11.838880+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_te_15",
+          "text": "Implement standardized communication protocols and semantic standards to enable interoperability and collaborative decision-making between heterogeneous AI-enabled machines and production lines.",
+          "text_de": "Implementierung standardisierter Kommunikationsprotokolle und semantischer Standards, um die Interoperabilität und kollaborative Entscheidungsfindung zwischen heterogenen, KI-gestützten Maschinen und Produktionslinien zu ermöglichen.",
+          "min_level": 4,
+          "category": "Interoperability",
+          "sources": [
+            "Establishment of a maturity model to assess the development of ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "Establishment of a maturity model to assess the development of ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://www.emerald.com/jeim/article/35/3/701/195975/Establishment-of-a-maturity-model-to-assess-the"
+            }
+          ],
+          "added_at": "2026-05-29T14:17:13.266329+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_te_16",
+          "text": "Define architectural standards that decouple AI model APIs from core application logic and legacy infrastructure, minimizing technical debt and enabling seamless model swapping or upgrades.",
+          "text_de": "Definition von Architekturstandards, die KI-Modell-APIs von der Kernanwendungslogik und der Legacy-Infrastruktur entkoppeln, um technische Schulden zu minimieren und einen nahtlosen Austausch oder Upgrades von Modellen zu ermöglichen.",
+          "min_level": 3,
+          "category": "Architecture & Integration",
+          "sources": [
+            "[PDF] A Preliminary Report on a Model for Maturing AI Adoption"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] A Preliminary Report on a Model for Maturing AI Adoption",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://www.sei.cmu.edu/documents/6413/AI-Maturity-Model-Overview.pdf"
+            }
+          ],
+          "added_at": "2026-05-29T14:17:49.479877+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_te_17",
+          "text": "Deploy a centralized Model Registry that acts as the single source of truth for model metadata, governing the transition of models through lifecycle stages (development, staging, production, archived) with automated approval gates.",
+          "text_de": "Bereitstellung eines zentralen Modellregisters (Model Registry) als 'Single Source of Truth' für Modell-Metadaten, das den Übergang von Modellen durch die Lebenszyklusphasen (Entwicklung, Staging, Produktion, Archiviert) mit automatisierten Freigabegates steuert.",
+          "min_level": 3,
+          "category": "Infrastructure & Tools",
+          "sources": [
+            "MLOps best practices, challenges and maturity models"
+          ],
+          "evidence_tags": [
+            {
+              "source": "MLOps best practices, challenges and maturity models",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://dl.acm.org/doi/10.1016/j.infsof.2025.107733"
+            }
+          ],
+          "added_at": "2026-05-29T14:23:06.927526+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_te_18",
+          "text": "Define a dynamic compute provisioning strategy that balances CPU, GPU, and TPU resources across hybrid cloud and on-premises environments to optimize training and inference workloads while managing hardware scarcity and cost.",
+          "text_de": "Definition einer dynamischen Rechenressourcen-Bereitstellungsstrategie, die CPU-, GPU- und TPU-Ressourcen über hybride Cloud- und On-Premises-Umgebungen hinweg ausbalanciert, um Trainings- und Inferenz-Workloads zu optimieren und gleichzeitig Hardware-Knappheit und Kosten zu steuern.",
+          "min_level": 3,
+          "category": "Infrastructure",
+          "sources": [
+            "Navigating MLOps: Insights into Maturity, Lifecycle, Tools, and Careers"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Navigating MLOps: Insights into Maturity, Lifecycle, Tools, and Careers",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2503.15577v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:23:31.716775+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_te_19",
+          "text": "Implement a system-centric evaluation framework that assesses end-to-end application performance (including system latency, API reliability, resource utilization, and user UX impact) in production-like environments, rather than relying solely on isolated model-centric metrics.",
+          "text_de": "Implementierung eines systemzentrierten Evaluierungsrahmens, der die End-to-End-Anwendungsleistung (einschließlich Systemlatenz, API-Zuverlässigkeit, Ressourcenauslastung und UX-Auswirkungen auf den Benutzer) in produktionsnahen Umgebungen bewertet, anstatt sich ausschließlich auf isolierte modellzentrierte Metriken zu verlassen.",
+          "min_level": 4,
+          "category": "Testing & Evaluation",
+          "sources": [
+            "[PDF] Operationalizing AI: Empirical Evidence on MLOps Practices, User ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] Operationalizing AI: Empirical Evidence on MLOps Practices, User ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/pdf/2510.09968"
+            }
+          ],
+          "added_at": "2026-05-29T14:24:19.586026+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_te_20",
+          "text": "Define a standardized, consolidated MLOps toolchain architecture to prevent tooling fragmentation, ensuring seamless integration and interoperability across data ingestion, model training, deployment, and monitoring phases.",
+          "text_de": "Definition einer standardisierten, konsolidierten MLOps-Toolchain-Architektur zur Vermeidung von Tool-Fragmentierung, um eine nahtlose Integration und Interoperabilität über die Phasen der Datenerfassung, des Modelltrainings, der Bereitstellung und der Überwachung hinweg zu gewährleisten.",
+          "min_level": 3,
+          "category": "Infrastructure & Tooling",
+          "sources": [
+            "[PDF] Operationalizing AI: Empirical Evidence on MLOps Practices, User ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] Operationalizing AI: Empirical Evidence on MLOps Practices, User ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/pdf/2510.09968"
+            }
+          ],
+          "added_at": "2026-05-29T14:24:21.300174+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_te_21",
+          "text": "Establish an enterprise-wide prompt management and optimization repository (Prompt Registry) to standardize, version-control, and share high-performing prompts, reducing operational inefficiencies and ensuring consistent model behavior.",
+          "text_de": "Einrichtung eines unternehmensweiten Repositories für Prompt-Management und -Optimierung (Prompt-Registry), um leistungsstarke Prompts zu standardisieren, zu versionieren und zu teilen, wodurch betriebliche Ineffizienzen reduziert und ein konsistentes Modellverhalten sichergestellt werden.",
+          "min_level": 3,
+          "category": "Infrastructure & Tools",
+          "sources": [
+            "Generative AI Literacy: Twelve Defining Competencies - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Generative AI Literacy: Twelve Defining Competencies - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2412.12107v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:26:46.396810+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_te_22",
+          "text": "Establish sustainability and energy-efficiency benchmarks for AI infrastructure, monitoring the carbon footprint of training and inference workloads to align AI scaling with corporate ESG goals.",
+          "text_de": "Etablierung von Nachhaltigkeits- und Energieeffizienz-Benchmarks für die KI-Infrastruktur sowie Überwachung des CO2-Fußabdrucks von Trainings- und Inferenz-Workloads, um die Skalierung von KI an den ESG-Zielen des Unternehmens auszurichten.",
+          "min_level": 4,
+          "category": "Sustainability & Green IT",
+          "sources": [
+            "Scaling Enterprise AI Responsibly: The Critical Role of Data Readiness and an Intelligent Data Infrastructure"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Scaling Enterprise AI Responsibly: The Critical Role of Data Readiness and an Intelligent Data Infrastructure",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://www.netapp.com/media/142474-idc-2025-ai-maturity-findings.pdf"
+            }
+          ],
+          "added_at": "2026-05-29T14:51:05.023881+00:00",
+          "added_by": "evolution_agent"
         }
       ]
     },
@@ -1765,6 +2884,101 @@
           ],
           "added_at": "2026-04-22T15:36:42.356723+00:00",
           "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_ta_13",
+          "text": "Establish formal peer-to-peer learning networks and 'AI Champion' systems to facilitate collective sensemaking of AI limitations, helping employees build realistic expectations and trust through shared hands-on experiences.",
+          "text_de": "Etablierung formeller Peer-to-Peer-Lernnetzwerke und „KI-Champion“-Systeme, um das kollektive Verständnis von KI-Einschränkungen zu erleichtern und Mitarbeitern zu helfen, durch gemeinsame praktische Erfahrungen realistische Erwartungen und Vertrauen aufzubauen.",
+          "min_level": 3,
+          "category": "Culture & Change Management",
+          "sources": [
+            "Making Sense of AI Limitations: How Individual Perceptions Shape Organizational Readiness for AI Adoption"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Making Sense of AI Limitations: How Individual Perceptions Shape Organizational Readiness for AI Adoption",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2502.15870v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:15:16.708787+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_ta_14",
+          "text": "Establish a systematic assessment framework to monitor human cognitive load, situational awareness, and potential skill degradation (deskilling) resulting from long-term reliance on specific Human-AI task allocation models.",
+          "text_de": "Ein systematisches Bewertungsrahmenwerk etablieren, um die kognitive Belastung des Menschen, das Situationsbewusstsein und einen potenziellen Kompetenzabbau (Deskilling) zu überwachen, die aus einer langfristigen Abhängigkeit von bestimmten Mensch-KI-Aufgabenverteilungsmodellen resultieren.",
+          "min_level": 4,
+          "category": "Workforce Enablement",
+          "sources": [
+            "[PDF] We introduce the Human–AI Task Tensor, a framework that ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] We introduce the Human–AI Task Tensor, a framework that ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/pdf/2503.15490"
+            }
+          ],
+          "added_at": "2026-05-29T14:15:46.250826+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_ta_15",
+          "text": "Formally allocate and track organizational learning budgets alongside technology procurement, ensuring that human capital capability building is prioritized as a primary driver of AI value realization.",
+          "text_de": "Weisen Sie formell Budgets für organisatorisches Lernen parallel zur Technologiebeschaffung zu und verfolgen Sie diese, um sicherzustellen, dass der Aufbau von Humankapitalkapazitäten als Haupttreiber der KI-Wertschöpfung priorisiert wird.",
+          "min_level": 3,
+          "category": "Training & Enablement",
+          "sources": [
+            "Why AI Readiness Is an Organizational Learning Problem, Not a ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "Why AI Readiness Is an Organizational Learning Problem, Not a ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2604.16369v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:16:15.560594+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_ta_16",
+          "text": "Establish a task-oriented AI literacy assessment framework for non-technical employees that evaluates practical, scenario-based decision-making rather than abstract technical or theoretical AI concepts.",
+          "text_de": "Etablierung eines aufgabenorientierten KI-Literacy-Bewertungsrahmens für nicht-technische Mitarbeitende, der die praktische, szenariobasierte Entscheidungsfindung anstelle von abstrakten technischen oder theoretischen KI-Konzepten bewertet.",
+          "min_level": 3,
+          "category": "Training & Enablement",
+          "sources": [
+            "AI Literacy Assessment Revisited: A Task-Oriented Approach Aligned with Real-world Occupations"
+          ],
+          "evidence_tags": [
+            {
+              "source": "AI Literacy Assessment Revisited: A Task-Oriented Approach Aligned with Real-world Occupations",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2511.05475v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:26:22.793410+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_ta_17",
+          "text": "Integrate formal 'trust calibration' and output troubleshooting protocols into workforce training, enabling employees to systematically determine when to rely on AI outputs and when to critically question or override them.",
+          "text_de": "Integration formaler Protokolle zur 'Vertrauenskalibrierung' (Trust Calibration) und zur Fehlerbehebung von Ergebnissen in die Mitarbeiterschulung, um Angestellte zu befähigen, systematisch zu bestimmen, wann sie KI-Ergebnissen vertrauen können und wann sie diese kritisch hinterfragen oder überschreiben müssen.",
+          "min_level": 3,
+          "category": "Training & Enablement",
+          "sources": [
+            "AI Literacy Assessment Revisited: A Task-Oriented Approach Aligned with Real-world Occupations"
+          ],
+          "evidence_tags": [
+            {
+              "source": "AI Literacy Assessment Revisited: A Task-Oriented Approach Aligned with Real-world Occupations",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2511.05475v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:26:23.502876+00:00",
+          "added_by": "evolution_agent"
         }
       ]
     },
@@ -2021,6 +3235,63 @@
           ],
           "added_at": "2026-04-22T15:35:04.503791+00:00",
           "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_et_12",
+          "text": "Establish a formal process to translate high-level ethical AI principles (e.g., fairness, accountability, transparency) into quantifiable, system-specific key performance indicators (KPIs) and automated guardrails integrated directly into the MLOps pipeline.",
+          "text_de": "Etablierung eines formalen Prozesses zur Übersetzung übergeordneter ethischer KI-Prinzipien (z. B. Fairness, Rechenschaftspflicht, Transparenz) in quantifizierbare, systemspezifische Leistungskennzahlen (KPIs) und automatisierte Guardrails, die direkt in die MLOps-Pipeline integriert sind.",
+          "min_level": 3,
+          "category": "Operationalizing Ethics",
+          "sources": [
+            "Responsible AI in the Global Context: Maturity Model and Survey"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Responsible AI in the Global Context: Maturity Model and Survey",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://dl.acm.org/doi/10.1145/3715275.3732165"
+            }
+          ],
+          "added_at": "2026-05-29T14:28:28.367848+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_et_13",
+          "text": "Establish a formal Explainable AI (XAI) framework that mandates the generation of human-interpretable explanations for model predictions, tailored to different stakeholder personas (e.g., end-users, auditors, developers).",
+          "text_de": "Etablierung eines formalen Frameworks für erklärbare KI (XAI), das die Generierung von für den Menschen interpretierbaren Erklärungen für Modellvorhersagen vorschreibt, zugeschnitten auf verschiedene Stakeholder-Personas (z. B. Endnutzer, Auditoren, Entwickler).",
+          "min_level": 3,
+          "category": "Transparency & Explainability",
+          "sources": [
+            "AI Ethics: Integrating Transparency, Fairness, and Privacy in AI ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "AI Ethics: Integrating Transparency, Fairness, and Privacy in AI ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://www.tandfonline.com/doi/full/10.1080/08839514.2025.2463722"
+            }
+          ],
+          "added_at": "2026-05-29T14:28:59.400248+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_et_14",
+          "text": "Establish continuous runtime monitoring and evaluation protocols specifically designed to detect 'alignment faking' and covert, goal-directed behaviors in autonomous agents, moving beyond static accuracy metrics to evaluate behavioral integrity.",
+          "text_de": "Etablierung kontinuierlicher Laufzeitüberwachungs- und Evaluierungsprotokolle, die speziell darauf ausgelegt sind, 'Alignment Faking' (vorgetäuschte Anpassung) und verdeckte, zielgerichtete Verhaltensweisen bei autonomen Agenten zu erkennen, um über statische Genauigkeitsmetriken hinaus die Verhaltensintegrität zu bewerten.",
+          "min_level": 5,
+          "category": "Trust & Safety",
+          "sources": [
+            "Agentic AI Governance and Lifecycle Management in Healthcare"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Agentic AI Governance and Lifecycle Management in Healthcare",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2601.15630v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:52:47.779889+00:00",
+          "added_by": "evolution_agent"
         }
       ]
     },
@@ -2313,6 +3584,443 @@
           ],
           "added_at": "2026-04-22T15:36:42.356723+00:00",
           "added_by": "framework_builder"
+        },
+        {
+          "id": "CP_pr_16",
+          "text": "Design and implement coordination mechanisms specifically aimed at managing decision variation across interconnected organizational tasks affected by AI, or actively restructure workflows to reduce these task interdependencies.",
+          "text_de": "Entwicklung und Implementierung von Koordinationsmechanismen, die speziell darauf abzielen, Entscheidungsvariationen in miteinander verknüpften, durch KI beeinflussten organisatorischen Aufgaben zu steuern, oder aktive Umstrukturierung von Arbeitsabläufen zur Reduzierung dieser Aufgabeninterdependenzen.",
+          "min_level": 4,
+          "category": "Process Orchestration",
+          "sources": [
+            "Making Sense of AI Limitations: How Individual Perceptions Shape Organizational Readiness for AI Adoption"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Making Sense of AI Limitations: How Individual Perceptions Shape Organizational Readiness for AI Adoption",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2502.15870v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:15:18.018437+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_17",
+          "text": "Decompose business processes into discrete tasks and map them onto a multi-dimensional framework (analyzing cognitive complexity, risk, and capability requirements) to systematically determine the optimal Human-AI collaboration configuration, such as human-only, AI-assisted, human-in-the-loop, or fully automated.",
+          "text_de": "Geschäftsprozesse in diskrete Aufgaben zerlegen und diese in einem mehrdimensionalen Framework abbilden (Analyse von kognitiver Komplexität, Risiko und Kompetenzanforderungen), um systematisch die optimale Mensch-KI-Kollaborationskonfiguration zu bestimmen (z. B. nur Mensch, KI-unterstützt, Human-in-the-Loop oder vollautomatisiert).",
+          "min_level": 4,
+          "category": "Process Optimization",
+          "sources": [
+            "[PDF] We introduce the Human–AI Task Tensor, a framework that ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] We introduce the Human–AI Task Tensor, a framework that ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/pdf/2503.15490"
+            }
+          ],
+          "added_at": "2026-05-29T14:15:44.438091+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_18",
+          "text": "Establish operational throttling mechanisms and cognitive load thresholds to prevent an 'Output Avalanche,' ensuring that the volume of AI-generated outputs does not exceed the real-time review and validation capacity of human operators.",
+          "text_de": "Etablieren Sie betriebliche Drosselungsmechanismen und Grenzwerte für die kognitive Belastung, um eine 'Output-Lawine' zu verhindern und sicherzustellen, dass das Volumen der KI-generierten Ergebnisse die Echtzeit-Überprüfungs- und Validierungskapazität der menschlichen Bediener nicht überschreitet.",
+          "min_level": 4,
+          "category": "Operational Integration",
+          "sources": [
+            "Why AI Readiness Is an Organizational Learning Problem, Not a ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "Why AI Readiness Is an Organizational Learning Problem, Not a ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2604.16369v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:16:13.117672+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_19",
+          "text": "Conduct downstream operational and physical compatibility assessments to ensure that physical supply chains, manufacturing processes, and logistical workflows can execute and absorb AI-optimized designs or outputs.",
+          "text_de": "Führen Sie nachgelagerte betriebliche und physische Kompatibilitätsprüfungen durch, um sicherzustellen, dass physische Lieferketten, Herstellungsprozesse und logistische Abläufe KI-optimierte Entwürfe oder Ergebnisse ausführen und aufnehmen können.",
+          "min_level": 4,
+          "category": "Operational Integration",
+          "sources": [
+            "Why AI Readiness Is an Organizational Learning Problem, Not a ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "Why AI Readiness Is an Organizational Learning Problem, Not a ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2604.16369v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:16:14.851395+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_20",
+          "text": "Establish a formal integration framework that bridges Operational Technology (OT) on the shop floor with Information Technology (IT) infrastructure to enable real-time Industrial AI (I-AI) applications.",
+          "text_de": "Etablierung eines formalen Integrationsrahmens, der die Betriebstechnologie (OT) in der Fertigung mit der Informationstechnologie (IT) verbindet, um industrielle KI-Anwendungen (I-AI) in Echtzeit zu ermöglichen.",
+          "min_level": 3,
+          "category": "OT-IT Convergence",
+          "sources": [
+            "Establishment of a maturity model to assess the development of ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "Establishment of a maturity model to assess the development of ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://www.emerald.com/jeim/article/35/3/701/195975/Establishment-of-a-maturity-model-to-assess-the"
+            }
+          ],
+          "added_at": "2026-05-29T14:17:11.143872+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_21",
+          "text": "Establish an operational monitoring framework with predefined threshold triggers for data and concept drift, defining automated fallback procedures (e.g., reverting to heuristics or human-in-the-loop) when model performance degrades.",
+          "text_de": "Einrichtung eines betrieblichen Überwachungsrahmens mit vordefinierten Schwellenwert-Triggern für Daten- und Konzeptdrift, der automatisierte Fallback-Verfahren (z. B. Rückfall auf Heuristiken oder Human-in-the-Loop) definiert, wenn die Modellleistung nachlässt.",
+          "min_level": 4,
+          "category": "Operations & Maintenance",
+          "sources": [
+            "[PDF] A Preliminary Report on a Model for Maturing AI Adoption"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] A Preliminary Report on a Model for Maturing AI Adoption",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://www.sei.cmu.edu/documents/6413/AI-Maturity-Model-Overview.pdf"
+            }
+          ],
+          "added_at": "2026-05-29T14:17:51.041856+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_22",
+          "text": "Establish a systematic benchmarking process to evaluate and transition between different LLM generations, specifically optimizing for operational latency, API cost reductions, and query accuracy in production RAG systems.",
+          "text_de": "Etablierung eines systematischen Benchmarking-Prozesses zur Bewertung und zum Übergang zwischen verschiedenen LLM-Generationen, der speziell auf die Optimierung der Betriebslatenz, der Reduzierung von API-Kosten und der Abfragegenauigkeit in produktiven RAG-Systemen abzielt.",
+          "min_level": 3,
+          "category": "Model Lifecycle Management",
+          "sources": [
+            "RAG-Driven Data Quality Governance for Enterprise ERP Systems"
+          ],
+          "evidence_tags": [
+            {
+              "source": "RAG-Driven Data Quality Governance for Enterprise ERP Systems",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/abs/2511.16700"
+            }
+          ],
+          "added_at": "2026-05-29T14:18:53.267600+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_23",
+          "text": "Define a closed-loop data remediation workflow where RAG-driven quality systems not only flag ERP data anomalies but also retrieve and suggest specific corrective actions based on historical resolutions and corporate policies for human approval.",
+          "text_de": "Definition eines geschlossenen Datenbereinigungs-Workflows, bei dem RAG-gestützte Qualitätssysteme nicht nur ERP-Datenanomalien melden, sondern auch spezifische Korrekturmaßnahmen auf der Grundlage historischer Lösungen und Unternehmensrichtlinien zur menschlichen Genehmigung vorschlagen.",
+          "min_level": 3,
+          "category": "Operational Efficiency",
+          "sources": [
+            "[PDF] RAG-Driven Data Quality Governance for Enterprise ERP Systems"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] RAG-Driven Data Quality Governance for Enterprise ERP Systems",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/pdf/2511.16700"
+            }
+          ],
+          "added_at": "2026-05-29T14:19:24.357750+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_24",
+          "text": "Establish a standardized MLOps framework that defines clear automation levels (e.g., manual deployment, automated pipeline execution, and continuous training) to systematically transition models from ad-hoc scripts to automated CI/CD pipelines.",
+          "text_de": "Etablierung eines standardisierten MLOps-Frameworks, das klare Automatisierungsstufen definiert (z. B. manuelle Bereitstellung, automatisierte Pipeline-Ausführung und kontinuierliches Training), um Modelle systematisch von Ad-hoc-Skripten in automatisierte CI/CD-Pipelines zu überführen.",
+          "min_level": 3,
+          "category": "Operations & Lifecycle",
+          "sources": [
+            "Data & AI Strategy Assessment"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Data & AI Strategy Assessment",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://data-ai-strategy.withgoogle.com"
+            }
+          ],
+          "added_at": "2026-05-29T14:20:54.958869+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_25",
+          "text": "Establish a standardized experiment tracking and version control protocol that captures code, hyperparameters, data splits, and model artifacts to guarantee absolute reproducibility of ML experiments.",
+          "text_de": "Etablierung eines standardisierten Protokolls zur Verfolgung von Experimenten und zur Versionskontrolle, das Code, Hyperparameter, Datensplits und Modellartefakte erfasst, um die absolute Reproduzierbarkeit von ML-Experimenten zu gewährleisten.",
+          "min_level": 3,
+          "category": "MLOps & Lifecycle",
+          "sources": [
+            "MLOps best practices, challenges and maturity models"
+          ],
+          "evidence_tags": [
+            {
+              "source": "MLOps best practices, challenges and maturity models",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://dl.acm.org/doi/10.1016/j.infsof.2025.107733"
+            }
+          ],
+          "added_at": "2026-05-29T14:23:05.456529+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_26",
+          "text": "Mandate progressive deployment strategies (such as shadow deployments, canary releases, or A/B testing) for all high-impact production AI models to validate real-world performance and latency without risking user disruption.",
+          "text_de": "Vorschreiben progressiver Bereitstellungsstrategien (wie Shadow-Deployments, Canary-Releases oder A/B-Tests) für alle hochgradig geschäftskritischen KI-Modelle in der Produktion, um die Leistung und Latenz unter realen Bedingungen ohne Risiko für die Benutzer zu validieren.",
+          "min_level": 4,
+          "category": "MLOps & Lifecycle",
+          "sources": [
+            "MLOps best practices, challenges and maturity models"
+          ],
+          "evidence_tags": [
+            {
+              "source": "MLOps best practices, challenges and maturity models",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://dl.acm.org/doi/10.1016/j.infsof.2025.107733"
+            }
+          ],
+          "added_at": "2026-05-29T14:23:07.283543+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_27",
+          "text": "Implement a standardized administrative setup phase for all ML projects that mandates the pre-configuration of unified workspaces, versioned code/data repositories, access controls (IAM), and baseline system monitoring before model development begins.",
+          "text_de": "Implementierung einer standardisierten administrativen Einrichtungsphase für alle ML-Projekte, die die Vorkonfiguration einheitlicher Arbeitsbereiche, versionierter Code-/Daten-Repositories, Zugriffskontrollen (IAM) und grundlegender Systemüberwachung vorschreibt, bevor die Modellentwicklung beginnt.",
+          "min_level": 2,
+          "category": "Lifecycle Management",
+          "sources": [
+            "Navigating MLOps: Insights into Maturity, Lifecycle, Tools, and Careers"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Navigating MLOps: Insights into Maturity, Lifecycle, Tools, and Careers",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2503.15577v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:23:30.779657+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_28",
+          "text": "Establish formal, standardized handoff protocols and shared responsibility matrices (RACI) between data science, software engineering, and operations teams to eliminate operational friction during the transition from model development to production deployment.",
+          "text_de": "Etablierung formaler, standardisierter Übergabeprotokolle und Verantwortlichkeitsmatrizen (RACI) zwischen Data Science, Software Engineering und Operations-Teams, um betriebliche Reibungsverluste beim Übergang von der Modellentwicklung zur Produktivbereitstellung zu eliminieren.",
+          "min_level": 3,
+          "category": "Collaboration & Workflow",
+          "sources": [
+            "[PDF] Operationalizing AI: Empirical Evidence on MLOps Practices, User ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] Operationalizing AI: Empirical Evidence on MLOps Practices, User ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/pdf/2510.09968"
+            }
+          ],
+          "added_at": "2026-05-29T14:24:18.790977+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_29",
+          "text": "Establish automated telemetry pipelines that capture both explicit and implicit end-user feedback on AI-driven outputs in production, systematically routing these insights back to MLOps pipelines for continuous model monitoring and retraining.",
+          "text_de": "Einrichtung automatisierter Telemetrie-Pipelines, die sowohl explizites als auch implizites Endbenutzer-Feedback zu KI-gestützten Ergebnissen in der Produktion erfassen und diese Erkenntnisse systematisch in die MLOps-Pipelines für eine kontinuierliche Modellüberwachung und -fortbildung zurückführen.",
+          "min_level": 4,
+          "category": "Monitoring & Feedback",
+          "sources": [
+            "[PDF] Operationalizing AI: Empirical Evidence on MLOps Practices, User ..."
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] Operationalizing AI: Empirical Evidence on MLOps Practices, User ...",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/pdf/2510.09968"
+            }
+          ],
+          "added_at": "2026-05-29T14:24:20.434916+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_30",
+          "text": "Define and assess practical 'AI User' competencies for domain experts, specifically focusing on hands-on tasks such as domain-specific data selection, labeling, and contextual validation of model performance.",
+          "text_de": "Definition und Bewertung praktischer 'KI-Anwender'-Kompetenzen für Fachexperten, mit besonderem Fokus auf praktische Aufgaben wie die domänenspezifische Datenauswahl, -kennzeichnung (Labeling) und die kontextuelle Validierung der Modellleistung.",
+          "min_level": 4,
+          "category": "Operational Excellence",
+          "sources": [
+            "AI Literacy Assessment Revisited: A Task-Oriented Approach Aligned with Real-world Occupations"
+          ],
+          "evidence_tags": [
+            {
+              "source": "AI Literacy Assessment Revisited: A Task-Oriented Approach Aligned with Real-world Occupations",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2511.05475v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:26:24.128801+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_31",
+          "text": "Implement a systematic output verification and quality assurance process for generative AI outputs (e.g., 'human-in-the-loop' validation protocols) to detect hallucinations, bias, and inaccuracies before they impact business decisions or customer-facing channels.",
+          "text_de": "Implementierung eines systematischen Prozesses zur Überprüfung der Ergebnisse und zur Qualitätssicherung von generativen KI-Ausgaben (z. B. 'Human-in-the-Loop'-Validierungsprotokolle), um Halluzinationen, Verzerrungen und Ungenauigkeiten zu erkennen, bevor sie sich auf Geschäftsentscheidungen oder kundenorientierte Kanäle auswirken.",
+          "min_level": 3,
+          "category": "Quality Assurance",
+          "sources": [
+            "Generative AI Literacy: Twelve Defining Competencies - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Generative AI Literacy: Twelve Defining Competencies - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2412.12107v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:26:45.694990+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_32",
+          "text": "Implement systematic ethical red-teaming and adversarial testing protocols specifically designed to uncover bias, safety vulnerabilities, and alignment failures prior to model deployment.",
+          "text_de": "Implementierung systematischer ethischer Red-Teaming- und Adversarial-Testing-Protokolle, die speziell darauf ausgelegt sind, Verzerrungen (Bias), Sicherheitslücken und Abweichungen von ethischen Richtlinien (Alignment) vor der Modellbereitstellung aufzudecken.",
+          "min_level": 4,
+          "category": "Quality Assurance & Testing",
+          "sources": [
+            "Towards a Responsible AI Organizational Maturity Model"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Towards a Responsible AI Organizational Maturity Model",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://dl.acm.org/doi/10.1145/3757514"
+            }
+          ],
+          "added_at": "2026-05-29T14:28:07.039355+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_34",
+          "text": "Establish a dual-track agile development process that separates exploratory data science (discovery track) from production-grade software engineering (delivery track) to manage the inherent uncertainty of AI model development.",
+          "text_de": "Etablierung eines Dual-Track-Agile-Entwicklungsprozesses, der die explorative Data Science (Discovery-Track) von der produktionsreifen Softwareentwicklung (Delivery-Track) trennt, um die inhärente Unsicherheit der KI-Modellentwicklung zu bewältigen.",
+          "min_level": 3,
+          "category": "Lifecycle Management",
+          "sources": [
+            "[PDF] Agile System Development Lifecycle for AI Systems - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] Agile System Development Lifecycle for AI Systems - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/pdf/2501.09434"
+            }
+          ],
+          "added_at": "2026-05-29T14:52:15.809746+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_35",
+          "text": "Define and enforce an AI-specific 'Definition of Done' (DoD) for user stories, requiring validation of model accuracy, bias/fairness checks, latency constraints, and the establishment of a monitoring baseline before deployment.",
+          "text_de": "Definition und Durchsetzung einer KI-spezifischen 'Definition of Done' (DoD) für User Stories, die neben der Code-Fertigstellung auch die Validierung der Modellgenauigkeit, Bias-/Fairness-Prüfungen, Latenzbeschränkungen und die Erstellung einer Monitoring-Baseline vor der Bereitstellung erfordert.",
+          "min_level": 4,
+          "category": "Quality Assurance",
+          "sources": [
+            "[PDF] Agile System Development Lifecycle for AI Systems - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] Agile System Development Lifecycle for AI Systems - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/pdf/2501.09434"
+            }
+          ],
+          "added_at": "2026-05-29T14:52:16.601505+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_36",
+          "text": "Implement a formal feedback loop that automatically translates production model drift, data drift, or performance degradation alerts into prioritized technical debt items within the agile product backlog.",
+          "text_de": "Implementierung eines formalen Feedback-Loops, der Warnmeldungen zu Modell- und Datendrift oder Leistungsabfällen in der Produktion automatisch in priorisierte Technical-Debt-Elemente im Agile Product Backlog übersetzt.",
+          "min_level": 4,
+          "category": "Operations & Maintenance",
+          "sources": [
+            "[PDF] Agile System Development Lifecycle for AI Systems - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "[PDF] Agile System Development Lifecycle for AI Systems - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/pdf/2501.09434"
+            }
+          ],
+          "added_at": "2026-05-29T14:52:17.433177+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_37",
+          "text": "Limit the scale of multi-agent collaborative workflows based on the 'inverted-U' performance curve, restricting active agent-to-agent coordination groups (typically to 4-5 specialized agents) to minimize coordination overhead and performance degradation.",
+          "text_de": "Begrenzung des Umfangs kollaborativer Multi-Agenten-Workflows basierend auf der 'umgekehrten U-Kurve' der Leistung, indem aktive Koordinationsgruppen zwischen Agenten (typischerweise auf 4-5 spezialisierte Agenten) beschränkt werden, um den Koordinationsaufwand und Leistungsabfall zu minimieren.",
+          "min_level": 4,
+          "category": "Workflow Optimization",
+          "sources": [
+            "Agentic AI Governance and Lifecycle Management in Healthcare"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Agentic AI Governance and Lifecycle Management in Healthcare",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2601.15630v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:52:44.989891+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_38",
+          "text": "Define a formal decommissioning protocol for agentic AI systems that mandates the immediate revocation of non-human credentials, API keys, and tool permissions upon use case termination to eliminate security vulnerabilities from orphaned agents.",
+          "text_de": "Definition eines formalen Stilllegungsprotokolls für agentenbasierte KI-Systeme, das den sofortigen Entzug von nicht-menschlichen Anmeldedaten, API-Schlüsseln und Tool-Berechtigungen bei Beendigung des Anwendungsfalls vorschreibt, um Sicherheitsrisiken durch verwaiste Agenten zu eliminieren.",
+          "min_level": 3,
+          "category": "Lifecycle Management",
+          "sources": [
+            "Agentic AI Governance and Lifecycle Management in Healthcare"
+          ],
+          "evidence_tags": [
+            {
+              "source": "Agentic AI Governance and Lifecycle Management in Healthcare",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2601.15630v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:52:47.218448+00:00",
+          "added_by": "evolution_agent"
+        },
+        {
+          "id": "CP_pr_39",
+          "text": "Integrate LLM-based tools systematically into established systems engineering lifecycles (such as the V-Model), ensuring that AI-generated artifacts (e.g., requirements, system architectures, test cases) are subjected to standardized verification, validation, and release gates.",
+          "text_de": "Systematische Integration von LLM-basierten Werkzeugen in etablierte Systems-Engineering-Lebenszyklen (wie das V-Modell), um sicherzustellen, dass KI-generierte Artefakte (z. B. Anforderungen, Systemarchitekturen, Testfälle) standardisierten Verifizierungs-, Validierungs- und Freigabegates unterzogen werden.",
+          "min_level": 4,
+          "category": "Lifecycle Integration",
+          "sources": [
+            "A Framework for Risk Assessment of Large Language Models - arXiv"
+          ],
+          "evidence_tags": [
+            {
+              "source": "A Framework for Risk Assessment of Large Language Models - arXiv",
+              "reference": "Evolution Agent — Auto-Integration",
+              "url": "https://arxiv.org/html/2602.04358v1"
+            }
+          ],
+          "added_at": "2026-05-29T14:53:10.624975+00:00",
+          "added_by": "evolution_agent"
         }
       ]
     }

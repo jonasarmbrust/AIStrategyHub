@@ -1,0 +1,16 @@
+.git
+.github
+.env
+*.md
+!README.md
+docs/
+data/*.db
+data/*.db-*
+data/embeddings/
+data/uploads/
+node_modules/
+__pycache__/
+.pytest_cache/
+*.pyc
+.vscode/
+.idea/

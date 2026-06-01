@@ -221,29 +221,26 @@ Respond in valid JSON:
             return {"success": False, "error": str(e)}
 
         # Log activity
-        db = await get_db()
         try:
-            activity_id = str(uuid.uuid4())[:8]
-            await db.execute(
-                """INSERT INTO framework_activity (id, action, checkpoint_id, dimension_id, details)
-                   VALUES (?, ?, ?, ?, ?)""",
-                (
-                    activity_id,
-                    "checkpoint_merged",
-                    keep_id,
-                    keep_dim["id"] if keep_dim else "",
-                    json.dumps({
-                        "kept": keep_id,
-                        "removed": remove_id,
-                        "merged_text": merged_data.get("merged_text", "")[:80],
-                    }),
-                ),
-            )
-            await db.commit()
+            async with get_db() as db:
+                activity_id = str(uuid.uuid4())[:8]
+                await db.execute(
+                    """INSERT INTO framework_activity (id, action, checkpoint_id, dimension_id, details)
+                       VALUES (?, ?, ?, ?, ?)""",
+                    (
+                        activity_id,
+                        "checkpoint_merged",
+                        keep_id,
+                        keep_dim["id"] if keep_dim else "",
+                        json.dumps({
+                            "kept": keep_id,
+                            "removed": remove_id,
+                            "merged_text": merged_data.get("merged_text", "")[:80],
+                        }),
+                    ),
+                )
         except Exception as e:
             log.warning(f"Failed to log merge activity: {e}")
-        finally:
-            pass  # singleton connection, no close needed
 
         log.info(f"Merged checkpoint {remove_id} into {keep_id}")
         return {
@@ -264,7 +261,7 @@ Respond in valid JSON:
 
         genai.configure(api_key=GEMINI_API_KEY)
         embeddings = []
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
 
         for i, text in enumerate(texts):
             for attempt in range(4):

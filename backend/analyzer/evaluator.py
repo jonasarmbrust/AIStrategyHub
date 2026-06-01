@@ -26,6 +26,19 @@ from config import UPLOAD_DIR, require_gemini_key
 
 log = logging.getLogger("evaluator")
 
+
+async def _update_progress(analysis_id: str, pct: float, step: str):
+    """Update analysis progress in DB for real-time frontend polling."""
+    try:
+        async with get_db() as db:
+            await db.execute(
+                "UPDATE analyses SET progress_pct = ?, progress_step = ? WHERE id = ?",
+                (round(pct, 1), step, analysis_id),
+            )
+    except Exception:
+        pass  # Non-critical, don't break evaluation
+
+
 BATCH_SIZE = 5  # Checkpoints per LLM call
 
 BATCH_EVALUATION_PROMPT = """You are an AI Strategy Maturity Assessor. Evaluate whether the document excerpts address each of the following checkpoints from an AI maturity framework.
@@ -93,12 +106,9 @@ async def evaluate_document(analysis_id: str):
     log.info(f"Starting evaluation for {analysis_id}")
     api_key = require_gemini_key()
 
-    db = await get_db()
-    try:
+    async with get_db() as db:
         cursor = await db.execute("SELECT * FROM analyses WHERE id = ?", (analysis_id,))
         row = await cursor.fetchone()
-    finally:
-        pass
 
     if not row:
         raise ValueError(f"Analysis {analysis_id} not found")
@@ -113,14 +123,17 @@ async def evaluate_document(analysis_id: str):
 
     text = extract_text(file_path)
     log.info(f"Extracted {len(text)} chars from {file_path.name}")
+    await _update_progress(analysis_id, 5, 'extracting_text')
 
     # 2. Chunk
     chunks = chunk_text(text)
     log.info(f"Created {len(chunks)} chunks")
+    await _update_progress(analysis_id, 10, 'chunking')
 
     # 3. Store embeddings
     collection_name = f"doc_{analysis_id}"
     await store_chunks(collection_name, chunks)
+    await _update_progress(analysis_id, 20, 'embedding')
 
     # 4. Group checkpoints into batches
     model = get_maturity_model()
@@ -131,22 +144,29 @@ async def evaluate_document(analysis_id: str):
 
     genai.configure(api_key=api_key)
     gemini_model = genai.GenerativeModel("gemini-3.5-flash")
-    semaphore = asyncio.Semaphore(3)
+    semaphore = asyncio.Semaphore(5)
 
     assessment_dict = {}
+    _assessment_lock = asyncio.Lock()
     all_evaluations = []
 
     batches = [all_checkpoints[i:i + BATCH_SIZE] for i in range(0, len(all_checkpoints), BATCH_SIZE)]
     log.info(f"Evaluating {len(all_checkpoints)} checkpoints in {len(batches)} batches")
+    await _update_progress(analysis_id, 25, 'evaluating')
+
+    completed_batches = [0]
+    total_batches = len(batches)
 
     async def evaluate_batch(batch):
         async with semaphore:
             try:
-                # Gather evidence for batch
+                # Gather evidence for batch — parallel for speed
+                search_tasks = [search_chunks(collection_name, cp.text, n_results=2) for _, cp in batch]
+                search_results = await asyncio.gather(*search_tasks)
+
                 checkpoint_metadata = []
                 all_evidence = []
-                for dim, cp in batch:
-                    relevant = await search_chunks(collection_name, cp.text, n_results=2)
+                for (dim, cp), relevant in zip(batch, search_results):
                     evidence_text = "\n".join([f"[{r['section']}] {r['text']}" for r in relevant])
                     all_evidence.append(evidence_text)
                     checkpoint_metadata.append({"dim": dim, "cp": cp, "relevant": relevant})
@@ -164,7 +184,7 @@ async def evaluate_document(analysis_id: str):
                 prompt = BATCH_EVALUATION_PROMPT.format(checkpoint_list=cp_list, evidence=combined)
 
                 # LLM call with retry
-                loop = asyncio.get_event_loop()
+                loop = asyncio.get_running_loop()
                 response = None
                 for attempt in range(4):
                     try:
@@ -181,7 +201,23 @@ async def evaluate_document(analysis_id: str):
                         else:
                             raise
 
-                results = json.loads(response.text)
+                if response is None:
+                    return []
+                try:
+                    results = json.loads(response.text)
+                except json.JSONDecodeError as e:
+                    log.warning("LLM returned invalid JSON for batch: %s", e)
+                    log.debug("Raw response: %s", response.text[:500] if response.text else "")
+                    # Fallback: try to extract JSON from markdown code block
+                    import re
+                    json_match = re.search(r'```json?\s*([\s\S]*?)```', response.text or "")
+                    if json_match:
+                        try:
+                            results = json.loads(json_match.group(1))
+                        except json.JSONDecodeError:
+                            return []
+                    else:
+                        return []
                 if isinstance(results, dict):
                     results = [results]
 
@@ -210,20 +246,27 @@ async def evaluate_document(analysis_id: str):
                         "sources": meta["cp"].sources,
                     }
                     if result.get("covered"):
-                        assessment_dict[meta["cp"].id] = {
-                            "fulfilled": True,
-                            "level": result.get("level", meta["cp"].min_level),
-                            "confidence": result.get("confidence", 0.5),
-                            "evidence_depth": result.get("evidence_depth", 1),
-                        }
+                        async with _assessment_lock:
+                            assessment_dict[meta["cp"].id] = {
+                                "fulfilled": True,
+                                "level": result.get("level", meta["cp"].min_level),
+                                "confidence": result.get("confidence", 0.5),
+                                "evidence_depth": result.get("evidence_depth", 1),
+                            }
                     evaluations.append(ev)
+                completed_batches[0] += 1
+                pct = 25 + (completed_batches[0] / total_batches) * 55  # 25% to 80%
+                await _update_progress(analysis_id, pct, f'evaluating_batch_{completed_batches[0]}_of_{total_batches}')
                 return evaluations
 
             except Exception as e:
                 log.warning(f"Batch failed, falling back to individual: {e}")
                 fallback = []
                 for dim, cp in batch:
-                    fallback.append(await _evaluate_single(gemini_model, collection_name, dim, cp, assessment_dict))
+                        fallback.append(await _evaluate_single(gemini_model, collection_name, dim, cp, assessment_dict))
+                completed_batches[0] += 1
+                pct = 25 + (completed_batches[0] / total_batches) * 55  # 25% to 80%
+                await _update_progress(analysis_id, pct, f'evaluating_batch_{completed_batches[0]}_of_{total_batches}')
                 return fallback
 
     # Run batches
@@ -236,6 +279,7 @@ async def evaluate_document(analysis_id: str):
     from knowledge_base.checklist_generator import calculate_maturity_score
     score_result = calculate_maturity_score(assessment_dict)
     log.info(f"Score: {score_result['overall_score']:.1f}, Level: {score_result['overall_level']}")
+    await _update_progress(analysis_id, 85, 'scoring')
 
     # 6. Recommendations
     recommendations = [
@@ -244,6 +288,7 @@ async def evaluate_document(analysis_id: str):
     ][:10]
 
     # 7. Executive Summary
+    await _update_progress(analysis_id, 88, 'generating_summary')
     executive_summary = ""
     try:
         covered = sum(1 for e in all_evaluations if e["covered"])
@@ -267,7 +312,7 @@ Dimensions:
 
 Include: current maturity assessment, strongest areas, critical gaps, 3 strategic next steps. Professional tone, no JSON."""
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         resp = await loop.run_in_executor(None, functools.partial(
             gemini_model.generate_content, summary_prompt,
             generation_config=genai.GenerationConfig(temperature=0.3),
@@ -278,23 +323,24 @@ Include: current maturity assessment, strongest areas, critical gaps, 3 strategi
         log.warning(f"Executive summary failed: {e}")
 
     # 8. Store results
-    db = await get_db()
-    await db.execute(
-        """UPDATE analyses SET
-            status = 'completed', overall_score = ?, overall_level = ?,
-            dimension_scores = ?, strengths = ?, gaps = ?,
-            recommendations = ?, evaluations = ?, executive_summary = ?,
-            completed_at = ?
-           WHERE id = ?""",
-        (
-            score_result["overall_score"], score_result["overall_level"],
-            json.dumps(score_result["dimension_scores"]),
-            json.dumps(score_result["strengths"]), json.dumps(score_result["gaps"]),
-            json.dumps(recommendations), json.dumps(all_evaluations),
-            executive_summary, datetime.now().isoformat(), analysis_id,
-        ),
-    )
-    await db.commit()
+    await _update_progress(analysis_id, 95, 'storing_results')
+    async with get_db() as db:
+        await db.execute(
+            """UPDATE analyses SET
+                status = 'completed', overall_score = ?, overall_level = ?,
+                dimension_scores = ?, strengths = ?, gaps = ?,
+                recommendations = ?, evaluations = ?, executive_summary = ?,
+                completed_at = ?
+               WHERE id = ?""",
+            (
+                score_result["overall_score"], score_result["overall_level"],
+                json.dumps(score_result["dimension_scores"]),
+                json.dumps(score_result["strengths"]), json.dumps(score_result["gaps"]),
+                json.dumps(recommendations), json.dumps(all_evaluations),
+                executive_summary, datetime.now().isoformat(), analysis_id,
+            ),
+        )
+        await db.commit()
     log.info(f"Evaluation complete: {len(batches)} LLM calls (was {len(all_checkpoints)})")
 
 
@@ -307,7 +353,7 @@ async def _evaluate_single(gemini_model, collection_name, dim, cp, assessment_di
         prompt = SINGLE_EVALUATION_PROMPT.format(
             checkpoint_id=cp.id, checkpoint_text=cp.text, min_level=cp.min_level, evidence=evidence,
         )
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         response = await loop.run_in_executor(None, functools.partial(
             gemini_model.generate_content, prompt,
             generation_config=genai.GenerationConfig(response_mime_type="application/json", temperature=0.1),

@@ -8,13 +8,16 @@ Enhanced with synchronous mode, proper error feedback, and resilient search.
 from __future__ import annotations
 
 import json
+import logging
 import os
 import uuid
 from datetime import datetime
 from typing import Optional
 
 from database import get_db
-from knowledge_base.checklist_generator import get_maturity_model
+from knowledge_base.checklist_generator import get_maturity_model, safe_read_json_sync
+
+log = logging.getLogger("research")
 
 _BASE_DIMENSION_QUERIES = {
     "strategy": "AI strategy leadership enterprise roadmap business alignment",
@@ -45,16 +48,14 @@ def get_dimension_queries() -> dict[str, str]:
             # Also check via model_extra or direct attribute
             if not recent_cps:
                 # Fallback: scan dimensions.json directly for added_by markers
-                import json
-                from pathlib import Path
-                dims_path = Path(__file__).parent.parent / "knowledge_base" / "dimensions.json"
-                if dims_path.exists():
-                    with open(dims_path, "r", encoding="utf-8") as f:
-                        raw = json.load(f)
-                    for raw_dim in raw.get("dimensions", []):
-                        if raw_dim["id"] == dim.id:
-                            for cp_raw in raw_dim.get("checkpoints", []):
-                                if cp_raw.get("added_by") == "framework_builder":
+                try:
+                    raw = safe_read_json_sync()
+                except Exception:
+                    raw = {}
+                for raw_dim in raw.get("dimensions", []):
+                    if raw_dim["id"] == dim.id:
+                        for cp_raw in raw_dim.get("checkpoints", []):
+                            if cp_raw.get("added_by") == "framework_builder":
                                     recent_cps.append(type('CP', (), {'text': cp_raw['text']})())
             if recent_cps:
                 # Take keywords from up to 3 most recent additions
@@ -65,7 +66,7 @@ def get_dimension_queries() -> dict[str, str]:
                 if extra_terms:
                     queries[dim.id] = f"{queries.get(dim.id, '')} {' '.join(extra_terms)}"
     except Exception as e:
-        print(f"[Research] Could not enrich queries from framework: {e}")
+        log.warning("Could not enrich queries from framework: %s", e)
     return queries
 
 RELEVANCE_PROMPT = """You are an AI Strategy Research Analyst. Evaluate the relevance of a search result for an AI Strategy Maturity Assessment knowledge base.
@@ -106,7 +107,7 @@ def _check_api_keys() -> dict[str, bool]:
 
 async def search_and_store(
     query: Optional[str] = None,
-    dimensions: list[str] = [],
+    dimensions: list[str] | None = None,
     max_results: int = 10,
     language: str = "both",
     pdf_only: bool = False,
@@ -115,6 +116,9 @@ async def search_and_store(
     Execute a research search and store relevant results.
     Returns a status dict with counts and errors for the frontend.
     """
+    if dimensions is None:
+        dimensions = []
+
     status = {
         "searched": 0,
         "found": 0,
@@ -190,10 +194,10 @@ async def search_and_store(
             results = response.get("results", [])
             all_results.extend(results)
             status["searched"] += 1
-            print(f"[Research] Tavily '{full_query[:50]}...' -> {len(results)} results")
+            log.info("Tavily '%s...' -> %d results", full_query[:50], len(results))
         except Exception as e:
             error_msg = str(e)
-            print(f"[Research] Tavily search failed: {error_msg}")
+            log.warning("Tavily search failed: %s", error_msg)
             if "401" in error_msg or "Unauthorized" in error_msg:
                 raise ResearchError(
                     "Tavily API-Key ist ungültig oder abgelaufen. "
@@ -267,7 +271,7 @@ async def search_and_store(
                     llm_eval = json.loads(response.text)
                     evaluation.update(llm_eval)
                 except Exception as e:
-                    print(f"[Research] Gemini eval failed for '{title[:40]}': {e}")
+                    log.debug("Gemini eval failed for '%s': %s", title[:40], e)
                     # Keep default evaluation, don't skip
 
             # Only skip if relevance is very low (< 0.2)
@@ -297,15 +301,15 @@ async def search_and_store(
                 )
                 await db.commit()
                 status["stored"] += 1
-                print(f"[Research] Stored: '{title[:50]}' (relevance: {evaluation.get('relevance_score', 0):.2f})")
+                log.info("Stored: '%s' (relevance: %.2f)", title[:50], evaluation.get('relevance_score', 0))
             finally:
                 pass  # singleton connection, no close needed
 
         except Exception as e:
-            print(f"[Research] Failed to process '{result.get('title', '')}': {e}")
+            log.warning("Failed to process '%s': %s", result.get('title', ''), e)
             status["errors"].append(f"Processing failed: {str(e)[:80]}")
 
-    print(f"[Research] Complete: {status['stored']} stored, {status['skipped_low_relevance']} skipped (low relevance)")
+    log.info("Complete: %d stored, %d skipped (low relevance)", status['stored'], status['skipped_low_relevance'])
     return status
 
 

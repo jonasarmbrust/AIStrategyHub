@@ -2,12 +2,14 @@
 
 import pytest
 import asyncio
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, AsyncMock
 from pathlib import Path
 import json
+import struct
 
 from knowledge_base.checklist_generator import safe_read_json, safe_write_json, DIMENSIONS_PATH
-from evolution.agent import EvolutionAgent, clear_embeddings_cache, _existing_embeddings_cache
+from evolution.agent import EvolutionAgent
+from evolution.checkpoint_extractor import clear_embeddings_cache, _get_cached_embedding, check_proposal_redundancy
 
 
 @pytest.mark.asyncio
@@ -60,12 +62,19 @@ async def test_dimensions_concurrent_access(tmp_path):
 
 
 @pytest.mark.asyncio
-async def test_redundancy_check_embeddings_batch_and_caching():
-    """Verify that _check_proposal_redundancy batches embedding API calls and uses caching."""
+async def test_redundancy_check_embeddings_with_sqlite_cache(test_db):
+    """Verify that _check_proposal_redundancy uses SQLite embedding cache.
+
+    With the new persistent cache, the flow is:
+    1. First call: embeds proposal (1 API call) + embeds each existing checkpoint
+       individually with cache miss (N API calls), stores them in SQLite.
+    2. Second call: embeds proposal again (1 API call), but existing checkpoints
+       are resolved from SQLite cache (0 additional API calls).
+    """
     agent = EvolutionAgent()
     
-    # Reset caching state
-    clear_embeddings_cache()
+    # Reset caching state (now async)
+    await clear_embeddings_cache()
     
     proposal = {
         "dimension_id": "strategy",
@@ -87,44 +96,44 @@ async def test_redundancy_check_embeddings_batch_and_caching():
     }
     
     # Mock safe_read_json to return our mock dimensions
-    with patch("knowledge_base.checklist_generator.safe_read_json", return_value=mock_dimensions_data):
+    with patch("knowledge_base.checklist_generator.safe_read_json", new_callable=AsyncMock, return_value=mock_dimensions_data):
         # Mock genai.embed_content
         mock_embed = MagicMock()
         proposal_vector = [1.0] + [0.0] * 767
         first_vector = [0.0, 1.0] + [0.0] * 766
         second_vector = [0.0, 0.0, 1.0] + [0.0] * 765
         
-        mock_embed.return_value = {
-            "embedding": proposal_vector,
-            "embeddings": [
-                {"embedding": first_vector},
-                {"embedding": second_vector}
-            ]
-        }
+        # embed_content is called once per text (proposal, cp1, cp2)
+        mock_embed.side_effect = [
+            {"embedding": proposal_vector},    # proposal
+            {"embedding": first_vector},       # CP_ST_01 (cache miss)
+            {"embedding": second_vector},      # CP_ST_02 (cache miss)
+        ]
         
         with patch("google.generativeai.embed_content", mock_embed):
-            # First check - embeds proposal AND existing checkpoints (2 in total in a batch)
-            # Thus, we expect embed_content to be called twice:
-            # 1. To embed the proposal text (1 text)
-            # 2. To embed the existing checkpoints (batch list of 2 texts)
-            result = await agent._check_proposal_redundancy(proposal)
+            # First check — embeds proposal + 2 existing checkpoints (3 API calls)
+            result = await check_proposal_redundancy(proposal)
             
-            # Since the similarity won't exceed threshold (0.1 * 0.1 dot product etc is low), result should be False
+            # Similarity is low (orthogonal vectors), so result should be False
             assert result is False
             
-            # Check call count of embedding api (1 for proposal, 1 for batch)
-            assert mock_embed.call_count == 2
+            # 3 calls: 1 for proposal + 2 for existing checkpoints (cache miss)
+            assert mock_embed.call_count == 3
             
-            # Verify caching worked: cache should have 2 existing texts cached
-            assert "First existing checkpoint text." in _existing_embeddings_cache
-            assert "Second existing checkpoint text." in _existing_embeddings_cache
+            # Verify SQLite cache has the existing checkpoint embeddings
+            cached_1 = await _get_cached_embedding("CP_ST_01", "First existing checkpoint text.")
+            cached_2 = await _get_cached_embedding("CP_ST_02", "Second existing checkpoint text.")
+            assert cached_1 is not None, "CP_ST_01 should be cached"
+            assert cached_2 is not None, "CP_ST_02 should be cached"
             
-            # Reset call count
+            # Reset call count and side_effect for second run
             mock_embed.reset_mock()
+            mock_embed.side_effect = [
+                {"embedding": proposal_vector},  # Only proposal needs embedding
+            ]
             
-            # Second check - proposal embedding will be requested again (uncached proposal),
-            # but existing checkpoints should be resolved fully from cache!
-            # So, only 1 call to embed proposal text, and 0 batch calls for existing checkpoints.
-            result2 = await agent._check_proposal_redundancy(proposal)
+            # Second check — proposal embedding requested again (uncached proposal),
+            # but existing checkpoints resolved from SQLite cache (0 API calls for them).
+            result2 = await check_proposal_redundancy(proposal)
             assert result2 is False
-            assert mock_embed.call_count == 1
+            assert mock_embed.call_count == 1  # Only the proposal was re-embedded

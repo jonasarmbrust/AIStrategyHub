@@ -18,9 +18,13 @@ from pathlib import Path
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Depends
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from config import DIMENSIONS_PATH, require_gemini_key
+import config
+from utils.url_validator import validate_url
+from utils.errors import safe_error
 
 router = APIRouter()
 
@@ -85,6 +89,7 @@ class IntegrateRequest(BaseModel):
 @router.post("/analyze-url")
 async def analyze_url(url: str = Form(...), title: str = Form("")):
     """Fetch a URL and extract key arguments using Gemini."""
+    validate_url(url)
     import httpx
 
     # Fetch content
@@ -113,6 +118,12 @@ async def analyze_url(url: str = Form(...), title: str = Form("")):
 @router.post("/analyze-file")
 async def analyze_file(file: UploadFile = File(...)):
     """Upload a file (PDF, TXT, MD) and extract key arguments."""
+    # Check file size
+    file.file.seek(0, 2)  # Seek to end
+    size = file.file.tell()
+    file.file.seek(0)     # Reset
+    if size > config.MAX_UPLOAD_SIZE_BYTES:
+        raise HTTPException(413, f"File too large. Maximum size: {config.MAX_UPLOAD_SIZE_MB}MB")
     content_bytes = await file.read()
     filename = file.filename or "uploaded_file"
 
@@ -208,12 +219,12 @@ async def integrate_arguments(request: IntegrateRequest):
         from knowledge_base.checklist_generator import safe_write_json
         await safe_write_json(model)
 
-    return {
+    return JSONResponse(status_code=201, content={
         "integrated": integrated,
         "total_requested": len(request.arguments),
         "source": request.source_name,
         "affected_checkpoints": affected_checkpoints,
-    }
+    })
 
 
 class RemoveEvidenceRequest(BaseModel):
@@ -353,9 +364,9 @@ async def personalize_recommendations(request: PersonalizeRequest, gemini_key: s
         return json.loads(response.text)
 
     except json.JSONDecodeError as e:
-        raise HTTPException(status_code=500, detail=f"Gemini returned invalid JSON: {e}")
+        raise safe_error(500, "AI returned invalid JSON", e)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Gemini analysis failed: {e}")
+        raise safe_error(500, "Gemini analysis failed", e)
 
 
 async def _extract_arguments(content: str, title: str, url: str) -> dict:
@@ -387,9 +398,9 @@ async def _extract_arguments(content: str, title: str, url: str) -> dict:
         return result
 
     except json.JSONDecodeError as e:
-        raise HTTPException(status_code=500, detail=f"Gemini returned invalid JSON: {e}")
+        raise safe_error(500, "AI returned invalid JSON", e)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Gemini analysis failed: {e}")
+        raise safe_error(500, "Gemini analysis failed", e)
 
 
 def _extract_pdf_text(content_bytes: bytes) -> str:

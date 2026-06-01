@@ -147,8 +147,7 @@ async def roadmap_from_latest_assessment(
     target_level: int = Query(default=3, ge=1, le=5),
 ):
     """Generate roadmap from the latest saved assessment."""
-    db = await get_db()
-    try:
+    async with get_db() as db:
         cursor = await db.execute(
             "SELECT assessments FROM manual_assessments ORDER BY created_at DESC LIMIT 1"
         )
@@ -157,7 +156,5 @@ async def roadmap_from_latest_assessment(
             assessments = json.loads(row["assessments"])
         else:
             assessments = {}
-    finally:
-        pass  # singleton connection, no close needed
 
     return generate_roadmap(assessments=assessments, target_level=target_level)

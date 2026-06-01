@@ -12,6 +12,7 @@ import uuid
 from typing import Optional
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
+from fastapi.responses import JSONResponse
 
 from database import get_db
 from models.schemas import ResearchFeedResponse, ResearchSource, ResearchTriggerRequest
@@ -47,14 +48,14 @@ async def trigger_research(request: ResearchTriggerRequest):
                 }),
             )
 
-        return {
+        return JSONResponse(status_code=201, content={
             "status": "completed",
             "stored": result.get("stored", 0),
             "found": result.get("found", 0),
             "new": result.get("new", 0),
             "skipped_low_relevance": result.get("skipped_low_relevance", 0),
             "errors": result.get("errors", []),
-        }
+        })
     except Exception as e:
         error_type = type(e).__name__
         error_msg = str(e)
@@ -91,50 +92,54 @@ async def list_sources(
     offset: int = Query(0, ge=0),
 ):
     """List all research sources with optional filtering."""
-    db = await get_db()
-    query = "SELECT * FROM research_sources WHERE 1=1"
-    params = []
+    async with get_db() as db:
+        query = "SELECT * FROM research_sources WHERE 1=1"
+        params = []
 
-    if category:
-        query += " AND category = ?"
-        params.append(category)
+        if category:
+            query += " AND category = ?"
+            params.append(category)
 
-    if unread_only:
-        query += " AND is_read = 0"
+        if unread_only:
+            query += " AND is_read = 0"
 
-    if dimension:
-        query += " AND relevant_dimensions LIKE ?"
-        params.append(f"%{dimension}%")
+        if dimension:
+            query += " AND relevant_dimensions LIKE ?"
+            params.append(f"%{dimension}%")
 
-    query += " ORDER BY discovered_at DESC LIMIT ? OFFSET ?"
-    params.extend([limit, offset])
+        query += " ORDER BY discovered_at DESC LIMIT ? OFFSET ?"
+        params.extend([limit, offset])
 
-    cursor = await db.execute(query, params)
-    rows = await cursor.fetchall()
+        cursor = await db.execute(query, params)
+        rows = await cursor.fetchall()
 
-    sources = []
-    for row in rows:
-        source = dict(row)
-        source["relevant_dimensions"] = json.loads(
-            source.get("relevant_dimensions", "[]")
+        sources = []
+        for row in rows:
+            source = dict(row)
+            source["relevant_dimensions"] = json.loads(
+                source.get("relevant_dimensions", "[]")
+            )
+            source["is_read"] = bool(source.get("is_read", 0))
+            sources.append(source)
+
+        # Counts
+        count_cursor = await db.execute(
+            "SELECT COUNT(*) as total FROM research_sources"
         )
-        source["is_read"] = bool(source.get("is_read", 0))
-        sources.append(source)
+        total = (await count_cursor.fetchone())["total"]
 
-    # Counts
-    count_cursor = await db.execute(
-        "SELECT COUNT(*) as total FROM research_sources"
-    )
-    total = (await count_cursor.fetchone())["total"]
-
-    new_cursor = await db.execute(
-        "SELECT COUNT(*) as new_count FROM research_sources WHERE is_read = 0"
-    )
-    new_count = (await new_cursor.fetchone())["new_count"]
+        new_cursor = await db.execute(
+            "SELECT COUNT(*) as new_count FROM research_sources WHERE is_read = 0"
+        )
+        new_count = (await new_cursor.fetchone())["new_count"]
 
     return {
-        "sources": sources,
-        "total_count": total,
+        "data": sources,
+        "meta": {
+            "total": total,
+            "skip": offset,
+            "limit": limit,
+        },
         "new_count": new_count,
     }
 
@@ -142,26 +147,24 @@ async def list_sources(
 @router.patch("/sources/{source_id}/read")
 async def mark_source_read(source_id: str):
     """Mark a research source as read."""
-    db = await get_db()
-    cursor = await db.execute(
-        "UPDATE research_sources SET is_read = 1 WHERE id = ?", (source_id,)
-    )
-    if cursor.rowcount == 0:
-        raise HTTPException(status_code=404, detail="Source not found")
-    await db.commit()
+    async with get_db() as db:
+        cursor = await db.execute(
+            "UPDATE research_sources SET is_read = 1 WHERE id = ?", (source_id,)
+        )
+        if cursor.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Source not found")
     return {"id": source_id, "is_read": True}
 
 
 @router.delete("/sources/{source_id}")
 async def delete_source(source_id: str):
     """Delete a research source."""
-    db = await get_db()
-    cursor = await db.execute(
-        "DELETE FROM research_sources WHERE id = ?", (source_id,)
-    )
-    if cursor.rowcount == 0:
-        raise HTTPException(status_code=404, detail="Source not found")
-    await db.commit()
+    async with get_db() as db:
+        cursor = await db.execute(
+            "DELETE FROM research_sources WHERE id = ?", (source_id,)
+        )
+        if cursor.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Source not found")
     return {"deleted": True, "id": source_id}
 
 
@@ -175,14 +178,14 @@ async def extract_source_for_framework(source_id: str):
     Bridges the gap between Research Agent and Framework Builder.
     """
     # 1. Load the research source from DB
-    db = await get_db()
-    cursor = await db.execute(
-        "SELECT * FROM research_sources WHERE id = ?", (source_id,)
-    )
-    row = await cursor.fetchone()
-    if not row:
-        raise HTTPException(status_code=404, detail="Research source not found")
-    source = dict(row)
+    async with get_db() as db:
+        cursor = await db.execute(
+            "SELECT * FROM research_sources WHERE id = ?", (source_id,)
+        )
+        row = await cursor.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="Research source not found")
+        source = dict(row)
 
     title = source.get("title", "Unknown")
     url = source.get("url", "")
@@ -289,24 +292,24 @@ Respond EXACTLY in this JSON format:
             p["research_source_title"] = title
 
         # Auto-enrich proposals with related research sources as evidence_tags
-        db = await get_db()
-        for p in proposals:
-            dim_id = p.get("dimension_id", "")
-            cursor = await db.execute(
-                "SELECT title, url FROM research_sources "
-                "WHERE relevant_dimensions LIKE ? AND relevance_score >= 0.5 AND id != ?",
-                (f"%{dim_id}%", source_id),
-            )
-            matches = await cursor.fetchall()
-            p["evidence_tags"] = [
-                {"source": title, "reference": "Research Agent — One-Click Extraction", "url": url}
-            ]
-            for m in list(matches)[:2]:
-                p["evidence_tags"].append({
-                    "source": m["title"],
-                    "reference": "Related Research Source",
-                    "url": m["url"],
-                })
+        async with get_db() as db:
+            for p in proposals:
+                dim_id = p.get("dimension_id", "")
+                cursor = await db.execute(
+                    "SELECT title, url FROM research_sources "
+                    "WHERE relevant_dimensions LIKE ? AND relevance_score >= 0.5 AND id != ?",
+                    (f"%{dim_id}%", source_id),
+                )
+                matches = await cursor.fetchall()
+                p["evidence_tags"] = [
+                    {"source": title, "reference": "Research Agent — One-Click Extraction", "url": url}
+                ]
+                for m in list(matches)[:2]:
+                    p["evidence_tags"].append({
+                        "source": m["title"],
+                        "reference": "Related Research Source",
+                        "url": m["url"],
+                    })
 
         # Log the extraction activity
         await _log_activity(
@@ -334,21 +337,21 @@ Respond EXACTLY in this JSON format:
 @router.get("/activity")
 async def get_activity_feed(limit: int = Query(30, ge=1, le=100)):
     """Get the unified activity feed for Research ↔ Framework lifecycle."""
-    db = await get_db()
-    cursor = await db.execute(
-        "SELECT * FROM framework_activity ORDER BY created_at DESC LIMIT ?",
-        (limit,),
-    )
-    rows = await cursor.fetchall()
-    activities = []
-    for row in rows:
-        activity = dict(row)
-        try:
-            activity["details"] = json.loads(activity.get("details", "{}"))
-        except (json.JSONDecodeError, TypeError):
-            activity["details"] = {}
-        activities.append(activity)
-    return {"activities": activities}
+    async with get_db() as db:
+        cursor = await db.execute(
+            "SELECT * FROM framework_activity ORDER BY created_at DESC LIMIT ?",
+            (limit,),
+        )
+        rows = await cursor.fetchall()
+        activities = []
+        for row in rows:
+            activity = dict(row)
+            try:
+                activity["details"] = json.loads(activity.get("details", "{}"))
+            except (json.JSONDecodeError, TypeError):
+                activity["details"] = {}
+            activities.append(activity)
+        return {"activities": activities}
 
 
 # ── Helper ─────────────────────────────────────────────────────────────────
@@ -362,13 +365,12 @@ async def _log_activity(
 ):
     """Log an activity to the framework_activity table."""
     activity_id = str(uuid.uuid4())[:8]
-    db = await get_db()
     try:
-        await db.execute(
-            """INSERT INTO framework_activity (id, action, source_id, checkpoint_id, dimension_id, details)
-               VALUES (?, ?, ?, ?, ?, ?)""",
-            (activity_id, action, source_id, checkpoint_id, dimension_id, details),
-        )
-        await db.commit()
+        async with get_db() as db:
+            await db.execute(
+                """INSERT INTO framework_activity (id, action, source_id, checkpoint_id, dimension_id, details)
+                   VALUES (?, ?, ?, ?, ?, ?)""",
+                (activity_id, action, source_id, checkpoint_id, dimension_id, details),
+            )
     except Exception as e:
         print(f"[Activity] Failed to log: {e}")

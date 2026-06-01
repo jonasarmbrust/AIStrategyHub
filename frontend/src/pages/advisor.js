@@ -5,6 +5,7 @@ import { api, showToast } from '../main.js';
 
 import { t } from '../i18n.js';
 import { sanitizeHTML, escapeHTML } from '../sanitize.js';
+import { parseMarkdown } from '../utils/markdown.js';
 
 let chatHistory = [];
 let isStreaming = false;
@@ -130,21 +131,10 @@ async function sendMessage() {
   if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = t('advisor.sending'); }
 
   try {
-    const res = await fetch('/api/advisor/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: msgText,
-        history: chatHistory.slice(0, -1), // exclude current message
-      }),
+    const data = await api.post('/api/advisor/chat', {
+      message: msgText,
+      history: chatHistory.slice(0, -1), // exclude current message
     });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: t('advisor.unknownError') }));
-      throw new Error(err.detail || `HTTP ${res.status}`);
-    }
-
-    const data = await res.json();
     const reply = data.response;
 
     // Remove typing indicator
@@ -174,7 +164,7 @@ function appendMessage(role, content) {
   if (role === 'user') {
     div.innerHTML = `
       <div class="advisor-bubble user-bubble">
-        <div class="advisor-bubble-content">${escapeHtml(content)}</div>
+        <div class="advisor-bubble-content">${escapeHTML(content)}</div>
       </div>
       <div class="advisor-avatar user-avatar">${t('advisor.youAvatar')}</div>
     `;
@@ -182,7 +172,7 @@ function appendMessage(role, content) {
     div.innerHTML = `
       <div class="advisor-avatar" style="background: var(--accent-red);">!</div>
       <div class="advisor-bubble" style="border-color: rgba(239, 68, 68, 0.2);">
-        <div class="advisor-bubble-content" style="color: var(--accent-red);">${escapeHtml(content)}</div>
+        <div class="advisor-bubble-content" style="color: var(--accent-red);">${escapeHTML(content)}</div>
       </div>
     `;
   } else {
@@ -219,23 +209,3 @@ function appendTypingIndicator() {
   return div;
 }
 
-function parseMarkdown(text) {
-  return text
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-    .replace(/`([^`]+)`/g, '<code style="background: rgba(59,130,246,0.1); padding: 1px 5px; border-radius: 4px; font-size: 0.85em; color: var(--accent-blue);">$1</code>')
-    .replace(/^### (.*$)/gim, '<h4 style="margin: 12px 0 4px; font-weight: 700; color: var(--text-primary); font-size: 0.95rem;">$1</h4>')
-    .replace(/^## (.*$)/gim, '<h3 style="margin: 16px 0 6px; font-weight: 800; color: var(--accent-blue); font-size: 1.05rem;">$1</h3>')
-    .replace(/^# (.*$)/gim, '<h2 style="margin: 20px 0 8px; font-weight: 800; font-size: 1.2rem;">$1</h2>')
-    .replace(/^- (.*$)/gim, '<div style="padding-left: 16px; position: relative; margin: 3px 0;"><span style="position: absolute; left: 0; color: var(--accent-blue);">•</span>$1</div>')
-    .replace(/^\d+\. (.*$)/gim, '<div style="padding-left: 20px; margin: 3px 0;">$1</div>')
-    .replace(/\n\n/g, '<br><br>')
-    .replace(/\n/g, '<br>');
-}
-
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}

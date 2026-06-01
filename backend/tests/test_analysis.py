@@ -23,7 +23,7 @@ async def test_upload_valid_txt(client):
         "/api/analysis/upload",
         files={"file": ("test_doc.txt", io.BytesIO(content), "text/plain")},
     )
-    assert response.status_code == 200
+    assert response.status_code == 201
     data = response.json()
     assert "id" in data
     assert data["filename"] == "test_doc.txt"
@@ -73,7 +73,7 @@ async def test_upload_and_list(client):
         "/api/analysis/upload",
         files={"file": ("strategy.txt", io.BytesIO(content), "text/plain")},
     )
-    assert upload_resp.status_code == 200
+    assert upload_resp.status_code == 201
     analysis_id = upload_resp.json()["id"]
     
     # List should contain the upload

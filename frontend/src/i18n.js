@@ -140,6 +140,16 @@ const dict = {
       btnImport: "Import & Analyze",
       btnAnalyze: "🔍 Analyze",
       statusAnalyzing: "Analyzing document…",
+      progressSteps: {
+        extracting_text: '📄 Extracting text from document…',
+        chunking: '✂️ Splitting into semantic chunks…',
+        embedding: '🧠 Generating embeddings…',
+        evaluating: '🔍 Evaluating checkpoints…',
+        scoring: '📊 Calculating maturity scores…',
+        generating_summary: '✨ Generating executive summary…',
+        storing_results: '💾 Saving results…',
+        completed: '✅ Analysis complete!'
+      },
       resultTitle: "📊 Analysis Result",
       maturityScore: "Maturity Score",
       reportTitle: "📋 Detailed Report",
@@ -515,8 +525,10 @@ const dict = {
       rollback: "Rollback",
       rollback_confirm: "Are you sure you want to rollback to {version}? This will revert the framework to that state.",
       rollback_success: "Successfully rolled back to {version}!",
-      trigger_success: "Evolution run triggered successfully!",
+      trigger_success: "Evolution run triggered successfully! This takes 30-60 minutes.",
       trigger_error: "Failed to trigger evolution",
+      already_running: "Evolution cycle is already running — check back in a few minutes.",
+      run_complete: "Evolution cycle completed! Refreshing data...",
       backend_offline: "Start the backend to view evolution data.",
       no_logs: "No log entries available.",
       imminent: "Imminent",
@@ -551,7 +563,28 @@ const dict = {
     playbook_loading: "Generating your personalized playbook...",
     playbook_error: "Could not load playbook",
     playbook_empty: "No checkpoints found in framework",
-    playbook_overall_progress: "Overall Progress"
+    playbook_overall_progress: "Overall Progress",
+    deps: {
+      pageTitle: "Checkpoint Dependency Map",
+      pageDesc: "Interactive visualization of checkpoint relationships across dimensions. Nodes are sized by maturity level, colored by dimension. Connected checkpoints share source frameworks.",
+      graphTitle: "Force-Directed Graph",
+      labels: "Labels",
+      resetView: "Reset View",
+      legendTitle: "Legend",
+      selectedTitle: "Selected Checkpoint",
+      clickHint: "Click a node to see checkpoint details.",
+      dimension: "Dimension",
+      level: "Level",
+      category: "Category",
+      sources: "Sources",
+      dimStrategy: "Strategy",
+      dimData: "Data & Infra",
+      dimGovernance: "Governance",
+      dimTechnology: "Tech & MLOps",
+      dimTalent: "Talent",
+      dimEthics: "Ethics & RAI",
+      dimProcesses: "Processes"
+    }
   },
   de: {
     nav: {
@@ -687,6 +720,16 @@ const dict = {
       btnImport: "Importieren & Analysieren",
       btnAnalyze: "🔍 Analysieren",
       statusAnalyzing: "Dokument wird analysiert…",
+      progressSteps: {
+        extracting_text: '📄 Text wird extrahiert…',
+        chunking: '✂️ Semantische Aufteilung…',
+        embedding: '🧠 Embeddings werden generiert…',
+        evaluating: '🔍 Checkpoints werden bewertet…',
+        scoring: '📊 Reifegrad wird berechnet…',
+        generating_summary: '✨ Zusammenfassung wird erstellt…',
+        storing_results: '💾 Ergebnisse werden gespeichert…',
+        completed: '✅ Analyse abgeschlossen!'
+      },
       resultTitle: "📊 Analyseergebnis",
       maturityScore: "Maturity Score",
       reportTitle: "📋 Detaillierter Bericht",
@@ -1062,8 +1105,10 @@ const dict = {
       rollback: "Zurücksetzen",
       rollback_confirm: "Sind Sie sicher, dass Sie auf {version} zurücksetzen möchten? Dies setzt das Framework auf diesen Zustand zurück.",
       rollback_success: "Erfolgreich auf {version} zurückgesetzt!",
-      trigger_success: "Evolutionslauf erfolgreich gestartet!",
+      trigger_success: "Evolutionslauf erfolgreich gestartet! Dauert 30-60 Minuten.",
       trigger_error: "Evolution konnte nicht gestartet werden",
+      already_running: "Evolutionszyklus laeuft bereits — schauen Sie in einigen Minuten nochmal.",
+      run_complete: "Evolutionszyklus abgeschlossen! Daten werden aktualisiert...",
       backend_offline: "Starten Sie das Backend, um Evolutionsdaten zu sehen.",
       no_logs: "Keine Log-Einträge verfügbar.",
       imminent: "Unmittelbar bevorstehend",
@@ -1098,7 +1143,28 @@ const dict = {
     playbook_loading: "Ihr personalisiertes Playbook wird erstellt...",
     playbook_error: "Playbook konnte nicht geladen werden",
     playbook_empty: "Keine Checkpoints im Framework gefunden",
-    playbook_overall_progress: "Gesamtfortschritt"
+    playbook_overall_progress: "Gesamtfortschritt",
+    deps: {
+      pageTitle: "Checkpoint Abhängigkeitskarte",
+      pageDesc: "Interaktive Visualisierung der Checkpoint-Beziehungen über Dimensionen hinweg. Knoten werden nach Reifegrad skaliert und nach Dimension eingefärbt. Verbundene Checkpoints teilen Quell-Frameworks.",
+      graphTitle: "Kräftebasierter Graph",
+      labels: "Beschriftungen",
+      resetView: "Ansicht zurücksetzen",
+      legendTitle: "Legende",
+      selectedTitle: "Ausgewählter Checkpoint",
+      clickHint: "Klicken Sie auf einen Knoten, um Checkpoint-Details zu sehen.",
+      dimension: "Dimension",
+      level: "Stufe",
+      category: "Kategorie",
+      sources: "Quellen",
+      dimStrategy: "Strategie",
+      dimData: "Daten & Infra",
+      dimGovernance: "Governance",
+      dimTechnology: "Tech & MLOps",
+      dimTalent: "Talent",
+      dimEthics: "Ethik & RAI",
+      dimProcesses: "Prozesse"
+    }
   }
 };
 

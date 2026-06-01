@@ -6,6 +6,7 @@ scanning redundancies, viewing snapshots, and monitoring scheduler status.
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import uuid
@@ -55,6 +56,23 @@ class EvolutionConfigUpdate(BaseModel):
     redundancy_threshold: Optional[float] = None
 
 
+# ── Background task management ────────────────────────────────────────────
+
+_active_evolution_task: asyncio.Task | None = None
+
+
+def _on_evolution_done(task: asyncio.Task):
+    """Callback when the background evolution task finishes."""
+    global _active_evolution_task
+    _active_evolution_task = None
+    if task.cancelled():
+        log.warning("Evolution task was cancelled")
+    elif task.exception():
+        log.error(f"Evolution task crashed: {task.exception()}")
+    else:
+        log.info("Evolution task completed successfully")
+
+
 # ── Trigger ───────────────────────────────────────────────────────────────
 
 @router.post("/trigger")
@@ -62,36 +80,80 @@ async def trigger_evolution():
     """Manually trigger an evolution cycle.
 
     Returns the run_id immediately; the cycle runs in the background.
+    The task reference is held globally to prevent garbage collection.
     """
+    global _active_evolution_task
+
+    # Prevent duplicate concurrent runs
+    if _active_evolution_task is not None and not _active_evolution_task.done():
+        # Find the current run_id to return
+        async with get_db() as db:
+            cursor = await db.execute(
+                "SELECT id, status FROM evolution_runs WHERE status = 'running' ORDER BY started_at DESC LIMIT 1"
+            )
+            row = await cursor.fetchone()
+            run_id = row["id"] if row else "unknown"
+        return {
+            "status": "already_running",
+            "run_id": run_id,
+            "message": "Evolution cycle is already running in the background",
+        }
+
     from evolution.agent import EvolutionAgent
-    import asyncio
 
     agent = EvolutionAgent()
 
-    # Run in background so the HTTP request returns immediately
-    loop = asyncio.get_event_loop()
-    task = loop.create_task(agent.run_evolution_cycle())
+    # Create task and hold global reference
+    _active_evolution_task = asyncio.create_task(agent.run_evolution_cycle())
+    _active_evolution_task.add_done_callback(_on_evolution_done)
 
-    # Wait briefly to capture the run_id from the DB
-    await asyncio.sleep(0.5)
+    # Wait for the DB INSERT to commit before reading back the run_id
+    await asyncio.sleep(1.5)
 
     # Find the most recent running evolution run
-    db = await get_db()
-    try:
+    async with get_db() as db:
         cursor = await db.execute(
             "SELECT id, status FROM evolution_runs ORDER BY started_at DESC LIMIT 1"
         )
         row = await cursor.fetchone()
-        if row:
-            return {
-                "status": "triggered",
-                "run_id": row["id"],
-                "message": "Evolution cycle started in background",
-            }
-    finally:
-        pass  # singleton connection, no close needed
+    if row:
+        return {
+            "status": "triggered",
+            "run_id": row["id"],
+            "message": "Evolution cycle started in background (takes 30-60 minutes)",
+        }
 
     return {"status": "triggered", "message": "Evolution cycle started"}
+
+
+@router.get("/active-run")
+async def get_active_run():
+    """Check if an evolution cycle is currently running and return live stats.
+
+    This is a lightweight endpoint designed for frontend polling.
+    """
+    is_task_alive = _active_evolution_task is not None and not _active_evolution_task.done()
+
+    async with get_db() as db:
+        cursor = await db.execute(
+            """SELECT id, started_at, status,
+                      sources_scanned, sources_qualified,
+                      checkpoints_proposed, checkpoints_integrated,
+                      redundancies_found, redundancies_resolved
+               FROM evolution_runs
+               WHERE status = 'running'
+               ORDER BY started_at DESC LIMIT 1"""
+        )
+        row = await cursor.fetchone()
+
+    if row:
+        return {
+            "active": True,
+            "task_alive": is_task_alive,
+            "run": dict(row),
+        }
+
+    return {"active": False, "task_alive": is_task_alive}
 
 
 # ── Runs ──────────────────────────────────────────────────────────────────
@@ -102,8 +164,7 @@ async def list_runs(
     offset: int = Query(0, ge=0),
 ):
     """List all evolution runs with stats."""
-    db = await get_db()
-    try:
+    async with get_db() as db:
         cursor = await db.execute(
             """SELECT id, started_at, completed_at, status,
                       sources_scanned, sources_qualified,
@@ -129,16 +190,13 @@ async def list_runs(
         count_cursor = await db.execute("SELECT COUNT(*) as total FROM evolution_runs")
         total = (await count_cursor.fetchone())["total"]
 
-        return {"runs": runs, "total": total}
-    finally:
-        pass  # singleton connection, no close needed
+    return {"data": runs, "meta": {"total": total, "skip": offset, "limit": limit}}
 
 
 @router.get("/runs/{run_id}")
 async def get_run_detail(run_id: str):
     """Get detailed log of a specific run."""
-    db = await get_db()
-    try:
+    async with get_db() as db:
         cursor = await db.execute(
             "SELECT * FROM evolution_runs WHERE id = ?", (run_id,)
         )
@@ -168,9 +226,7 @@ async def get_run_detail(run_id: str):
         proposals = [dict(r) for r in await proposal_cursor.fetchall()]
         run["proposals"] = proposals
 
-        return run
-    finally:
-        pass  # singleton connection, no close needed
+    return run
 
 
 # ── Proposals ─────────────────────────────────────────────────────────────
@@ -179,23 +235,28 @@ async def get_run_detail(run_id: str):
 async def list_proposals(
     status: str = Query("all"),
     run_id: Optional[str] = Query(None),
+    skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=200),
 ):
     """List evolution proposals with optional filtering."""
-    db = await get_db()
-    try:
-        query = "SELECT * FROM evolution_proposals WHERE 1=1"
+    async with get_db() as db:
+        where = "WHERE 1=1"
         params: list = []
 
         if status != "all":
-            query += " AND status = ?"
+            where += " AND status = ?"
             params.append(status)
         if run_id:
-            query += " AND run_id = ?"
+            where += " AND run_id = ?"
             params.append(run_id)
 
-        query += " ORDER BY created_at DESC LIMIT ?"
-        params.append(limit)
+        count_cursor = await db.execute(
+            f"SELECT COUNT(*) as total FROM evolution_proposals {where}", params
+        )
+        total = (await count_cursor.fetchone())["total"]
+
+        query = f"SELECT * FROM evolution_proposals {where} ORDER BY created_at DESC LIMIT ? OFFSET ?"
+        params.extend([limit, skip])
 
         cursor = await db.execute(query, params)
         rows = await cursor.fetchall()
@@ -209,16 +270,13 @@ async def list_proposals(
                 p["checkpoint_data"] = {}
             proposals.append(p)
 
-        return {"proposals": proposals, "count": len(proposals)}
-    finally:
-        pass  # singleton connection, no close needed
+    return {"data": proposals, "meta": {"total": total, "skip": skip, "limit": limit}}
 
 
 @router.post("/proposals/{proposal_id}/approve")
 async def approve_proposal(proposal_id: str):
     """Manually approve and integrate a pending proposal."""
-    db = await get_db()
-    try:
+    async with get_db() as db:
         cursor = await db.execute(
             "SELECT * FROM evolution_proposals WHERE id = ?", (proposal_id,)
         )
@@ -235,9 +293,8 @@ async def approve_proposal(proposal_id: str):
 
         # Integrate the checkpoint
         checkpoint_data = json.loads(proposal.get("checkpoint_data", "{}"))
-        from evolution.agent import EvolutionAgent
-        agent = EvolutionAgent()
-        cp_id = await agent._integrate_proposal(
+        from evolution.checkpoint_extractor import integrate_proposal
+        cp_id = await integrate_proposal(
             proposal=checkpoint_data,
             source_id=proposal.get("source_id", ""),
             source_title=proposal.get("source_title", ""),
@@ -253,19 +310,15 @@ async def approve_proposal(proposal_id: str):
                    WHERE id = ?""",
                 (datetime.now(timezone.utc).isoformat(), cp_id, proposal_id),
             )
-            await db.commit()
             return {"status": "approved", "checkpoint_id": cp_id, "proposal_id": proposal_id}
         else:
             raise HTTPException(status_code=500, detail="Integration failed")
-    finally:
-        pass  # singleton connection, no close needed
 
 
 @router.post("/proposals/{proposal_id}/reject")
 async def reject_proposal(proposal_id: str):
     """Reject a proposal."""
-    db = await get_db()
-    try:
+    async with get_db() as db:
         cursor = await db.execute(
             "SELECT status FROM evolution_proposals WHERE id = ?", (proposal_id,)
         )
@@ -284,10 +337,7 @@ async def reject_proposal(proposal_id: str):
                WHERE id = ?""",
             (datetime.now(timezone.utc).isoformat(), proposal_id),
         )
-        await db.commit()
-        return {"status": "rejected", "proposal_id": proposal_id}
-    finally:
-        pass  # singleton connection, no close needed
+    return {"status": "rejected", "proposal_id": proposal_id}
 
 
 @router.post("/proposals/bulk-approve")
@@ -427,8 +477,7 @@ async def update_config(config: EvolutionConfigUpdate):
 @router.get("/snapshots")
 async def list_snapshots(limit: int = Query(10, ge=1, le=50)):
     """List framework snapshots."""
-    db = await get_db()
-    try:
+    async with get_db() as db:
         cursor = await db.execute(
             """SELECT id, run_id, checkpoint_count, version_tag, created_at
                FROM framework_snapshots
@@ -438,16 +487,22 @@ async def list_snapshots(limit: int = Query(10, ge=1, le=50)):
         )
         rows = await cursor.fetchall()
         snapshots = [dict(r) for r in rows]
-        return {"snapshots": snapshots, "count": len(snapshots)}
-    finally:
-        pass  # singleton connection, no close needed
+    return {"snapshots": snapshots, "count": len(snapshots)}
 
 
 @router.post("/snapshots/{snapshot_id}/rollback")
-async def rollback_to_snapshot(snapshot_id: str):
+async def rollback_to_snapshot(
+    snapshot_id: str,
+    confirm: bool = Query(False),
+):
     """Rollback framework to a specific snapshot."""
-    db = await get_db()
-    try:
+    if not confirm:
+        raise HTTPException(
+            status_code=400,
+            detail="Destructive operation: add ?confirm=true to confirm rollback",
+        )
+
+    async with get_db() as db:
         cursor = await db.execute(
             "SELECT * FROM framework_snapshots WHERE id = ?", (snapshot_id,)
         )
@@ -477,16 +532,13 @@ async def rollback_to_snapshot(snapshot_id: str):
                 }),
             ),
         )
-        await db.commit()
 
-        return {
-            "status": "rolled_back",
-            "snapshot_id": snapshot_id,
-            "version_tag": snapshot.get("version_tag", ""),
-            "checkpoint_count": snapshot.get("checkpoint_count", 0),
-        }
-    finally:
-        pass  # singleton connection, no close needed
+    return {
+        "status": "rolled_back",
+        "snapshot_id": snapshot_id,
+        "version_tag": snapshot.get("version_tag", ""),
+        "checkpoint_count": snapshot.get("checkpoint_count", 0),
+    }
 
 
 # ── Statistics ────────────────────────────────────────────────────────────
@@ -494,8 +546,7 @@ async def rollback_to_snapshot(snapshot_id: str):
 @router.get("/stats")
 async def get_evolution_stats():
     """Aggregated evolution statistics."""
-    db = await get_db()
-    try:
+    async with get_db() as db:
         # Total runs
         cursor = await db.execute("SELECT COUNT(*) as total FROM evolution_runs")
         total_runs = (await cursor.fetchone())["total"]
@@ -561,20 +612,18 @@ async def get_evolution_stats():
         )
         recent_runs = [dict(r) for r in await cursor.fetchall()]
 
-        return {
-            "total_runs": total_runs,
-            "completed_runs": completed_runs,
-            "total_integrated": total_integrated,
-            "total_proposals": total_proposals,
-            "pending_proposals": pending_proposals,
-            "avg_quality_score": avg_quality,
-            "total_redundancies_resolved": total_redundancies_resolved,
-            "dimension_distribution": dimension_distribution,
-            "status_distribution": status_distribution,
-            "recent_runs": recent_runs,
-        }
-    finally:
-        pass  # singleton connection, no close needed
+    return {
+        "total_runs": total_runs,
+        "completed_runs": completed_runs,
+        "total_integrated": total_integrated,
+        "total_proposals": total_proposals,
+        "pending_proposals": pending_proposals,
+        "avg_quality_score": avg_quality,
+        "total_redundancies_resolved": total_redundancies_resolved,
+        "dimension_distribution": dimension_distribution,
+        "status_distribution": status_distribution,
+        "recent_runs": recent_runs,
+    }
 
 
 # ── Scheduler Status ──────────────────────────────────────────────────────
@@ -595,16 +644,13 @@ async def get_scheduler_status():
         })
 
     # Check if a cycle is currently running
-    db = await get_db()
-    try:
+    async with get_db() as db:
         cursor = await db.execute(
             "SELECT id FROM evolution_runs WHERE status = 'running' LIMIT 1"
         )
         running_row = await cursor.fetchone()
         is_cycle_running = running_row is not None
         running_run_id = running_row["id"] if running_row else None
-    finally:
-        pass  # singleton connection, no close needed
 
     return {
         "scheduler_running": scheduler.running if hasattr(scheduler, "running") else False,

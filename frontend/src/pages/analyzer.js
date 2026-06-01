@@ -51,12 +51,15 @@ export function renderAnalyzer(container) {
           </div>
         </div>
         <div id="analysis-progress" style="display: none;" class="mt-md">
-          <div class="flex items-center gap-md" style="margin-bottom: 8px;">
-            <div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div>
-            <span style="font-size: 0.85rem; color: var(--text-secondary);" id="analysis-status-text">${t('analyzer.statusAnalyzing')}</span>
-          </div>
-          <div class="progress-bar" style="height: 4px;">
-            <div class="progress-fill" id="analysis-progress-bar" style="width: 10%; transition: width 0.5s ease;"></div>
+          <div style="background: rgba(59, 130, 246, 0.06); border: 1px solid rgba(59, 130, 246, 0.15); border-radius: 12px; padding: 16px;">
+            <div class="flex items-center gap-md" style="margin-bottom: 12px;">
+              <div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div>
+              <span style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary);" id="analysis-status-text">${t('analyzer.statusAnalyzing')}</span>
+            </div>
+            <div class="progress-bar" style="height: 6px; margin-bottom: 12px; border-radius: 3px;">
+              <div class="progress-fill" id="analysis-progress-bar" style="width: 0%; transition: width 0.5s ease;"></div>
+            </div>
+            <div id="analysis-steps" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
           </div>
         </div>
       </div>
@@ -283,9 +286,16 @@ async function startAnalysis() {
 }
 
 function pollAnalysisStatus(analysisId, originalBtn = null) {
-  let progress = 10;
   const progressBar = document.getElementById('analysis-progress-bar');
   const statusText = document.getElementById('analysis-status-text');
+  const stepsEl = document.getElementById('analysis-steps');
+  const seenSteps = new Set();
+
+  // Define step order for visual tracking
+  const stepOrder = [
+    'extracting_text', 'chunking', 'embedding', 'evaluating',
+    'scoring', 'generating_summary', 'storing_results'
+  ];
 
   if (pollInterval) clearInterval(pollInterval);
 
@@ -296,7 +306,18 @@ function pollAnalysisStatus(analysisId, originalBtn = null) {
       if (status.status === 'completed') {
         clearInterval(pollInterval);
         progressBar.style.width = '100%';
-        statusText.textContent = t('analyzer.analysisComplete').replace('{score}', ''); // score will be set later
+        progressBar.style.background = 'var(--accent-emerald)';
+        statusText.textContent = t('analyzer.progressSteps.completed') || t('analyzer.analysisComplete').replace('{score}', '');
+
+        // Show all steps as complete
+        stepsEl.innerHTML = stepOrder.map(s => 
+          `<span style="font-size: 0.7rem; padding: 3px 8px; border-radius: 6px; background: rgba(16,185,129,0.12); color: var(--accent-emerald);">✓ ${(t('analyzer.progressSteps.' + s) || s).replace(/^[^\s]+\s/, '')}</span>`
+        ).join('');
+
+        // Hide spinner
+        const spinner = document.querySelector('#analysis-progress .spinner');
+        if (spinner) spinner.style.display = 'none';
+
         if (originalBtn) {
            originalBtn.textContent = t('analyzer.btnAnalyze');
            originalBtn.disabled = false;
@@ -307,26 +328,67 @@ function pollAnalysisStatus(analysisId, originalBtn = null) {
           const report = await api.get(`/analysis/${analysisId}/report`);
           showAnalysisResult(report);
           loadAnalysesList();
-        }, 500);
+        }, 1500);
+
       } else if (status.status === 'failed') {
         clearInterval(pollInterval);
-        statusText.textContent = t('analyzer.analysisError').replace('{msg}', '');
+        progressBar.style.background = 'var(--accent-red)';
+        statusText.textContent = '❌ ' + t('analyzer.analysisError').replace('{msg}', '');
         showToast(t('analyzer.analysisFailedLog'), 'error');
+        const spinner = document.querySelector('#analysis-progress .spinner');
+        if (spinner) spinner.style.display = 'none';
         if (originalBtn) {
            originalBtn.textContent = t('analyzer.btnAnalyze');
            originalBtn.disabled = false;
         }
+
       } else {
-        // Simulate progress
-        progress = Math.min(progress + 5, 90);
-        progressBar.style.width = `${progress}%`;
+        // Processing — use real progress
+        const pct = status.progress_pct || 0;
+        const step = status.progress_step || '';
+        progressBar.style.width = `${Math.max(pct, 5)}%`;
+
+        // Show current step text
+        const baseStep = step.startsWith('evaluating_batch') ? 'evaluating' : step;
+        const stepText = t('analyzer.progressSteps.' + baseStep) || t('analyzer.statusAnalyzing');
+        
+        // For batch evaluation, show batch progress
+        if (step.startsWith('evaluating_batch_')) {
+          const match = step.match(/evaluating_batch_(\d+)_of_(\d+)/);
+          if (match) {
+            statusText.textContent = `${stepText} (${match[1]}/${match[2]})`;
+          } else {
+            statusText.textContent = stepText;
+          }
+        } else {
+          statusText.textContent = stepText;
+        }
+
+        // Track seen steps for step indicator pills
+        if (step) {
+          const currentBase = step.startsWith('evaluating_batch') ? 'evaluating' : step;
+          seenSteps.add(currentBase);
+        }
+
+        // Render step pills
+        stepsEl.innerHTML = stepOrder.map(s => {
+          const isDone = Array.from(seenSteps).indexOf(s) < Array.from(seenSteps).length - 1 && seenSteps.has(s);
+          const isCurrent = (step.startsWith('evaluating_batch') ? 'evaluating' : step) === s;
+          const label = (t('analyzer.progressSteps.' + s) || s).replace(/^[^\s]+\s/, '');
+
+          if (isDone) {
+            return `<span style="font-size: 0.7rem; padding: 3px 8px; border-radius: 6px; background: rgba(16,185,129,0.12); color: var(--accent-emerald);">✓ ${label}</span>`;
+          } else if (isCurrent) {
+            return `<span style="font-size: 0.7rem; padding: 3px 8px; border-radius: 6px; background: rgba(59,130,246,0.15); color: var(--accent-blue); font-weight: 600;">● ${label}</span>`;
+          } else {
+            return `<span style="font-size: 0.7rem; padding: 3px 8px; border-radius: 6px; background: rgba(255,255,255,0.04); color: var(--text-muted);">○ ${label}</span>`;
+          }
+        }).join('');
       }
     } catch (e) {
-      // Keep polling
-      progress = Math.min(progress + 2, 85);
-      progressBar.style.width = `${progress}%`;
+      // Keep polling on error
     }
-  }, 3000);
+  }, 2000);
 }
 
 function showAnalysisResult(report) {

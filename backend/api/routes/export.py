@@ -195,8 +195,7 @@ async def export_markdown(
     assessment_id: Optional[str] = Query(default=None),
 ):
     """Export assessment results as a Markdown document."""
-    db = await get_db()
-    try:
+    async with get_db() as db:
         if assessment_id:
             cursor = await db.execute(
                 "SELECT * FROM manual_assessments WHERE id = ?", (assessment_id,)
@@ -206,8 +205,6 @@ async def export_markdown(
                 "SELECT * FROM manual_assessments ORDER BY created_at DESC LIMIT 1"
             )
         row = await cursor.fetchone()
-    finally:
-        pass  # singleton connection, no close needed
 
     if not row:
         # Generate empty report with no assessments
@@ -240,8 +237,7 @@ async def export_pdf(
     assessment_id: Optional[str] = Query(default=None),
 ):
     """Export assessment results as a PDF document."""
-    db = await get_db()
-    try:
+    async with get_db() as db:
         if assessment_id:
             cursor = await db.execute(
                 "SELECT * FROM manual_assessments WHERE id = ?", (assessment_id,)
@@ -251,8 +247,6 @@ async def export_pdf(
                 "SELECT * FROM manual_assessments ORDER BY created_at DESC LIMIT 1"
             )
         row = await cursor.fetchone()
-    finally:
-        pass  # singleton connection, no close needed
 
     if not row:
         from knowledge_base.checklist_generator import calculate_maturity_score
@@ -326,4 +320,3 @@ Keep the tone professional, urgent but optimistic, and highly actionable. Return
         return {"markdown": response.text}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to generate briefing: {e}")
-

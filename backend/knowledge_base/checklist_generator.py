@@ -6,6 +6,7 @@ filtered checklists from the structured dimensions.json.
 from __future__ import annotations
 
 import json
+import logging
 import os
 import asyncio
 from pathlib import Path
@@ -13,6 +14,8 @@ from typing import Optional
 
 from models.schemas import Checkpoint, ChecklistResponse, Dimension, MaturityModel
 from config import DIMENSIONS_PATH
+
+log = logging.getLogger("checklist_generator")
 
 try:
     import msvcrt
@@ -43,7 +46,7 @@ class CrossProcessFileLock:
                 fcntl.flock(self.fd, fcntl.LOCK_EX)
         except Exception as e:
             # Fallback if locking fails
-            print(f"[CrossProcessFileLock] Warning: Failed to acquire lock: {e}")
+            log.warning("Failed to acquire file lock: %s", e)
 
     def release(self):
         if self.fd is not None:
@@ -131,11 +134,8 @@ def clear_cache():
     """Invalidate the model cache so it reloads from disk."""
     global _model_cache
     _model_cache = None
-    try:
-        from evolution.agent import clear_embeddings_cache
-        clear_embeddings_cache()
-    except Exception:
-        pass
+    # Note: checkpoint embedding cache auto-invalidates via text_hash comparison,
+    # so no explicit clearing needed here.
 
 
 def get_maturity_model() -> MaturityModel:
@@ -279,6 +279,12 @@ def calculate_maturity_score(
                 "total_count": total,
             }
         )
+
+    # Normalize weights to sum to 1.0
+    total_weight = sum(ds["weight"] for ds in dimension_scores)
+    if total_weight > 0:
+        for ds in dimension_scores:
+            ds["weight"] /= total_weight
 
     # Weighted overall score
     overall_score = sum(

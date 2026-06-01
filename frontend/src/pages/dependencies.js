@@ -15,31 +15,33 @@ const DIM_COLORS = {
   processes: '#f97316',
 };
 
-const DIM_LABELS = {
-  strategy: 'Strategy',
-  data: 'Data & Infra',
-  governance: 'Governance',
-  technology: 'Tech & MLOps',
-  talent: 'Talent',
-  ethics: 'Ethics & RAI',
-  processes: 'Processes',
-};
+function getDimLabels() {
+  return {
+    strategy: t('deps.dimStrategy'),
+    data: t('deps.dimData'),
+    governance: t('deps.dimGovernance'),
+    technology: t('deps.dimTechnology'),
+    talent: t('deps.dimTalent'),
+    ethics: t('deps.dimEthics'),
+    processes: t('deps.dimProcesses'),
+  };
+}
 
 export function renderDependencies(container) {
   container.innerHTML = `
     <div class="page-header">
-      <h1 class="page-title">🔗 ${t('nav.dependencies') || 'Checkpoint Dependency Map'}</h1>
-      <p class="page-description">Interactive visualization of checkpoint relationships across dimensions. Nodes are sized by maturity level, colored by dimension. Connected checkpoints share source frameworks.</p>
+      <h1 class="page-title">🔗 ${t('deps.pageTitle')}</h1>
+      <p class="page-description">${t('deps.pageDesc')}</p>
     </div>
 
     <div class="card mb-xl fade-in" style="animation-delay: 100ms">
       <div class="card-header">
-        <span class="card-title">Force-Directed Graph</span>
+        <span class="card-title">${t('deps.graphTitle')}</span>
         <div class="flex gap-md" style="align-items: center;">
           <label style="font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
-            <input type="checkbox" id="dep-show-labels" checked style="accent-color: var(--accent-blue);"> Labels
+            <input type="checkbox" id="dep-show-labels" checked style="accent-color: var(--accent-blue);"> ${t('deps.labels')}
           </label>
-          <button id="dep-reset" class="btn btn-secondary btn-sm">Reset View</button>
+          <button id="dep-reset" class="btn btn-secondary btn-sm">${t('deps.resetView')}</button>
         </div>
       </div>
       <div style="position: relative; border-radius: var(--radius-md); overflow: hidden; background: rgba(0,0,0,0.15);">
@@ -49,17 +51,17 @@ export function renderDependencies(container) {
 
     <div class="card fade-in" style="animation-delay: 200ms">
       <div class="card-header">
-        <span class="card-title">Legend</span>
+        <span class="card-title">${t('deps.legendTitle')}</span>
       </div>
       <div id="dep-legend" class="flex gap-md" style="flex-wrap: wrap; padding: 8px 0;"></div>
     </div>
 
     <div class="card fade-in mt-lg" style="animation-delay: 300ms">
       <div class="card-header">
-        <span class="card-title">Selected Checkpoint</span>
+        <span class="card-title">${t('deps.selectedTitle')}</span>
       </div>
       <div id="dep-details" style="padding: 8px 0; min-height: 60px;">
-        <p style="color: var(--text-muted); font-size: 0.85rem;">Click a node to see checkpoint details.</p>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">${t('deps.clickHint')}</p>
       </div>
     </div>
   `;
@@ -71,7 +73,8 @@ export function renderDependencies(container) {
 function renderLegend() {
   const el = document.getElementById('dep-legend');
   if (!el) return;
-  el.innerHTML = Object.entries(DIM_LABELS).map(([id, label]) => {
+  const dimLabels = getDimLabels();
+  el.innerHTML = Object.entries(dimLabels).map(([id, label]) => {
     const color = DIM_COLORS[id];
     return `<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-secondary);">
       <span style="width: 10px; height: 10px; border-radius: 50%; background: ${color}; display: inline-block;"></span>
@@ -325,10 +328,10 @@ function showDetails(node) {
         <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">${node.id}</div>
         <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">${node.text}</div>
         <div style="display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.78rem;">
-          <span style="color: var(--text-muted);">📐 Dimension: <strong style="color: ${node.color};">${node.dimName}</strong></span>
-          <span style="color: var(--text-muted);">⭐ Level: <strong>${node.level}</strong></span>
-          <span style="color: var(--text-muted);">📂 Category: <strong>${node.category}</strong></span>
-          <span style="color: var(--text-muted);">📚 Sources: <strong>${node.sources.join(', ') || 'N/A'}</strong></span>
+          <span style="color: var(--text-muted);">📐 ${t('deps.dimension')}: <strong style="color: ${node.color};">${node.dimName}</strong></span>
+          <span style="color: var(--text-muted);">⭐ ${t('deps.level')}: <strong>${node.level}</strong></span>
+          <span style="color: var(--text-muted);">📂 ${t('deps.category')}: <strong>${node.category}</strong></span>
+          <span style="color: var(--text-muted);">📚 ${t('deps.sources')}: <strong>${node.sources.join(', ') || 'N/A'}</strong></span>
         </div>
       </div>
     </div>

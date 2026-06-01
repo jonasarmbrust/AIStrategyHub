@@ -11,6 +11,7 @@ import uuid
 from typing import Optional
 
 from fastapi import APIRouter, Query
+from fastapi.responses import JSONResponse
 
 from database import get_db
 from knowledge_base.checklist_generator import (
@@ -65,8 +66,7 @@ async def submit_manual_assessment(request: ManualAssessmentRequest):
 
     # Store in database
     assessment_id = str(uuid.uuid4())[:8]
-    db = await get_db()
-    try:
+    async with get_db() as db:
         await db.execute(
             """INSERT INTO manual_assessments
                (id, assessments, overall_score, overall_level, dimension_scores, strengths, gaps)
@@ -81,21 +81,17 @@ async def submit_manual_assessment(request: ManualAssessmentRequest):
                 json.dumps(result["gaps"]),
             ),
         )
-        await db.commit()
-    finally:
-        pass  # singleton connection, no close needed
 
-    return {
+    return JSONResponse(status_code=201, content={
         "id": assessment_id,
         **result,
-    }
+    })
 
 
 @router.get("/history")
 async def get_assessment_history():
     """Retrieve all past manual assessments."""
-    db = await get_db()
-    try:
+    async with get_db() as db:
         cursor = await db.execute(
             "SELECT * FROM manual_assessments ORDER BY created_at DESC"
         )
@@ -112,5 +108,3 @@ async def get_assessment_history():
             }
             for row in rows
         ]
-    finally:
-        pass  # singleton connection, no close needed
