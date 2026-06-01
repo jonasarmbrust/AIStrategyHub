@@ -12,7 +12,7 @@ python-docx==1.1.0
 # (Switched to Gemini Embeddings + lightweight JSON storage to avoid chromadb C++ Build Tool issues)
 
 # LLM Integration
-google-generativeai==0.8.0
+google-generativeai==0.8.6
 
 # Research Agent
 tavily-python==0.5.0
