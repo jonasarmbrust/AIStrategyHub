@@ -6,6 +6,43 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [2.0.0] — 2026-05-28 — "The Living Framework"
+
+### 🧬 Evolution Engine — Autonomous Framework Evolution
+- **Evolution Dashboard**: Full-featured control center for monitoring and managing autonomous framework evolution — status bar, KPI cards, timeline, growth charts, and pending proposals queue
+- **Automated Research Pipeline**: The Evolution Engine triggers Tavily-powered web research, discovers new AI governance frameworks and regulations, then evaluates them with Gemini against all existing checkpoints
+- **AI-Powered Checkpoint Proposals**: Gemini generates concrete new checkpoint proposals with dimension assignment, maturity level, source attribution, justification, and quality scores
+- **Redundancy Scanner**: Embedding-based semantic deduplication detects overlapping checkpoints using cosine similarity and flags them for merging
+- **Human-in-the-Loop Review**: All AI-generated proposals are queued for human approval/rejection before integration — full transparency and control
+- **Scheduled Autonomy**: Configurable cron-like scheduling (default: weekly) — the framework evolves on autopilot while you review
+- **Framework Growth Tracking**: Stacked chart visualization showing checkpoint count growth per dimension over time
+
+### 📋 AI Strategy Playbook
+- **Phased Implementation Roadmap**: Transforms maturity assessment into a 5-phase actionable plan (Foundation → Experimentation → Operationalization → Scaling → Transformation)
+- Per-phase duration estimates, key focus areas, dimension-filtered checkpoints, and progress tracking
+- Color-coded phase indicators with progress bars
+
+### 🔬 AI Deep Dives
+- Per-checkpoint detailed analysis powered by Gemini
+- In-depth implementation guidance and best practices from source frameworks
+- Connected from EU AI Act compliance gaps ("Fix via AI Deep Dive")
+
+### 🏗️ Framework Expansion
+- Framework grown from **101 → 226 checkpoints** via the Evolution Engine
+- Automatic dimension weight recalculation on checkpoint changes
+- `CrossProcessFileLock` for safe concurrent writes to `dimensions.json`
+
+### ⚡ Architecture Expansion
+- **12 API routers** (from 9) with **50+ endpoints** (from 30+)
+- **16 frontend pages** (from 13): Evolution Dashboard, AI Playbook, AI Deep Dive
+- Enhanced Research Agent now serves as the input pipeline for the Evolution Engine
+- Framework Builder integrated with evolution pipeline for atomic checkpoint merging
+
+### 🧪 Testing
+- **29 tests** covering health, scoring, checklist, analysis, security hardening, and database concurrency
+
+---
+
 ## [1.0.0] — 2026-04-24
 
 ### 🎉 Initial Public Release
