@@ -19,7 +19,7 @@ from fastapi.responses import FileResponse
 sys.path.insert(0, str(Path(__file__).parent))
 
 # Load config (also loads .env)
-from config import AUTH_ENABLED, LOG_LEVEL, RATE_LIMIT_DEFAULT
+from config import AUTH_ENABLED, LOG_LEVEL, RATE_LIMIT_DEFAULT, __version__
 from api.routes import advisor, analysis, checklist, dashboard, evolution, export, framework, ingest, research, roadmap
 from database import init_db
 from middleware.auth import APIKeyMiddleware
@@ -77,7 +77,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="AI Strategy Hub",
     description="Open AI Maturity Meta-Model — Assess your organization's AI readiness based on synthesized global best practices.",
-    version="1.0.0",
+    version=__version__,
     lifespan=lifespan,
 )
 
@@ -135,7 +135,7 @@ async def health_check():
     return {
         "status": "ok",
         "service": "AI Strategy Hub",
-        "version": "1.0.0",
+        "version": __version__,
         "auth_enabled": AUTH_ENABLED,
     }
 

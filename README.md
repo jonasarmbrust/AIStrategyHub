@@ -163,7 +163,7 @@ Phased implementation roadmap (Foundation → Experimentation → Operationaliza
 Per-checkpoint detailed analysis powered by Gemini. In-depth implementation guidance and best practices — connected from EU AI Act gaps ("Fix via AI Deep Dive").
 
 ### 🧠 AI Strategy Advisor
-Interactive chatbot powered by **Gemini 3.1 Pro** — knows your assessment scores, gaps, and research sources. Provides context-aware strategic advice.
+Interactive chatbot powered by **Gemini 2.5 Pro** — knows your assessment scores, gaps, and research sources. Provides context-aware strategic advice.
 
 ### 📊 Maturity Assessment
 Interactive checklist across 7 weighted dimensions with automated scoring, radar chart visualization, and level classification (1–5).
@@ -246,7 +246,7 @@ graph TB
         AUTH["Auth Middleware<br/>API Key + Rate Limiting"]
         
         subgraph AI["🧠 AI Layer"]
-            GEMINI_PRO["Gemini 3.1 Pro<br/>Advisor · Summaries · Evolution"]
+            GEMINI_PRO["Gemini 2.5 Pro<br/>Advisor · Summaries · Evolution"]
             GEMINI_FLASH["Gemini 2.5 Flash<br/>Batch Evaluation"]
             GEMINI_EMBED["Gemini Embeddings<br/>Document Vectors · Redundancy Detection"]
         end
@@ -292,7 +292,7 @@ graph TB
 |-------|-----------|---------| 
 | **Frontend** | Vite, Vanilla JS, Chart.js | SPA with hash routing, radar charts, force-directed graphs |
 | **Backend** | Python 3.12, FastAPI, Uvicorn | Async API, 50+ endpoints, 12 routers |
-| **AI** | Gemini 3.1 Pro, 2.5 Flash, Embeddings | Reasoning, batch eval, vector search, evolution |
+| **AI** | Gemini 2.5 Pro, 2.5 Flash, Embeddings | Reasoning, batch eval, vector search, evolution |
 | **Evolution** | APScheduler, CrossProcessFileLock | Autonomous agent scheduling, safe concurrent writes |
 | **Database** | SQLite (aiosqlite, WAL mode) | Assessments, analyses, research, evolution history |
 | **Research** | Tavily API | Automated web research agent, evolution input pipeline |
@@ -479,7 +479,8 @@ AIStrategyHub/
 | **SQL Injection** | Parameterized queries throughout |
 | **Error Handling** | Standardized error responses, no stack traces in production |
 | **Input Validation** | Pydantic models + file type whitelisting |
-| **SSRF Prevention** | URL validation with comprehensive security checks |
+| **SSRF Prevention** | Strict per-hop URL and IP validation against private/internal network ranges, mitigating DNS rebinding attacks |
+| **Data Integrity** | Atomic file writes via temporary files and `os.replace` to prevent corruption |
 
 ---
 

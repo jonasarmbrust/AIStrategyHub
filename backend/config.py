@@ -8,6 +8,21 @@ from pathlib import Path
 from dotenv import load_dotenv
 from fastapi import HTTPException
 
+# ── Version ───────────────────────────────────────────────────────────────────
+
+__version__ = "2.0.1"
+
+# ── AI Model Configuration ───────────────────────────────────────────────────
+# Centralized model names — override via environment variables.
+
+GEMINI_MODEL_REASONING = os.getenv("GEMINI_MODEL_REASONING", "gemini-2.5-pro")
+GEMINI_MODEL_FAST = os.getenv("GEMINI_MODEL_FAST", "gemini-2.5-flash")
+GEMINI_MODEL_EMBEDDING = os.getenv("GEMINI_MODEL_EMBEDDING", "gemini-embedding-exp-03-07")
+
+# ── SSRF Protection ──────────────────────────────────────────────────────────
+
+MAX_REDIRECTS = int(os.getenv("MAX_REDIRECTS", "5"))
+
 # ── Paths ─────────────────────────────────────────────────────────────────────
 
 BASE_DIR = Path(__file__).resolve().parent.parent

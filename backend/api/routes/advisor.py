@@ -1,7 +1,7 @@
 """
 AI Strategy Advisor — Context-aware chatbot endpoint.
 Uses the user's assessment data, framework model, and research sources
-to provide personalized strategic guidance via Gemini 3.1 Pro.
+to provide personalized strategic guidance via Gemini.
 """
 
 from __future__ import annotations
@@ -9,7 +9,6 @@ from __future__ import annotations
 import json
 from typing import Optional
 
-import google.generativeai as genai
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
@@ -140,17 +139,11 @@ async def _get_user_context() -> str:
 @router.post("/chat")
 async def advisor_chat(request: ChatRequest, gemini_key: str = Depends(require_gemini_key)):
     """Chat with the AI Strategy Advisor."""
-    import google.generativeai as genai
-    genai.configure(api_key=gemini_key)
+    from utils.ai_client import chat_with_retry
+    from config import GEMINI_MODEL_REASONING
 
     system_prompt = _build_system_context()
     user_context = await _get_user_context()
-
-    # Build conversation for Gemini
-    gemini_model = genai.GenerativeModel(
-        "gemini-3.1-pro-preview",
-        system_instruction=system_prompt,
-    )
 
     # Build chat history
     gemini_history = []
@@ -172,11 +165,15 @@ async def advisor_chat(request: ChatRequest, gemini_key: str = Depends(require_g
             "parts": [msg.content]
         })
 
-    chat = gemini_model.start_chat(history=gemini_history)
-    response = chat.send_message(request.message)
+    response_text = await chat_with_retry(
+        messages=gemini_history,
+        user_message=request.message,
+        model_name=GEMINI_MODEL_REASONING,
+        system_instruction=system_prompt,
+    )
 
     return {
-        "response": response.text,
+        "response": response_text,
         "context_loaded": bool(user_context.strip()),
     }
 

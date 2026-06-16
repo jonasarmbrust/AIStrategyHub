@@ -17,7 +17,8 @@ import uuid
 
 import google.generativeai as genai
 
-from config import GEMINI_API_KEY
+from config import GEMINI_API_KEY, GEMINI_MODEL_FAST
+from utils.ai_client import configure_gemini
 from database import get_db
 from knowledge_base.checklist_generator import _load_model
 from evolution.prompts import EVOLUTION_QUERIES, QUALITY_ASSESSMENT_PROMPT
@@ -50,7 +51,8 @@ async def research_scan(
         run_log.append("ERROR: tavily-python not installed")
         return []
 
-    gemini_model = genai.GenerativeModel("gemini-3.5-flash")
+    configure_gemini()
+    gemini_model = genai.GenerativeModel(GEMINI_MODEL_FAST)
     all_new_sources = []
 
     for dim_id, queries in EVOLUTION_QUERIES.items():
@@ -89,15 +91,21 @@ async def research_scan(
 
                     try:
                         from research.agent import RELEVANCE_PROMPT
+                        import functools
                         async with _gemini_semaphore:
                             prompt = RELEVANCE_PROMPT.format(
                                 title=title, url=url, content=content,
                             )
-                            resp = gemini_model.generate_content(
-                                prompt,
-                                generation_config=genai.GenerationConfig(
-                                    response_mime_type="application/json",
-                                    temperature=0.1,
+                            loop = asyncio.get_running_loop()
+                            resp = await loop.run_in_executor(
+                                None,
+                                functools.partial(
+                                    gemini_model.generate_content,
+                                    prompt,
+                                    generation_config=genai.GenerationConfig(
+                                        response_mime_type="application/json",
+                                        temperature=0.1,
+                                    ),
                                 ),
                             )
                             llm_eval = json.loads(resp.text)
@@ -173,6 +181,8 @@ def get_framework_context() -> str:
 async def fetch_content(url: str) -> str:
     """Fetch and clean web page content from a URL.
 
+    Uses SSRF-safe fetching with redirect validation.
+
     Args:
         url: The URL to fetch content from.
 
@@ -183,15 +193,9 @@ async def fetch_content(url: str) -> str:
         return ""
 
     try:
-        import httpx
-        async with httpx.AsyncClient(follow_redirects=True, timeout=30) as client:
-            resp = await client.get(url, headers={"User-Agent": "AI-Strategy-Hub/2.0"})
-            resp.raise_for_status()
-            raw = resp.text
-            # Strip HTML tags
-            content = re.sub(r'<[^>]+>', ' ', raw)
-            content = re.sub(r'\s+', ' ', content).strip()
-            return content[:15000]  # Cap at 15k chars for LLM context
+        from utils.web_fetcher import safe_fetch_url
+        result = await safe_fetch_url(url, timeout=30)
+        return result["text"][:15000]  # Cap at 15k chars for LLM context
     except Exception as e:
         log.debug(f"Could not fetch URL {url}: {e}")
         return ""
@@ -216,18 +220,25 @@ async def assess_quality(
     """
     try:
         async with _gemini_semaphore:
-            model = genai.GenerativeModel("gemini-3.5-flash")
+            configure_gemini()
+            model = genai.GenerativeModel(GEMINI_MODEL_FAST)
             prompt = QUALITY_ASSESSMENT_PROMPT.format(
                 title=title,
                 url=url,
                 content=content[:8000],
                 dimension_context=dimension_context[:4000],
             )
-            response = model.generate_content(
-                prompt,
-                generation_config=genai.GenerationConfig(
-                    response_mime_type="application/json",
-                    temperature=0.1,
+            import functools
+            loop = asyncio.get_running_loop()
+            response = await loop.run_in_executor(
+                None,
+                functools.partial(
+                    model.generate_content,
+                    prompt,
+                    generation_config=genai.GenerationConfig(
+                        response_mime_type="application/json",
+                        temperature=0.1,
+                    ),
                 ),
             )
             scores = json.loads(response.text)

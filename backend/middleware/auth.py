@@ -1,7 +1,6 @@
 """
 API Key Authentication Middleware.
 Protects all /api/ endpoints when API_AUTH_KEY is configured.
-Localhost and health endpoints are exempt in development mode.
 """
 
 from __future__ import annotations
@@ -34,8 +33,7 @@ class APIKeyMiddleware(BaseHTTPMiddleware):
     Middleware that enforces X-API-Key header on all /api/ routes.
     
     - Disabled entirely when API_AUTH_KEY is not set in .env
-    - Localhost requests bypass auth in development
-    - Static assets and health endpoint are always exempt
+    - Static assets and documentation endpoints are exempt
     """
 
     async def dispatch(self, request: Request, call_next):

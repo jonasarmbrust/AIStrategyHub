@@ -274,7 +274,6 @@ async def export_pdf(
 
 
 from pydantic import BaseModel
-import os
 from fastapi import HTTPException
 
 class BriefingRequest(BaseModel):
@@ -283,20 +282,15 @@ class BriefingRequest(BaseModel):
 @router.post("/executive-briefing")
 async def generate_executive_briefing(request: BriefingRequest):
     """Generate an AI-narrated Executive Summary based on assessment scores."""
-    gemini_key = os.getenv("GEMINI_API_KEY", "")
-    if not gemini_key:
-        raise HTTPException(status_code=500, detail="GEMINI_API_KEY not configured")
+    from utils.ai_client import generate_with_retry
+    from config import GEMINI_MODEL_REASONING
 
     try:
-        import google.generativeai as genai
-        genai.configure(api_key=gemini_key)
-        model = genai.GenerativeModel("gemini-3.1-pro-preview")
-
         scores = request.score_data
         overall_score = scores.get("overall_score", 0)
         overall_level = scores.get("overall_level", 1)
-        gaps = "\\n- ".join(scores.get("gaps", [])[:7])
-        strengths = "\\n- ".join(scores.get("strengths", [])[:3])
+        gaps = "\n- ".join(scores.get("gaps", [])[:7])
+        strengths = "\n- ".join(scores.get("strengths", [])[:3])
 
         prompt = f"""You are a top-tier Management Consultant (McKinsey/BCG level). 
 Write an 'Executive Summary & AI Readiness Narrative' for a CEO based on this AI Strategy Hub Maturity Assessment:
@@ -313,10 +307,11 @@ Provide a structured, beautifully formatted Markdown response with:
 
 Keep the tone professional, urgent but optimistic, and highly actionable. Return ONLY Markdown."""
 
-        response = model.generate_content(
+        result = await generate_with_retry(
             prompt,
-            generation_config=genai.GenerationConfig(temperature=0.3)
+            model_name=GEMINI_MODEL_REASONING,
+            temperature=0.3,
         )
-        return {"markdown": response.text}
+        return {"markdown": result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to generate briefing: {e}")

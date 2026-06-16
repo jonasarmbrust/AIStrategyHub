@@ -150,9 +150,10 @@ async def search_and_store(
     gemini_model = None
     if keys["gemini"]:
         try:
-            import google.generativeai as genai
-            genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-            gemini_model = genai.GenerativeModel("gemini-3.5-flash")
+            from utils.ai_client import get_model, configure_gemini
+            from config import GEMINI_MODEL_FAST
+            configure_gemini()
+            gemini_model = get_model(GEMINI_MODEL_FAST)
         except Exception as e:
             status["errors"].append(f"Gemini init failed: {e}. Sources will be stored without AI evaluation.")
     else:
@@ -257,7 +258,7 @@ async def search_and_store(
             # LLM relevance evaluation (if Gemini is available)
             if gemini_model and content:
                 try:
-                    import google.generativeai as genai
+                    import google.generativeai as genai  # needed for genai.GenerationConfig
                     prompt = RELEVANCE_PROMPT.format(
                         title=title, url=url, content=content,
                     )

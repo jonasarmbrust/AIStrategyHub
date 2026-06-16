@@ -22,7 +22,7 @@ from analyzer.document_parser import chunk_text, extract_text
 from analyzer.embedder import delete_collection, search_chunks, store_chunks
 from database import get_db
 from knowledge_base.checklist_generator import get_maturity_model
-from config import UPLOAD_DIR, require_gemini_key
+from config import GEMINI_MODEL_FAST, UPLOAD_DIR, require_gemini_key
 
 log = logging.getLogger("evaluator")
 
@@ -143,7 +143,7 @@ async def evaluate_document(analysis_id: str):
             all_checkpoints.append((dim, cp))
 
     genai.configure(api_key=api_key)
-    gemini_model = genai.GenerativeModel("gemini-3.5-flash")
+    gemini_model = genai.GenerativeModel(GEMINI_MODEL_FAST)
     semaphore = asyncio.Semaphore(5)
 
     assessment_dict = {}

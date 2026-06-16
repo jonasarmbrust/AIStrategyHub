@@ -21,7 +21,7 @@ from typing import Optional
 
 import google.generativeai as genai
 
-from config import GEMINI_API_KEY, EVOLUTION_REDUNDANCY_THRESHOLD
+from config import GEMINI_API_KEY, GEMINI_MODEL_FAST, EVOLUTION_REDUNDANCY_THRESHOLD
 from database import get_db
 from knowledge_base.checklist_generator import _load_model
 from evolution.prompts import CHECKPOINT_EXTRACTION_PROMPT
@@ -102,7 +102,7 @@ async def extract_checkpoints(
         dim_ids = ", ".join([d.id for d in model_data.dimensions])
 
         async with _gemini_semaphore:
-            gemini_model = genai.GenerativeModel("gemini-3.5-flash")
+            gemini_model = genai.GenerativeModel(GEMINI_MODEL_FAST)
             prompt = CHECKPOINT_EXTRACTION_PROMPT.format(
                 meta_model_context=meta_model_context[:8000],
                 title=title,

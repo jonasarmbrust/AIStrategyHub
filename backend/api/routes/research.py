@@ -7,7 +7,6 @@ Enhanced with synchronous mode, proper error feedback, and Framework Builder int
 from __future__ import annotations
 
 import json
-import os
 import uuid
 from typing import Optional
 
@@ -197,7 +196,9 @@ async def extract_source_for_framework(source_id: str):
         try:
             import httpx
             import re
-            async with httpx.AsyncClient(follow_redirects=True, timeout=30) as client:
+            from utils.url_validator import validate_url
+            validate_url(url)
+            async with httpx.AsyncClient(follow_redirects=False, timeout=30) as client:
                 resp = await client.get(url, headers={"User-Agent": "AI-Strategy-Hub/2.0"})
                 resp.raise_for_status()
                 raw = resp.text
@@ -219,13 +220,9 @@ async def extract_source_for_framework(source_id: str):
         )
 
     # 3. Extract novel checkpoints via Gemini
-    gemini_key = os.getenv("GEMINI_API_KEY", "")
-    if not gemini_key:
-        raise HTTPException(status_code=500, detail="GEMINI_API_KEY not configured")
-
     try:
-        import google.generativeai as genai
-        genai.configure(api_key=gemini_key)
+        from utils.ai_client import generate_with_retry
+        from config import GEMINI_MODEL_FAST
 
         # Load meta-model context for comparison
         from knowledge_base.checklist_generator import _load_model
@@ -271,16 +268,14 @@ Respond EXACTLY in this JSON format:
   ]
 }}
 """
-        gemini_model = genai.GenerativeModel("gemini-3.5-flash")
-        response = gemini_model.generate_content(
+        response_text = await generate_with_retry(
             prompt,
-            generation_config=genai.GenerationConfig(
-                response_mime_type="application/json",
-                temperature=0.2,
-            ),
+            model_name=GEMINI_MODEL_FAST,
+            temperature=0.2,
+            response_mime_type="application/json",
         )
 
-        data = json.loads(response.text)
+        data = json.loads(response_text)
         proposals = data.get("proposals", [])
 
         # Assign unique IDs and enrich with research source link

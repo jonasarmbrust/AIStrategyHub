@@ -17,7 +17,7 @@ from pathlib import Path
 
 import google.generativeai as genai
 
-from config import DIMENSIONS_PATH, GEMINI_API_KEY, EVOLUTION_REDUNDANCY_THRESHOLD
+from config import DIMENSIONS_PATH, GEMINI_API_KEY, GEMINI_MODEL_FAST, EVOLUTION_REDUNDANCY_THRESHOLD
 from database import get_db
 from knowledge_base.checklist_generator import clear_cache
 
@@ -117,7 +117,7 @@ class RedundancyDetector:
 
         try:
             genai.configure(api_key=GEMINI_API_KEY)
-            model = genai.GenerativeModel("gemini-3.5-flash")
+            model = genai.GenerativeModel(GEMINI_MODEL_FAST)
 
             prompt = f"""You are an AI Strategy Framework expert. Analyze these two checkpoints for semantic redundancy.
 

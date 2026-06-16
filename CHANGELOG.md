@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [2.0.1] — 2026-06-16 — Security & Performance Update
+
+### 🔒 Security
+- **SSRF Prevention**: Rewrote URL validator and web fetcher. `follow_redirects` is now disabled and all HTTP redirects are manually followed with per-hop IP validation against private network ranges to prevent DNS rebinding and Server-Side Request Forgery.
+- **Atomic File Writes**: `dimensions.json` is now written atomically via `tempfile` and `os.replace` to prevent data corruption during simultaneous accesses or crashes.
+
+### ⚡ Performance & Reliability
+- **Async Unblocking**: Eliminated all blocking `model.generate_content` and `chat.send_message` calls from the FastAPI event loop. All LLM calls now correctly use the `run_in_executor` pattern.
+- **Smart Retries**: Centralized AI client now only retries transient errors (429, 503, network) with exponential backoff, instantly raising 400s or Safety Blocks.
+- **Centralized Model Configuration**: Replaced 12+ scattered hardcoded model IDs with centralized environment-configurable constants in `config.py`.
+- **Reproducible Builds**: Switched `npm install` to `npm ci` in Dockerfile.
+
 ## [2.0.0] — 2026-05-28 — "The Living Framework"
 
 ### 🧬 Evolution Engine — Autonomous Framework Evolution

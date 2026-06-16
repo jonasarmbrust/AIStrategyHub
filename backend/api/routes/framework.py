@@ -12,12 +12,10 @@ Enhanced with:
 from __future__ import annotations
 
 import json
-import os
 import uuid
 from pathlib import Path
 from typing import List
 
-import google.generativeai as genai
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 
@@ -26,7 +24,6 @@ from knowledge_base.checklist_generator import _load_model
 
 router = APIRouter()
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY", ""))
 
 UPLOAD_DIR = Path(__file__).parent.parent.parent.parent / "data" / "uploads"
 from config import DIMENSIONS_PATH
@@ -117,16 +114,17 @@ Respond EXACTLY in this JSON format:
 """
 
     try:
-        gemini_model = genai.GenerativeModel("gemini-3.5-flash")
-        response = gemini_model.generate_content(
+        from utils.ai_client import generate_with_retry
+        from config import GEMINI_MODEL_FAST
+
+        response_text = await generate_with_retry(
             prompt,
-            generation_config=genai.GenerationConfig(
-                response_mime_type="application/json",
-                temperature=0.2,
-            ),
+            model_name=GEMINI_MODEL_FAST,
+            temperature=0.2,
+            response_mime_type="application/json",
         )
 
-        data = json.loads(response.text)
+        data = json.loads(response_text)
         # Assign unique IDs to the proposals before sending to frontend
         proposals = data.get("proposals", [])
         for p in proposals:

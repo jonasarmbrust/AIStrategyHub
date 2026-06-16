@@ -63,10 +63,14 @@ async def import_url(url: str = Form(...), title: str = Form("Imported Source"))
     """Import an article or URL as a document for analysis."""
     import httpx
     import re
+    from utils.url_validator import validate_url
+
+    # Validate URL before fetching
+    validate_url(url)
 
     # Fetch content
     try:
-        async with httpx.AsyncClient(follow_redirects=True, timeout=30) as client:
+        async with httpx.AsyncClient(follow_redirects=False, timeout=30) as client:
             resp = await client.get(url, headers={"User-Agent": "AI-Strategy-Hub/2.0"})
             resp.raise_for_status()
             raw_content = resp.text
@@ -205,7 +209,6 @@ async def list_analyses():
         return [dict(row) for row in rows]
 
 from pydantic import BaseModel
-import os
 
 class DeepDiveRequest(BaseModel):
     text: str
@@ -228,22 +231,17 @@ Keep it professional, highly actionable, and avoid generic fluff.
 @router.post("/deep-dive")
 async def generate_deep_dive(request: DeepDiveRequest):
     """Generate a detailed markdown deep-dive for a 1-sentence strategy checkpoint."""
-    gemini_key = os.getenv("GEMINI_API_KEY", "")
-    if not gemini_key:
-        raise HTTPException(status_code=500, detail="GEMINI_API_KEY not configured")
+    from utils.ai_client import generate_with_retry
+    from config import GEMINI_MODEL_REASONING
 
     try:
-        import google.generativeai as genai
-        genai.configure(api_key=gemini_key)
-        model = genai.GenerativeModel("gemini-3.1-pro-preview")
-
         prompt = DEEP_DIVE_PROMPT.format(text=request.text, context=request.context)
-        
-        response = model.generate_content(
+        result = await generate_with_retry(
             prompt,
-            generation_config=genai.GenerationConfig(temperature=0.3)
+            model_name=GEMINI_MODEL_REASONING,
+            temperature=0.3,
         )
-        return {"markdown": response.text}
+        return {"markdown": result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Gemini deep-dive failed: {e}")
 

@@ -9,6 +9,7 @@ import json
 import logging
 import os
 import asyncio
+import tempfile
 from pathlib import Path
 from typing import Optional
 
@@ -82,13 +83,34 @@ async def safe_read_json() -> dict:
 
 
 async def safe_write_json(data: dict) -> None:
-    """Safely write dimensions.json using both event-loop lock and file lock."""
+    """Safely write dimensions.json using both event-loop lock and file lock.
+
+    Writes to a temporary file first, then atomically replaces the target
+    file via os.replace(). This prevents corruption if the process crashes
+    mid-write.
+    """
     async with _dimensions_lock:
         lock = CrossProcessFileLock(str(DIMENSIONS_PATH))
         lock.acquire()
         try:
-            with open(DIMENSIONS_PATH, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=2, ensure_ascii=False)
+            # Write to temp file in same directory (required for atomic os.replace)
+            dir_path = os.path.dirname(DIMENSIONS_PATH)
+            fd, tmp_path = tempfile.mkstemp(
+                dir=dir_path, suffix=".tmp", prefix=".dimensions_"
+            )
+            try:
+                with os.fdopen(fd, "w", encoding="utf-8") as f:
+                    json.dump(data, f, indent=2, ensure_ascii=False)
+                    f.flush()
+                    os.fsync(f.fileno())
+                os.replace(tmp_path, str(DIMENSIONS_PATH))
+            except Exception:
+                # Clean up temp file on failure
+                try:
+                    os.unlink(tmp_path)
+                except OSError:
+                    pass
+                raise
         finally:
             lock.release()
         
@@ -108,12 +130,30 @@ def safe_read_json_sync() -> dict:
 
 
 def safe_write_json_sync(data: dict) -> None:
-    """Synchronously write dimensions.json with file lock."""
+    """Synchronously write dimensions.json with file lock.
+
+    Writes to a temporary file first, then atomically replaces the target
+    file via os.replace().
+    """
     lock = CrossProcessFileLock(str(DIMENSIONS_PATH))
     lock.acquire()
     try:
-        with open(DIMENSIONS_PATH, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
+        dir_path = os.path.dirname(DIMENSIONS_PATH)
+        fd, tmp_path = tempfile.mkstemp(
+            dir=dir_path, suffix=".tmp", prefix=".dimensions_"
+        )
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(tmp_path, str(DIMENSIONS_PATH))
+        except Exception:
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+            raise
     finally:
         lock.release()
     

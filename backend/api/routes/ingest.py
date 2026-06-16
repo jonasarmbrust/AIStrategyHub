@@ -94,7 +94,7 @@ async def analyze_url(url: str = Form(...), title: str = Form("")):
 
     # Fetch content
     try:
-        async with httpx.AsyncClient(follow_redirects=True, timeout=30) as client:
+        async with httpx.AsyncClient(follow_redirects=False, timeout=30) as client:
             resp = await client.get(url, headers={"User-Agent": "AI-Strategy-Hub/2.0"})
             resp.raise_for_status()
             raw_content = resp.text
@@ -337,31 +337,26 @@ Generate 7-10 recommendations, ordered by priority. Be specific and actionable, 
 """
 
 
-from config import require_gemini_key
-from fastapi import Depends
-
 @router.post("/personalize")
 async def personalize_recommendations(request: PersonalizeRequest, gemini_key: str = Depends(require_gemini_key)):
     """Generate AI-powered personalized recommendations based on assessment scores."""
-    try:
-        import google.generativeai as genai
-        genai.configure(api_key=gemini_key)
-        model = genai.GenerativeModel("gemini-3.1-pro-preview")
+    from utils.ai_client import generate_with_retry
+    from config import GEMINI_MODEL_REASONING
 
+    try:
         prompt = PERSONALIZE_PROMPT.format(
             scores_json=json.dumps(request.dimension_scores, indent=2),
             gaps_json=json.dumps(request.gaps, indent=2),
         )
 
-        response = model.generate_content(
+        result = await generate_with_retry(
             prompt,
-            generation_config=genai.GenerationConfig(
-                response_mime_type="application/json",
-                temperature=0.3,
-            ),
+            model_name=GEMINI_MODEL_REASONING,
+            temperature=0.3,
+            response_mime_type="application/json",
         )
 
-        return json.loads(response.text)
+        return json.loads(result)
 
     except json.JSONDecodeError as e:
         raise safe_error(500, "AI returned invalid JSON", e)
@@ -371,31 +366,27 @@ async def personalize_recommendations(request: PersonalizeRequest, gemini_key: s
 
 async def _extract_arguments(content: str, title: str, url: str) -> dict:
     """Use Gemini to extract key arguments from content."""
-    gemini_key = require_gemini_key()
+    from utils.ai_client import generate_with_retry
+    from config import GEMINI_MODEL_REASONING
 
     try:
-        import google.generativeai as genai
-        genai.configure(api_key=gemini_key)
-        model = genai.GenerativeModel("gemini-2.5-pro")
-
         prompt = EXTRACT_PROMPT.format(
             title=title,
             url=url,
             content=content,
         )
 
-        response = model.generate_content(
+        result = await generate_with_retry(
             prompt,
-            generation_config=genai.GenerationConfig(
-                response_mime_type="application/json",
-                temperature=0.2,
-            ),
+            model_name=GEMINI_MODEL_REASONING,
+            temperature=0.2,
+            response_mime_type="application/json",
         )
 
-        result = json.loads(response.text)
-        result["source_url"] = url
+        result_dict = json.loads(result)
+        result_dict["source_url"] = url
 
-        return result
+        return result_dict
 
     except json.JSONDecodeError as e:
         raise safe_error(500, "AI returned invalid JSON", e)
@@ -407,7 +398,6 @@ def _extract_pdf_text(content_bytes: bytes) -> str:
     """Extract text from PDF bytes."""
     try:
         import io
-        from reportlab.lib.pagesizes import letter
         # Try PyPDF2 or pdfplumber
         try:
             import PyPDF2
