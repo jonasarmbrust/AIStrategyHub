@@ -54,10 +54,10 @@ jobs:
       contents: read
       id-token: write
     env:
-      PROJECT_ID: gen-lang-client-0019594546
+      PROJECT_ID: job-automation-jonas
       REGION: europe-west1
       SERVICE_NAME: ai-strategy-hub
-      IMAGE: europe-west1-docker.pkg.dev/gen-lang-client-0019594546/ai-strategy-hub/app
+      IMAGE: europe-west1-docker.pkg.dev/job-automation-jonas/cloud-run-source-deploy/ai-strategy-hub/app
     steps:
       - uses: actions/checkout@v4
 
