@@ -44,10 +44,43 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: cd frontend && npm ci && npm run build
 
-  docker-build:
+  deploy-cloud-run:
     runs-on: ubuntu-latest
     needs: [backend-tests, frontend-build]
     if: github.event_name == 'push'
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      PROJECT_ID: gen-lang-client-0019594546
+      REGION: europe-west1
+      SERVICE_NAME: ai-strategy-hub
+      IMAGE: europe-west1-docker.pkg.dev/gen-lang-client-0019594546/ai-strategy-hub/app
     steps:
       - uses: actions/checkout@v4
-      - run: docker build -t ai-strategy-hub .
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker europe-west1-docker.pkg.dev --quiet
+
+      - name: Build Docker image
+        run: docker build -t ${{ env.IMAGE }}:${{ github.sha }} -t ${{ env.IMAGE }}:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ env.IMAGE }}:${{ github.sha }}
+          docker push ${{ env.IMAGE }}:latest
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE_NAME }}
+          region: ${{ env.REGION }}
+          image: ${{ env.IMAGE }}:${{ github.sha }}

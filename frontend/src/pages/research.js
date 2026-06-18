@@ -350,13 +350,18 @@ async function loadSources() {
     if (category) queryParams += `&category=${category}`;
     if (dimension) queryParams += `&dimension=${dimension}`;
 
-    const data = await api.get(`/research/sources${queryParams}`);
+    const response = await api.get(`/research/sources${queryParams}`);
+
+    // API returns { data: [...], meta: { total }, new_count }
+    const sources = response.data || response.sources || [];
+    const totalCount = response.meta?.total ?? response.total_count ?? sources.length;
+    const newCount = response.new_count ?? 0;
 
     if (countEl) {
-      countEl.textContent = t('research.sourceCountLabel').replace('{total}', data.total_count).replace('{new}', data.new_count);
+      countEl.textContent = t('research.sourceCountLabel').replace('{total}', totalCount).replace('{new}', newCount);
     }
 
-    if (!data.sources || data.sources.length === 0) {
+    if (!sources || sources.length === 0) {
       el.innerHTML = `
         <div class="empty-state">
           <div class="empty-state-icon">🔬</div>
@@ -366,7 +371,7 @@ async function loadSources() {
       return;
     }
 
-    el.innerHTML = data.sources.map(source => renderSourceCard(source)).join('');
+    el.innerHTML = sources.map(source => renderSourceCard(source)).join('');
 
     // Mark as read events
     el.querySelectorAll('.btn-mark-read').forEach(btn => {
