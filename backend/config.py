@@ -4,7 +4,9 @@ Loads environment variables and defines common paths.
 """
 
 import os
+import shutil
 from pathlib import Path
+
 from dotenv import load_dotenv
 from fastapi import HTTPException
 
@@ -33,11 +35,22 @@ DATA_DIR = BASE_DIR / "data"
 UPLOAD_DIR = DATA_DIR / "uploads"
 EMBEDDINGS_DIR = DATA_DIR / "embeddings"
 DB_PATH = DATA_DIR / "strategy_hub.db"
-DIMENSIONS_PATH = BACKEND_DIR / "knowledge_base" / "dimensions.json"
+
+# The bundled (read-only) copy lives inside the backend source tree.
+# On Cloud Run / Docker the source tree is read-only, so we work with
+# a writable copy in DATA_DIR instead.
+_DIMENSIONS_SOURCE = BACKEND_DIR / "knowledge_base" / "dimensions.json"
+_DIMENSIONS_WRITABLE = DATA_DIR / "dimensions.json"
 
 # Ensure data directories exist
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 EMBEDDINGS_DIR.mkdir(parents=True, exist_ok=True)
+
+# Bootstrap: copy bundled dimensions.json → writable location on first run
+if not _DIMENSIONS_WRITABLE.exists() and _DIMENSIONS_SOURCE.exists():
+    shutil.copy2(_DIMENSIONS_SOURCE, _DIMENSIONS_WRITABLE)
+
+DIMENSIONS_PATH = _DIMENSIONS_WRITABLE if _DIMENSIONS_WRITABLE.exists() else _DIMENSIONS_SOURCE
 
 
 # ── Environment Variables ─────────────────────────────────────────────────────
