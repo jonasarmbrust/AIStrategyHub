@@ -21,7 +21,7 @@ tavily-python==0.5.0
 aiosqlite==0.20.0
 
 # Export
-reportlab==4.2.0
+reportlab==4.5.1
 
 # Security & Middleware
 slowapi==0.1.9
