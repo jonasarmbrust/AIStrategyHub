@@ -1,6 +1,5 @@
 """Tests for the scoring engine — calculate_maturity_score()."""
 
-import pytest
 import sys
 from pathlib import Path
 
@@ -30,7 +29,7 @@ class TestScoringEngine:
                     "confidence": 0.95,
                     "evidence_depth": 3,
                 }
-        
+
         result = calculate_maturity_score(assessments)
         assert result["overall_score"] >= 90.0
         assert result["overall_level"] == 5
@@ -48,7 +47,7 @@ class TestScoringEngine:
                     "confidence": 0.7,
                     "evidence_depth": 2,
                 }
-        
+
         result = calculate_maturity_score(assessments)
         assert 30 <= result["overall_score"] <= 70
         assert 2 <= result["overall_level"] <= 3
@@ -56,7 +55,7 @@ class TestScoringEngine:
     def test_confidence_affects_score(self):
         """Lower confidence should yield lower score than higher confidence."""
         model = get_maturity_model()
-        
+
         # High confidence
         assessments_high = {}
         for dim in model.dimensions:
@@ -65,7 +64,7 @@ class TestScoringEngine:
                     "fulfilled": True, "level": 3,
                     "confidence": 0.95, "evidence_depth": 2,
                 }
-        
+
         # Low confidence
         assessments_low = {}
         for dim in model.dimensions:
@@ -74,10 +73,10 @@ class TestScoringEngine:
                     "fulfilled": True, "level": 3,
                     "confidence": 0.3, "evidence_depth": 1,
                 }
-        
+
         score_high = calculate_maturity_score(assessments_high)["overall_score"]
         score_low = calculate_maturity_score(assessments_low)["overall_score"]
-        
+
         assert score_high > score_low, "Higher confidence should yield higher score"
 
     def test_dimension_weights_sum_to_one(self):
@@ -96,7 +95,7 @@ class TestScoringEngine:
                 "fulfilled": True, "level": 4,
                 "confidence": 0.9, "evidence_depth": 2,
             }
-        
+
         result = calculate_maturity_score(assessments)
         assert isinstance(result["strengths"], list)
         assert isinstance(result["gaps"], list)
@@ -105,7 +104,7 @@ class TestScoringEngine:
     def test_level_mapping_thresholds(self):
         """Verify level mapping: 0-24=1, 25-49=2, 50-69=3, 70-89=4, 90+=5."""
         model = get_maturity_model()
-        
+
         # Create a controlled test with exact scores
         result = calculate_maturity_score({})
         assert result["overall_level"] == 1  # Score 0 -> Level 1

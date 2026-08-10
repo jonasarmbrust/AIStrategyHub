@@ -13,10 +13,10 @@ from __future__ import annotations
 
 import json
 import uuid
+from datetime import UTC
 from pathlib import Path
-from typing import List
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from database import get_db
@@ -26,7 +26,6 @@ router = APIRouter()
 
 
 UPLOAD_DIR = Path(__file__).parent.parent.parent.parent / "data" / "uploads"
-from config import DIMENSIONS_PATH
 
 
 class ExtractRequest(BaseModel):
@@ -40,7 +39,7 @@ class IntegrableCheckpoint(BaseModel):
     text_de: str
     min_level: int
     category: str
-    sources: List[str]
+    sources: list[str]
     rationale: str
     # New: optional fields from research enrichment
     research_source_id: str = ""
@@ -50,7 +49,7 @@ class IntegrableCheckpoint(BaseModel):
 
 
 class IntegrateRequest(BaseModel):
-    checkpoints: List[IntegrableCheckpoint]
+    checkpoints: list[IntegrableCheckpoint]
 
 
 @router.post("/extract")
@@ -62,14 +61,14 @@ async def extract_novel_checkpoints(request: ExtractRequest):
         doc_row = await cursor.fetchone()
         if not doc_row:
             raise HTTPException(status_code=404, detail="Document not found")
-        
+
         file_path = UPLOAD_DIR / f"{request.document_id}{doc_row['file_type']}"
         if not file_path.exists():
             raise HTTPException(status_code=404, detail="Physical document not found")
-        
+
         if doc_row['file_type'] != '.txt':
             raise HTTPException(status_code=400, detail="Only .txt imports are supported for framework extraction currently.")
-        
+
         doc_text = file_path.read_text(encoding="utf-8")
         doc_name = doc_row["document_name"]
 
@@ -79,7 +78,7 @@ async def extract_novel_checkpoints(request: ExtractRequest):
     for dim in model.dimensions:
         cp_summaries = [f"- {cp.text}" for cp in dim.checkpoints]
         framework_summary.append(f"Dimension: {dim.id} ({dim.name})\nExisting Checkpoints:\n" + "\n".join(cp_summaries))
-    
+
     meta_model_context = "\n\n".join(framework_summary)
 
     prompt = f"""You are a Master Enterprise Architecture and AI Strategy expert.
@@ -114,8 +113,8 @@ Respond EXACTLY in this JSON format:
 """
 
     try:
-        from utils.ai_client import generate_with_retry
         from config import GEMINI_MODEL_FAST
+        from utils.ai_client import generate_with_retry
 
         response_text = await generate_with_retry(
             prompt,
@@ -133,7 +132,7 @@ Respond EXACTLY in this JSON format:
 
         # ── Auto-Enrich: attach matching research sources as evidence_tags ──
         proposals = await _enrich_proposals_with_research(proposals)
-            
+
         return {"proposals": proposals}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"AI Extraction Error: {str(e)}")
@@ -157,9 +156,9 @@ async def integrate_checkpoints(request: IntegrateRequest):
             # Generate final ID: CP_{DIMENSION}_{COUNT+1}
             cp_count = len(target_dim.get("checkpoints", []))
             final_id = f"CP_{target_dim['id'][:2]}_{cp_count + 1:02d}"
-            
-            from datetime import datetime, timezone
-            
+
+            from datetime import datetime
+
             # Build evidence tags from research enrichment
             evidence_tags = []
             if new_cp.evidence_tags:
@@ -168,7 +167,7 @@ async def integrate_checkpoints(request: IntegrateRequest):
                     for t in new_cp.evidence_tags
                     if t.get("source")
                 ]
-            
+
             checkpoint_obj = {
                 "id": final_id,
                 "text": new_cp.text,
@@ -177,7 +176,7 @@ async def integrate_checkpoints(request: IntegrateRequest):
                 "category": new_cp.category,
                 "sources": new_cp.sources,
                 "evidence_tags": evidence_tags,
-                "added_at": datetime.now(timezone.utc).isoformat(),
+                "added_at": datetime.now(UTC).isoformat(),
                 "added_by": "framework_builder"
             }
             target_dim["checkpoints"].append(checkpoint_obj)
@@ -219,7 +218,7 @@ async def coverage_analysis():
     """
     # Load model
     model = _load_model()
-    
+
     # Count research sources per dimension from DB
     async with get_db() as db:
         cursor = await db.execute(
@@ -247,10 +246,10 @@ async def coverage_analysis():
         avg_rel = 0
         if dim.id in dim_avg_relevance and dim_avg_relevance[dim.id]:
             avg_rel = sum(dim_avg_relevance[dim.id]) / len(dim_avg_relevance[dim.id])
-        
+
         # Coverage ratio: sources per checkpoint (normalized)
         ratio = min(source_count / max(cp_count, 1), 1.0)
-        
+
         if ratio >= 0.6:
             status = "well-covered"
         elif ratio >= 0.3:
@@ -304,7 +303,7 @@ async def _enrich_proposals_with_research(proposals: list) -> list:
             dim_id = p.get("dimension_id", "")
             if not dim_id:
                 continue
-            
+
             cursor = await db.execute(
                 "SELECT title, url, relevance_score FROM research_sources "
                 "WHERE relevant_dimensions LIKE ? AND relevance_score >= 0.5 "
@@ -312,7 +311,7 @@ async def _enrich_proposals_with_research(proposals: list) -> list:
                 (f"%{dim_id}%",),
             )
             matches = await cursor.fetchall()
-            
+
             if matches:
                 evidence_tags = p.get("evidence_tags", [])
                 for m in matches:

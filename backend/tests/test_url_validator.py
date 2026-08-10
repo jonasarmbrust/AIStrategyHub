@@ -7,6 +7,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import pytest
 from fastapi import HTTPException
+
 from utils.url_validator import validate_url
 
 

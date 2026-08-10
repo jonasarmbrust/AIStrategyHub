@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 import pytest_asyncio
-from httpx import AsyncClient, ASGITransport
+from httpx import ASGITransport, AsyncClient
 
 # Ensure backend is importable
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -31,7 +31,7 @@ async def test_db(tmp_path):
     db_path = tmp_path / "test.db"
     config.DB_PATH = db_path
 
-    from database import init_db, get_db
+    from database import get_db, init_db
 
     await init_db()
 

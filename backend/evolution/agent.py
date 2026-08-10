@@ -17,27 +17,25 @@ import json
 import logging
 import os
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import google.generativeai as genai
 
 from config import (
-    GEMINI_API_KEY,
     EVOLUTION_AUTO_INTEGRATE,
     EVOLUTION_MIN_QUALITY,
     EVOLUTION_REDUNDANCY_THRESHOLD,
+    GEMINI_API_KEY,
 )
 from database import get_db
-from evolution.redundancy_detector import RedundancyDetector
-from evolution.snapshot_manager import create_snapshot, cleanup_old_snapshots, compact_old_run_logs
-from evolution.research_scanner import research_scan, get_framework_context, fetch_content, assess_quality
 from evolution.checkpoint_extractor import (
-    extract_checkpoints,
     check_proposal_redundancy,
+    extract_checkpoints,
     integrate_proposal,
-    clear_embeddings_cache,
-    _get_cached_embedding,
 )
+from evolution.redundancy_detector import RedundancyDetector
+from evolution.research_scanner import assess_quality, fetch_content, get_framework_context, research_scan
+from evolution.snapshot_manager import cleanup_old_snapshots, compact_old_run_logs, create_snapshot
 
 log = logging.getLogger("evolution.agent")
 
@@ -88,7 +86,7 @@ class EvolutionAgent:
 
         def _log(msg: str):
             """Append timestamped message to run log."""
-            ts = datetime.now(timezone.utc).strftime("%H:%M:%S")
+            ts = datetime.now(UTC).strftime("%H:%M:%S")
             entry = f"[{ts}] {msg}"
             run_log.append(entry)
             log.info(f"[Run {run_id}] {msg}")
@@ -167,7 +165,7 @@ class EvolutionAgent:
                     # Extract novel checkpoints
                     proposals = await extract_checkpoints(title, url, content)
                     if not proposals:
-                        _log(f"  No novel checkpoints found")
+                        _log("  No novel checkpoints found")
                         continue
 
                     stats["checkpoints_proposed"] += len(proposals)
@@ -265,7 +263,7 @@ class EvolutionAgent:
                            log = ?
                        WHERE id = ?""",
                     (
-                        datetime.now(timezone.utc).isoformat(),
+                        datetime.now(UTC).isoformat(),
                         stats["sources_scanned"],
                         stats["sources_qualified"],
                         stats["checkpoints_proposed"],
@@ -294,7 +292,7 @@ class EvolutionAgent:
                                log = ?
                            WHERE id = ?""",
                         (
-                            datetime.now(timezone.utc).isoformat(),
+                            datetime.now(UTC).isoformat(),
                             str(e),
                             json.dumps(run_log),
                             run_id,

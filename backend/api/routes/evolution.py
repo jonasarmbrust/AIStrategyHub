@@ -10,23 +10,21 @@ import asyncio
 import json
 import logging
 import uuid
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 
-from database import get_db
 from config import (
-    DIMENSIONS_PATH,
-    EVOLUTION_ENABLED,
-    EVOLUTION_SCHEDULE,
-    EVOLUTION_DAY,
-    EVOLUTION_HOUR,
     EVOLUTION_AUTO_INTEGRATE,
+    EVOLUTION_DAY,
+    EVOLUTION_ENABLED,
+    EVOLUTION_HOUR,
     EVOLUTION_MIN_QUALITY,
     EVOLUTION_REDUNDANCY_THRESHOLD,
+    EVOLUTION_SCHEDULE,
 )
+from database import get_db
 
 router = APIRouter()
 log = logging.getLogger("api.evolution")
@@ -47,13 +45,13 @@ class MergeRequest(BaseModel):
 
 class EvolutionConfigUpdate(BaseModel):
     """Runtime-only configuration update."""
-    evolution_enabled: Optional[bool] = None
-    evolution_schedule: Optional[str] = None
-    evolution_day: Optional[str] = None
-    evolution_hour: Optional[int] = None
-    auto_integrate: Optional[bool] = None
-    min_quality: Optional[float] = None
-    redundancy_threshold: Optional[float] = None
+    evolution_enabled: bool | None = None
+    evolution_schedule: str | None = None
+    evolution_day: str | None = None
+    evolution_hour: int | None = None
+    auto_integrate: bool | None = None
+    min_quality: float | None = None
+    redundancy_threshold: float | None = None
 
 
 # ── Background task management ────────────────────────────────────────────
@@ -234,7 +232,7 @@ async def get_run_detail(run_id: str):
 @router.get("/proposals")
 async def list_proposals(
     status: str = Query("all"),
-    run_id: Optional[str] = Query(None),
+    run_id: str | None = Query(None),
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=200),
 ):
@@ -308,7 +306,7 @@ async def approve_proposal(proposal_id: str):
                        reviewed_at = ?,
                        integrated_checkpoint_id = ?
                    WHERE id = ?""",
-                (datetime.now(timezone.utc).isoformat(), cp_id, proposal_id),
+                (datetime.now(UTC).isoformat(), cp_id, proposal_id),
             )
             return {"status": "approved", "checkpoint_id": cp_id, "proposal_id": proposal_id}
         else:
@@ -335,7 +333,7 @@ async def reject_proposal(proposal_id: str):
             """UPDATE evolution_proposals
                SET status = 'rejected', reviewed_at = ?
                WHERE id = ?""",
-            (datetime.now(timezone.utc).isoformat(), proposal_id),
+            (datetime.now(UTC).isoformat(), proposal_id),
         )
     return {"status": "rejected", "proposal_id": proposal_id}
 

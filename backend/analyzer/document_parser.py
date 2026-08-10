@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Optional
 
 
 def extract_text(file_path: Path) -> str:

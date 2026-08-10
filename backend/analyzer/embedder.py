@@ -19,7 +19,6 @@ import json
 import logging
 import math
 import struct
-from pathlib import Path
 
 import google.generativeai as genai
 
@@ -301,7 +300,7 @@ async def migrate_json_to_sqlite():
     for json_file in json_files:
         collection_name = json_file.stem  # e.g. 'doc_abc123'
         try:
-            with open(json_file, "r", encoding="utf-8") as f:
+            with open(json_file, encoding="utf-8") as f:
                 data = json.load(f)
 
             async with get_db() as db:

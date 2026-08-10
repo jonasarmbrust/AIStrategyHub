@@ -7,12 +7,11 @@ generating a weighted, prioritized list of next steps with full traceability.
 from __future__ import annotations
 
 import json
-from typing import Optional
 
 from fastapi import APIRouter, Query
 
 from database import get_db
-from knowledge_base.checklist_generator import get_maturity_model, calculate_maturity_score
+from knowledge_base.checklist_generator import calculate_maturity_score, get_maturity_model
 from models.schemas import (
     EffortLevel,
     EvidenceTag,

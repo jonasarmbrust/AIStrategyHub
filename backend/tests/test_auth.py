@@ -1,8 +1,8 @@
 """Tests for API Key authentication middleware."""
 
-import pytest
 from unittest.mock import patch
-import config
+
+import pytest
 
 
 @pytest.mark.asyncio

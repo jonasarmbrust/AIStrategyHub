@@ -14,15 +14,14 @@ import functools
 import json
 import logging
 from datetime import datetime
-from pathlib import Path
 
 import google.generativeai as genai
 
 from analyzer.document_parser import chunk_text, extract_text
-from analyzer.embedder import delete_collection, search_chunks, store_chunks
+from analyzer.embedder import search_chunks, store_chunks
+from config import GEMINI_MODEL_FAST, UPLOAD_DIR, require_gemini_key
 from database import get_db
 from knowledge_base.checklist_generator import get_maturity_model
-from config import GEMINI_MODEL_FAST, UPLOAD_DIR, require_gemini_key
 
 log = logging.getLogger("evaluator")
 

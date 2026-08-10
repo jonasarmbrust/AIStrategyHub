@@ -12,19 +12,16 @@ Workflow:
 from __future__ import annotations
 
 import json
-import os
 import re
-from pathlib import Path
-from typing import Optional
 
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Depends
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from config import DIMENSIONS_PATH, require_gemini_key
 import config
-from utils.url_validator import validate_url
+from config import require_gemini_key
 from utils.errors import safe_error
+from utils.url_validator import validate_url
 
 router = APIRouter()
 
@@ -255,7 +252,7 @@ async def remove_evidence(request: RemoveEvidenceRequest):
 
     initial_len = len(target_cp["evidence_tags"])
     target_cp["evidence_tags"] = [
-        t for t in target_cp["evidence_tags"] 
+        t for t in target_cp["evidence_tags"]
         if not (t.get("source") == request.source and t.get("reference") == request.reference)
     ]
 
@@ -340,8 +337,8 @@ Generate 7-10 recommendations, ordered by priority. Be specific and actionable, 
 @router.post("/personalize")
 async def personalize_recommendations(request: PersonalizeRequest, gemini_key: str = Depends(require_gemini_key)):
     """Generate AI-powered personalized recommendations based on assessment scores."""
-    from utils.ai_client import generate_with_retry
     from config import GEMINI_MODEL_REASONING
+    from utils.ai_client import generate_with_retry
 
     try:
         prompt = PERSONALIZE_PROMPT.format(
@@ -366,8 +363,8 @@ async def personalize_recommendations(request: PersonalizeRequest, gemini_key: s
 
 async def _extract_arguments(content: str, title: str, url: str) -> dict:
     """Use Gemini to extract key arguments from content."""
-    from utils.ai_client import generate_with_retry
     from config import GEMINI_MODEL_REASONING
+    from utils.ai_client import generate_with_retry
 
     try:
         prompt = EXTRACT_PROMPT.format(
@@ -432,10 +429,9 @@ def _extract_docx_text(content_bytes: bytes) -> str:
         import io
         import zipfile
 
-        with zipfile.ZipFile(io.BytesIO(content_bytes)) as z:
-            with z.open('word/document.xml') as f:
-                content = f.read().decode('utf-8')
-                text = re.sub(r'<[^>]+>', ' ', content)
-                return re.sub(r'\s+', ' ', text).strip()
+        with zipfile.ZipFile(io.BytesIO(content_bytes)) as z, z.open('word/document.xml') as f:
+            content = f.read().decode('utf-8')
+            text = re.sub(r'<[^>]+>', ' ', content)
+            return re.sub(r'\s+', ' ', text).strip()
     except Exception as e:
         return f"DOCX extraction failed: {e}"

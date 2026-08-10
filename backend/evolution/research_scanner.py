@@ -12,16 +12,15 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
-import re
 import uuid
 
 import google.generativeai as genai
 
-from config import GEMINI_API_KEY, GEMINI_MODEL_FAST
-from utils.ai_client import configure_gemini
+from config import GEMINI_MODEL_FAST
 from database import get_db
-from knowledge_base.checklist_generator import _load_model
 from evolution.prompts import EVOLUTION_QUERIES, QUALITY_ASSESSMENT_PROMPT
+from knowledge_base.checklist_generator import _load_model
+from utils.ai_client import configure_gemini
 
 log = logging.getLogger("evolution.research_scanner")
 
@@ -90,8 +89,9 @@ async def research_scan(
                     }
 
                     try:
-                        from research.agent import RELEVANCE_PROMPT
                         import functools
+
+                        from research.agent import RELEVANCE_PROMPT
                         async with _gemini_semaphore:
                             prompt = RELEVANCE_PROMPT.format(
                                 title=title, url=url, content=content,

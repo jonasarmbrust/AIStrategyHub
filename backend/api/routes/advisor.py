@@ -7,14 +7,13 @@ to provide personalized strategic guidance via Gemini.
 from __future__ import annotations
 
 import json
-from typing import Optional
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from database import get_db
-from knowledge_base.checklist_generator import get_maturity_model, calculate_maturity_score
 from config import require_gemini_key
+from database import get_db
+from knowledge_base.checklist_generator import get_maturity_model
 
 router = APIRouter()
 
@@ -139,15 +138,15 @@ async def _get_user_context() -> str:
 @router.post("/chat")
 async def advisor_chat(request: ChatRequest, gemini_key: str = Depends(require_gemini_key)):
     """Chat with the AI Strategy Advisor."""
-    from utils.ai_client import chat_with_retry
     from config import GEMINI_MODEL_REASONING
+    from utils.ai_client import chat_with_retry
 
     system_prompt = _build_system_context()
     user_context = await _get_user_context()
 
     # Build chat history
     gemini_history = []
-    
+
     # Inject user context as first message
     gemini_history.append({
         "role": "user",

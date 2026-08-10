@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from database import get_db
 
@@ -40,7 +40,7 @@ async def create_snapshot(run_id: str) -> str:
         )
 
         # Generate version tag
-        version_tag = f"v{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}"
+        version_tag = f"v{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}"
 
         async with get_db() as db:
             await db.execute(

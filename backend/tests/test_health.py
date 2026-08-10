@@ -29,7 +29,7 @@ async def test_api_routes_registered(client):
     """All core API routes are registered."""
     response = await client.get("/openapi.json")
     paths = response.json()["paths"]
-    
+
     expected_prefixes = [
         "/api/checklist",
         "/api/analysis",
@@ -40,7 +40,7 @@ async def test_api_routes_registered(client):
         "/api/framework",
         "/api/advisor",
     ]
-    
+
     for prefix in expected_prefixes:
         matching = [p for p in paths if p.startswith(prefix)]
         assert len(matching) > 0, f"No routes found for {prefix}"

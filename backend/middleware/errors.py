@@ -8,7 +8,7 @@ from __future__ import annotations
 import logging
 import traceback
 
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 log = logging.getLogger("errors")

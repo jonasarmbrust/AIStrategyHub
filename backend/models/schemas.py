@@ -5,12 +5,10 @@ Defines request/response schemas for all endpoints.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import Optional
 
 from pydantic import BaseModel, Field
-
 
 # ── Enums ──────────────────────────────────────────────────────────────────────
 
@@ -55,7 +53,7 @@ class EvidenceTag(BaseModel):
     """Links a checkpoint to its original source with specific reference."""
     source: str
     reference: str
-    url: Optional[str] = None
+    url: str | None = None
 
 
 # ── Knowledge Base Models ──────────────────────────────────────────────────────
@@ -118,7 +116,7 @@ class MaturityReport(BaseModel):
     strengths: list[str] = []
     gaps: list[str] = []
     recommendations: list[str] = []
-    assessed_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    assessed_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 # ── Manual Assessment ──────────────────────────────────────────────────────────
@@ -135,7 +133,7 @@ class DocumentInfo(BaseModel):
     filename: str
     file_type: str
     file_size: int
-    uploaded_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    uploaded_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     chunk_count: int = 0
 
 
@@ -156,11 +154,11 @@ class AnalysisResult(BaseModel):
     document_name: str
     status: AnalysisStatus = AnalysisStatus.PENDING
     progress: float = Field(default=0.0, ge=0.0, le=100.0)
-    report: Optional[MaturityReport] = None
+    report: MaturityReport | None = None
     evaluations: list[CheckpointEvaluation] = []
-    started_at: Optional[datetime] = None
-    completed_at: Optional[datetime] = None
-    error: Optional[str] = None
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
+    error: str | None = None
 
 
 # ── Research Agent Models ──────────────────────────────────────────────────────
@@ -172,14 +170,14 @@ class ResearchSource(BaseModel):
     summary: str
     category: SourceCategory
     relevant_dimensions: list[str] = []
-    published_date: Optional[str] = None
-    discovered_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    published_date: str | None = None
+    discovered_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     is_read: bool = False
     relevance_score: float = Field(default=0.0, ge=0.0, le=1.0)
 
 
 class ResearchTriggerRequest(BaseModel):
-    query: Optional[str] = None
+    query: str | None = None
     dimensions: list[str] = []
     max_results: int = Field(default=10, ge=1, le=50)
     language: str = "both"  # "english", "german", "both"
@@ -190,7 +188,7 @@ class ResearchFeedResponse(BaseModel):
     sources: list[ResearchSource]
     total_count: int
     new_count: int
-    last_search_at: Optional[datetime] = None
+    last_search_at: datetime | None = None
 
 
 # ── Roadmap Models ─────────────────────────────────────────────────────────────
@@ -234,8 +232,8 @@ class RoadmapResponse(BaseModel):
 
 class DashboardStats(BaseModel):
     total_analyses: int = 0
-    latest_score: Optional[float] = None
-    latest_level: Optional[int] = None
+    latest_score: float | None = None
+    latest_level: int | None = None
     total_sources: int = 0
     new_sources: int = 0
     dimension_averages: dict[str, float] = {}
@@ -259,4 +257,4 @@ class ChecklistResponse(BaseModel):
 
 class ErrorResponse(BaseModel):
     detail: str
-    error_code: Optional[str] = None
+    error_code: str | None = None

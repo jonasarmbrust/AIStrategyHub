@@ -12,9 +12,7 @@ Supports two call patterns during migration:
 
 from __future__ import annotations
 
-import asyncio
 import logging
-from contextlib import asynccontextmanager
 
 import aiosqlite
 

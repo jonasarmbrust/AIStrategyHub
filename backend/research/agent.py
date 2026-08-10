@@ -11,8 +11,6 @@ import json
 import logging
 import os
 import uuid
-from datetime import datetime
-from typing import Optional
 
 from database import get_db
 from knowledge_base.checklist_generator import get_maturity_model, safe_read_json_sync
@@ -106,7 +104,7 @@ def _check_api_keys() -> dict[str, bool]:
 
 
 async def search_and_store(
-    query: Optional[str] = None,
+    query: str | None = None,
     dimensions: list[str] | None = None,
     max_results: int = 10,
     language: str = "both",
@@ -150,8 +148,8 @@ async def search_and_store(
     gemini_model = None
     if keys["gemini"]:
         try:
-            from utils.ai_client import get_model, configure_gemini
             from config import GEMINI_MODEL_FAST
+            from utils.ai_client import configure_gemini, get_model
             configure_gemini()
             gemini_model = get_model(GEMINI_MODEL_FAST)
         except Exception as e:
@@ -179,10 +177,10 @@ async def search_and_store(
     for search_query in queries:
         try:
             full_query = f"AI maturity {search_query}"
-            
+
             if language == "german":
                 full_query += " Deutsch Germany OR KI Reifegrad"
-                
+
             if pdf_only:
                 full_query += " filetype:pdf"
             response = tavily_client.search(

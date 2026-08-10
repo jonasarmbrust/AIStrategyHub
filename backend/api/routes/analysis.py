@@ -9,12 +9,12 @@ import json
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, BackgroundTasks, File, Form, HTTPException, UploadFile, Depends
+from fastapi import APIRouter, BackgroundTasks, File, Form, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 
+from config import UPLOAD_DIR
 from database import get_db
-from models.schemas import AnalysisResult, AnalysisStatus
-from config import UPLOAD_DIR, require_gemini_key
+from models.schemas import AnalysisStatus
 
 router = APIRouter()
 
@@ -61,8 +61,10 @@ async def upload_document(file: UploadFile = File(...)):
 @router.post("/import-url")
 async def import_url(url: str = Form(...), title: str = Form("Imported Source")):
     """Import an article or URL as a document for analysis."""
-    import httpx
     import re
+
+    import httpx
+
     from utils.url_validator import validate_url
 
     # Validate URL before fetching
@@ -210,6 +212,7 @@ async def list_analyses():
 
 from pydantic import BaseModel
 
+
 class DeepDiveRequest(BaseModel):
     text: str
     context: str = "Framework Explorer Checkpoint"
@@ -231,8 +234,8 @@ Keep it professional, highly actionable, and avoid generic fluff.
 @router.post("/deep-dive")
 async def generate_deep_dive(request: DeepDiveRequest):
     """Generate a detailed markdown deep-dive for a 1-sentence strategy checkpoint."""
-    from utils.ai_client import generate_with_retry
     from config import GEMINI_MODEL_REASONING
+    from utils.ai_client import generate_with_retry
 
     try:
         prompt = DEEP_DIVE_PROMPT.format(text=request.text, context=request.context)

@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import json
 import uuid
-from typing import Optional
 
 from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
@@ -22,7 +21,6 @@ from knowledge_base.checklist_generator import (
 from models.schemas import (
     ChecklistResponse,
     ManualAssessmentRequest,
-    MaturityReport,
 )
 
 router = APIRouter()
@@ -30,10 +28,10 @@ router = APIRouter()
 
 @router.get("", response_model=ChecklistResponse)
 async def get_checklist(
-    dimension: Optional[str] = Query(None, description="Filter by dimension ID"),
-    min_level: Optional[int] = Query(None, ge=1, le=5, description="Min maturity level"),
-    max_level: Optional[int] = Query(None, ge=1, le=5, description="Max maturity level"),
-    category: Optional[str] = Query(None, description="Filter by checkpoint category"),
+    dimension: str | None = Query(None, description="Filter by dimension ID"),
+    min_level: int | None = Query(None, ge=1, le=5, description="Min maturity level"),
+    max_level: int | None = Query(None, ge=1, le=5, description="Max maturity level"),
+    category: str | None = Query(None, description="Filter by checkpoint category"),
 ):
     """Retrieve the full or filtered AI maturity checklist."""
     return get_checklist_response(dimension, min_level, max_level, category)

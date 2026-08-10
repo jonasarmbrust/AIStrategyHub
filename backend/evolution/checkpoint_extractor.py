@@ -16,15 +16,14 @@ import json
 import logging
 import struct
 import uuid
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 
 import google.generativeai as genai
 
-from config import GEMINI_API_KEY, GEMINI_MODEL_FAST, EVOLUTION_REDUNDANCY_THRESHOLD
+from config import EVOLUTION_REDUNDANCY_THRESHOLD, GEMINI_API_KEY, GEMINI_MODEL_FAST
 from database import get_db
-from knowledge_base.checklist_generator import _load_model
 from evolution.prompts import CHECKPOINT_EXTRACTION_PROMPT
+from knowledge_base.checklist_generator import _load_model
 
 log = logging.getLogger("evolution.checkpoint_extractor")
 
@@ -228,7 +227,7 @@ async def integrate_proposal(
     source_id: str,
     source_title: str,
     source_url: str,
-) -> Optional[str]:
+) -> str | None:
     """Integrate a single checkpoint proposal into dimensions.json.
 
     Reuses the integration logic from framework.py.
@@ -270,7 +269,7 @@ async def integrate_proposal(
                 "reference": "Evolution Agent — Auto-Integration",
                 "url": source_url,
             }],
-            "added_at": datetime.now(timezone.utc).isoformat(),
+            "added_at": datetime.now(UTC).isoformat(),
             "added_by": "evolution_agent",
         }
 

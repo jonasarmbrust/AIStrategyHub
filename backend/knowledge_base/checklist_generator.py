@@ -5,16 +5,14 @@ filtered checklists from the structured dimensions.json.
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import os
-import asyncio
 import tempfile
-from pathlib import Path
-from typing import Optional
 
-from models.schemas import Checkpoint, ChecklistResponse, Dimension, MaturityModel
 from config import DIMENSIONS_PATH
+from models.schemas import ChecklistResponse, Dimension, MaturityModel
 
 log = logging.getLogger("checklist_generator")
 
@@ -67,7 +65,7 @@ class CrossProcessFileLock:
 
 
 _dimensions_lock = asyncio.Lock()
-_model_cache: Optional[MaturityModel] = None
+_model_cache: MaturityModel | None = None
 
 
 async def safe_read_json() -> dict:
@@ -76,7 +74,7 @@ async def safe_read_json() -> dict:
         lock = CrossProcessFileLock(str(DIMENSIONS_PATH))
         lock.acquire()
         try:
-            with open(DIMENSIONS_PATH, "r", encoding="utf-8") as f:
+            with open(DIMENSIONS_PATH, encoding="utf-8") as f:
                 return json.load(f)
         finally:
             lock.release()
@@ -113,7 +111,7 @@ async def safe_write_json(data: dict) -> None:
                 raise
         finally:
             lock.release()
-        
+
         global _model_cache
         _model_cache = None
 
@@ -123,7 +121,7 @@ def safe_read_json_sync() -> dict:
     lock = CrossProcessFileLock(str(DIMENSIONS_PATH))
     lock.acquire()
     try:
-        with open(DIMENSIONS_PATH, "r", encoding="utf-8") as f:
+        with open(DIMENSIONS_PATH, encoding="utf-8") as f:
             return json.load(f)
     finally:
         lock.release()
@@ -156,7 +154,7 @@ def safe_write_json_sync(data: dict) -> None:
             raise
     finally:
         lock.release()
-    
+
     global _model_cache
     _model_cache = None
 
@@ -184,10 +182,10 @@ def get_maturity_model() -> MaturityModel:
 
 
 def get_dimensions(
-    dimension_id: Optional[str] = None,
-    min_level: Optional[int] = None,
-    max_level: Optional[int] = None,
-    category: Optional[str] = None,
+    dimension_id: str | None = None,
+    min_level: int | None = None,
+    max_level: int | None = None,
+    category: str | None = None,
 ) -> list[Dimension]:
     """
     Get dimensions with optional filtering.
@@ -241,10 +239,10 @@ def get_dimensions(
 
 
 def get_checklist_response(
-    dimension_id: Optional[str] = None,
-    min_level: Optional[int] = None,
-    max_level: Optional[int] = None,
-    category: Optional[str] = None,
+    dimension_id: str | None = None,
+    min_level: int | None = None,
+    max_level: int | None = None,
+    category: str | None = None,
 ) -> ChecklistResponse:
     """Generate a ChecklistResponse with optional filters."""
     model = _load_model()

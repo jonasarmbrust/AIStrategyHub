@@ -12,15 +12,15 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 # Ensure backend package is on path
 sys.path.insert(0, str(Path(__file__).parent))
 
 # Load config (also loads .env)
-from config import AUTH_ENABLED, LOG_LEVEL, RATE_LIMIT_DEFAULT, __version__
 from api.routes import advisor, analysis, checklist, dashboard, evolution, export, framework, ingest, research, roadmap
+from config import AUTH_ENABLED, LOG_LEVEL, RATE_LIMIT_DEFAULT, __version__
 from database import init_db
 from middleware.auth import APIKeyMiddleware
 from middleware.errors import register_error_handlers
@@ -98,9 +98,9 @@ app.add_middleware(APIKeyMiddleware)
 # 3. Rate limiting
 try:
     from slowapi import Limiter, _rate_limit_exceeded_handler
-    from slowapi.util import get_remote_address
     from slowapi.errors import RateLimitExceeded
     from slowapi.middleware import SlowAPIMiddleware
+    from slowapi.util import get_remote_address
 
     limiter = Limiter(key_func=get_remote_address, default_limits=[RATE_LIMIT_DEFAULT])
     app.state.limiter = limiter
@@ -144,13 +144,13 @@ async def health_check():
 frontend_dist = Path(__file__).parent.parent / "frontend" / "dist"
 if frontend_dist.exists() and frontend_dist.is_dir():
     app.mount("/assets", StaticFiles(directory=str(frontend_dist / "assets")), name="assets")
-    
+
     @app.get("/{full_path:path}")
     async def serve_spa(full_path: str):
         # Allow requests to /api to pass through to 404 if not matched above
         if full_path.startswith("api/"):
             raise HTTPException(404, "Not Found")
-        
+
         # Serve index.html for all other routes to support SPA client-side routing
         index_path = frontend_dist / "index.html"
         if index_path.exists():

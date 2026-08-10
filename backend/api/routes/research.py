@@ -8,13 +8,12 @@ from __future__ import annotations
 
 import json
 import uuid
-from typing import Optional
 
-from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import JSONResponse
 
 from database import get_db
-from models.schemas import ResearchFeedResponse, ResearchSource, ResearchTriggerRequest
+from models.schemas import ResearchTriggerRequest
 
 router = APIRouter()
 
@@ -26,7 +25,7 @@ async def trigger_research(request: ResearchTriggerRequest):
     Returns results directly instead of fire-and-forget.
     """
     try:
-        from research.agent import search_and_store, ResearchError
+        from research.agent import search_and_store
 
         result = await search_and_store(
             query=request.query,
@@ -84,8 +83,8 @@ async def check_api_status():
 
 @router.get("/sources")
 async def list_sources(
-    category: Optional[str] = Query(None),
-    dimension: Optional[str] = Query(None),
+    category: str | None = Query(None),
+    dimension: str | None = Query(None),
     unread_only: bool = Query(False),
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
@@ -194,8 +193,10 @@ async def extract_source_for_framework(source_id: str):
     content = ""
     if url:
         try:
-            import httpx
             import re
+
+            import httpx
+
             from utils.url_validator import validate_url
             validate_url(url)
             async with httpx.AsyncClient(follow_redirects=False, timeout=30) as client:
@@ -221,11 +222,11 @@ async def extract_source_for_framework(source_id: str):
 
     # 3. Extract novel checkpoints via Gemini
     try:
-        from utils.ai_client import generate_with_retry
         from config import GEMINI_MODEL_FAST
 
         # Load meta-model context for comparison
         from knowledge_base.checklist_generator import _load_model
+        from utils.ai_client import generate_with_retry
         model = _load_model()
         framework_summary = []
         for dim in model.dimensions:

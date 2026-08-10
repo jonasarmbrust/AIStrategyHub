@@ -12,12 +12,11 @@ import functools
 import json
 import logging
 import uuid
-from datetime import datetime, timezone
-from pathlib import Path
+from datetime import UTC, datetime
 
 import google.generativeai as genai
 
-from config import DIMENSIONS_PATH, GEMINI_API_KEY, GEMINI_MODEL_FAST, EVOLUTION_REDUNDANCY_THRESHOLD
+from config import EVOLUTION_REDUNDANCY_THRESHOLD, GEMINI_API_KEY, GEMINI_MODEL_FAST
 from database import get_db
 from knowledge_base.checklist_generator import clear_cache
 
@@ -204,7 +203,7 @@ Respond in valid JSON:
         keep_cp["sources"] = merged_sources
         keep_cp["evidence_tags"] = merged_evidence
         keep_cp["merged_from"] = remove_id
-        keep_cp["merged_at"] = datetime.now(timezone.utc).isoformat()
+        keep_cp["merged_at"] = datetime.now(UTC).isoformat()
 
         # Remove duplicate checkpoint
         remove_dim["checkpoints"] = [

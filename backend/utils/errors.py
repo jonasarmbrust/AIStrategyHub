@@ -1,5 +1,6 @@
 """Safe error responses that don't leak internal details."""
 import logging
+
 from fastapi import HTTPException
 
 log = logging.getLogger("errors")
